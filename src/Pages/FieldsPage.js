@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
-import ApplnPaper from './components/ApplnPaper'
+import ListItem from '@material-ui/core/ListItem';
+import Grid from '@material-ui/core/Grid';
+import List from '@material-ui/core/List';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -13,22 +14,78 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-
 function FieldsPage() {
     const classes = useStyles();
-    return (
-        <div>
-            <ApplnPaper>
-                <form className={classes.root} noValidate autoComplete="off">
-                    <TextField id="standard-basic" label="Field name" />
-                    <TextField id="standard-basic" label="Field identifier" />
-                    <TextField id="standard-basic" label="Field location" />
-                    <TextField id="standard-basic" label="Field area" />
-                </form>
-                <button>Submit</button>
-            </ApplnPaper>
+    const [fieldName, setFieldName] = useState('');
+    const [fieldIdentifier, setFieldIdentifier] = useState('');
+    const [fieldLocation, setFieldLocation] = useState('');
 
-        </div>
+    const submitField = (event) => {
+        console.log("submitField");
+        console.log("fieldName" + fieldName + "->" + fieldIdentifier + "->" + fieldLocation);
+
+        event.preventDefault();
+
+        const payload = {
+            fieldName: fieldName,
+            fieldIdentifier: fieldIdentifier,
+            fieldLocation: fieldLocation
+        };
+
+        //TODO
+        // axios({
+        //     url: `http://localhost:8080/api/fields`,
+        //     method: 'POST',
+        //     data: payload,
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     }
+        // }).then(() => {
+        //     console.log("Data posted to the server")
+        // })
+        //     .catch(() => {
+        //         console.log('Internal server error');
+        //     });
+    }
+
+    const handleChange = ({ target }) => {
+        const { name, value } = target;
+        if (name === 'fieldName') {
+            setFieldName(value)
+        }
+        else if (name === 'fieldIdentifier') {
+            setFieldIdentifier(value);
+        }
+        else if (name === 'fieldLocation') {
+            setFieldLocation(value);
+        }
+    };
+
+
+    return (
+        <Grid container spacing={2}>
+            <Grid item xs={12}>
+                <Grid container justify="center" spacing={2}>
+                    <List component="nav">
+                        <ListItem>
+                            <span style={{ backgroundColor: 'gray', border: '1px solid gray', padding: '5px', margin: '5px', color: 'white', fontSize: '20px' }}>ADD FIELD</span>
+                        </ListItem>
+                        <ListItem>
+                            <TextField id="standard-basic" name="fieldName" onChange={handleChange} label="Field name" />
+                        </ListItem>
+                        <ListItem>
+                            <TextField id="standard-basic" name="fieldIdentifier" onChange={handleChange} label="Field identifier" />
+                        </ListItem>
+                        <ListItem>
+                            <TextField id="standard-basic" name="fieldLocation" onChange={handleChange} label="Field location" />
+                        </ListItem>
+                        <ListItem>
+                            <button onClick={submitField}>Submit</button>
+                        </ListItem>
+                    </List>
+                </Grid>
+            </Grid>
+        </Grid>
     )
 }
 
