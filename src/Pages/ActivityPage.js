@@ -17,7 +17,7 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
-
+import Button from  '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -226,7 +226,7 @@ function ActivityPage() {
                         </ListItem>
 
                         <ListItem key="5">
-                            <button onClick={handleCLick}>ADD/UPDATE</button>
+                            <Button variant="outlined" color="primary" onClick={handleCLick}>ADD/UPDATE</Button>
                         </ListItem>
                     </List>
                 </Grid>

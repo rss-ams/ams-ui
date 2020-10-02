@@ -9,7 +9,8 @@ import { fieldsData } from '../fieldsData';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-
+import TextField from '@material-ui/core/TextField';
+import Button from  '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -27,8 +28,16 @@ function AddFarm() {
     const classes = useStyles();
     const [locality, setLocality] = React.useState('');
     const [fieldId, setFieldId] = React.useState('');
-
-
+    const [area , setArea]= React.useState('');
+    const handleTextChange = ({ target }) => {
+        const { name, value } = target;
+        if (name === 'fieldId') {
+            setFieldId(value)
+        }
+        else if (name === 'area') {
+            setArea(value)
+        }
+    }
 
 
     const handleCLick = () => {
@@ -43,10 +52,8 @@ function AddFarm() {
         if (name === 'locality') {
             setLocality(value)
         }
-        else if (name === 'fieldId') {
-            setFieldId(value);
-        }
-     
+        
+
         console.log("after: locality,fieldId,cropSeason,activity" + locality, fieldId)
     };
 
@@ -58,7 +65,7 @@ function AddFarm() {
 
                     <List component="nav" aria-label="secondary mailbox folders">
                         <ListItem>
-                                <span style={{backgroundColor:'gray' , border:'1px solid gray', padding:'5px' , margin:'5px' , color:'white' , fontSize:'20px'}}>ADD FARM</span>
+                            <span style={{ backgroundColor: 'gray', border: '1px solid gray', padding: '5px', margin: '5px', color: 'white', fontSize: '20px' }}>ADD FIELD</span>
                         </ListItem>
                         <ListItem key="1">
                             <FormControl className={classes.formControl}>
@@ -81,7 +88,7 @@ function AddFarm() {
                             </FormControl>
                         </ListItem>
 
-                        <ListItem key="2">
+                        {/* <ListItem key="2">
                             <FormControl className={classes.formControl}>
                                 <InputLabel id="fId-label">Field ID</InputLabel>
                                 <Select
@@ -100,12 +107,18 @@ function AddFarm() {
                                     }
                                 </Select>
                             </FormControl>
+                        </ListItem> */}
+
+
+                        <ListItem>
+                            <TextField id="fieldId" name="fieldId" onChange={handleTextChange} label="Field ID" />
+                        </ListItem>
+                        <ListItem>
+                            <TextField id="Area" name="area" onChange={handleTextChange} label="Area" />
                         </ListItem>
 
-                   
-
                         <ListItem key="5">
-                            <button onClick={handleCLick}>ADD FARM</button>
+                        <Button variant="outlined" color="primary" onClick={handleCLick}>ADD FIELD</Button>
                         </ListItem>
                     </List>
                 </Grid>

@@ -29,7 +29,6 @@ const rows = [
     "process1",
     "done"
   ),
-  createData("2", "Locality2", "FarmID2", 37, "Rabi", "Bajra","process2", "done")
 ];
 
 export default function BasicTable() {

@@ -3,12 +3,12 @@ import AddFarm from "./AddFarm"
 
 
 export default {
-    title: 'Organisms/AddFarm',
+    title: 'Organisms/AddField',
     component: AddFarm
 }
 
 
-export const Farm = () => <AddFarm></AddFarm>
+export const FIELD = () => <AddFarm></AddFarm>
 
 
 

@@ -15,7 +15,7 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
-
+import Button from  '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -163,7 +163,7 @@ function FarmTimeline() {
 
 
                         <ListItem key="5">
-                            <button onClick={handleCLick}>SHOW</button>
+                            <Button variant="outlined" color="primary" onClick={handleCLick}>SHOW</Button>
                         </ListItem>
                     </List>
                 </Grid>
