@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
+import Button from  '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -80,7 +81,7 @@ function FieldsPage() {
                             <TextField id="standard-basic" name="fieldLocation" onChange={handleChange} label="Field location" />
                         </ListItem>
                         <ListItem>
-                            <button onClick={submitField}>Submit</button>
+                            <Button variant="outlined" color="primary">Submit</Button>
                         </ListItem>
                     </List>
                 </Grid>

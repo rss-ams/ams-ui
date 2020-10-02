@@ -3,7 +3,7 @@ import FarmInfoPage from "./FarmInfoPage"
 
 
 export default {
-    title: 'Organisms/FarmInfoPage',
+    title: 'Organisms/FieldInfoPage',
     component: FarmInfoPage
 }
 
