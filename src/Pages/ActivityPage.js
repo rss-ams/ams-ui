@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -17,7 +17,8 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
-import Button from  '@material-ui/core/Button';
+import Button from '@material-ui/core/Button';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -28,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(2),
     },
 }));
+
 
 
 function ActivityPage() {
@@ -44,8 +46,11 @@ function ActivityPage() {
 
     const handleCLick = () => {
         console.log("locality,fieldId,cropSeason,activity" + locality, fieldId, cropSeason, activity)
-
     }
+
+    useEffect(() => {
+
+    }, [])
 
     const handleStartDateChange = (date) => {
         setSelectedDate(date);
@@ -87,7 +92,7 @@ function ActivityPage() {
 
                     <List component="nav" aria-label="secondary mailbox folders">
                         <ListItem>
-                                <span style={{backgroundColor:'gray' , border:'1px solid gray', padding:'5px' , margin:'5px' , color:'white' , fontSize:'20px'}}>ADD FIELD ACTIVITY</span>
+                            <span style={{ backgroundColor: 'gray', border: '1px solid gray', padding: '5px', margin: '5px', color: 'white', fontSize: '20px' }}>ADD FIELD ACTIVITY</span>
                         </ListItem>
                         <ListItem key="1">
                             <FormControl className={classes.formControl}>

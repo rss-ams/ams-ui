@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -10,7 +10,8 @@ import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import TextField from '@material-ui/core/TextField';
-import Button from  '@material-ui/core/Button';
+import Button from '@material-ui/core/Button';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -28,7 +29,9 @@ function AddFarm() {
     const classes = useStyles();
     const [locality, setLocality] = React.useState('');
     const [fieldId, setFieldId] = React.useState('');
-    const [area , setArea]= React.useState('');
+    const [area, setArea] = React.useState('');
+    const [fieldName, setFieldName] = useState('');
+
     const handleTextChange = ({ target }) => {
         const { name, value } = target;
         if (name === 'fieldId') {
@@ -37,24 +40,39 @@ function AddFarm() {
         else if (name === 'area') {
             setArea(value)
         }
+        
     }
 
 
     const handleCLick = () => {
-        console.log("locality,fieldId,cropSeason,activity" + locality, fieldId)
 
+        axios({
+            url: `http://localhost:8080/api/fields`,
+            method: 'POST',
+            data: {
+                name:fieldId,
+                identifier:fieldId,
+                location:locality
+            },
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then((r) => {
+            console.log("Field saved..."+JSON.stringify(r.data))
+        })
+            .catch(() => {
+                console.log('Internal server error');
+            });
     }
 
 
     const handleChange = ({ target }) => {
-        console.log("locality,fieldId,cropSeason,activity" + locality, fieldId)
+
         const { name, value } = target;
         if (name === 'locality') {
             setLocality(value)
         }
-        
 
-        console.log("after: locality,fieldId,cropSeason,activity" + locality, fieldId)
     };
 
     return (
@@ -88,28 +106,6 @@ function AddFarm() {
                             </FormControl>
                         </ListItem>
 
-                        {/* <ListItem key="2">
-                            <FormControl className={classes.formControl}>
-                                <InputLabel id="fId-label">Field ID</InputLabel>
-                                <Select
-                                    id="fieldId"
-                                    name="fieldId"
-                                    value={fieldId}
-                                    onChange={handleChange}
-                                >
-                                    {
-                                        fieldIds.map((fieldId) => {
-                                            return (
-                                                <MenuItem key={fieldId} value={fieldId}>{fieldId}</MenuItem>
-                                            );
-
-                                        })
-                                    }
-                                </Select>
-                            </FormControl>
-                        </ListItem> */}
-
-
                         <ListItem>
                             <TextField id="fieldId" name="fieldId" onChange={handleTextChange} label="Field ID" />
                         </ListItem>
@@ -118,7 +114,7 @@ function AddFarm() {
                         </ListItem>
 
                         <ListItem key="5">
-                        <Button variant="outlined" color="primary" onClick={handleCLick}>ADD FIELD</Button>
+                            <Button variant="outlined" color="primary" onClick={handleCLick}>ADD FIELD</Button>
                         </ListItem>
                     </List>
                 </Grid>
