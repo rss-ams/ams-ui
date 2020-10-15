@@ -73,7 +73,7 @@ function FarmTimeline() {
 
                     <List component="nav" aria-label="secondary mailbox folders">
                         <ListItem>
-                            <span style={{ backgroundColor: 'gray', border: '1px solid gray', padding: '5px', margin: '5px', color: 'white', fontSize: '20px' }}> FARM TIMELINE</span>
+                            <span style={{ backgroundColor: 'white', border: '1px solid gray', padding: '5px', margin: '5px', color: 'gray', fontSize: '20px' }}> FARM TIMELINE</span>
                         </ListItem>
                         <ListItem key="1">
                             <FormControl className={classes.formControl}>

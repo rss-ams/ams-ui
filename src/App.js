@@ -1,21 +1,15 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import FieldsPage from "./Pages/FieldsPage"
-import MapsPage from "./Pages/MapsPage"
-import ActivityPage from "./Pages/ActivityPage"
-import AddFarm from "./Pages/AddFarm"
+import ApplnBar from "./components/ApplnBar"
+import SideMenu from "./components/SideMenu"
+
 function App() {
   return (
     <div className="App">
-      {/* <ApplnBar /> */}
-      {/* <FieldsPage /> */}
-      {/* <MapsPage /> */}
-
-      {/* <ActivityPage /> */}
-
-      <AddFarm />
-    </div> 
+      <ApplnBar />
+      <SideMenu />
+    </div>
   );
 }
 

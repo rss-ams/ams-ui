@@ -110,7 +110,7 @@ function FarmInfoPage() {
 
                     <List component="nav" aria-label="secondary mailbox folders">
                         <ListItem>
-                            <span style={{ backgroundColor: 'gray', border: '1px solid gray', padding: '5px', margin: '5px', color: 'white', fontSize: '20px' }}> FIELD INFO</span>
+                            <span style={{ backgroundColor: 'white', border: '1px solid gray', padding: '5px', margin: '5px', color: 'gray', fontSize: '20px' }}> FIELD INFO</span>
                         </ListItem>
                         <ListItem key="1">
                             <FormControl className={classes.formControl}>
@@ -167,7 +167,7 @@ function FarmInfoPage() {
 
             <Grid item xs={12}>
                 <Grid container justify="center" spacing={2}>
-                    <AppBar position="static">
+                    <AppBar  position="static" color="default">
                         <Tabs value={value} onChange={handleTabChange} aria-label="simple tabs example">
                             <Tab label="Info" {...a11yProps(0)} />
                             <Tab label="Upcoming" {...a11yProps(1)} />

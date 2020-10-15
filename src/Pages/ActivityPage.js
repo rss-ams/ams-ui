@@ -92,7 +92,7 @@ function ActivityPage() {
 
                     <List component="nav" aria-label="secondary mailbox folders">
                         <ListItem>
-                            <span style={{ backgroundColor: 'gray', border: '1px solid gray', padding: '5px', margin: '5px', color: 'white', fontSize: '20px' }}>ADD FIELD ACTIVITY</span>
+                            <span style={{ backgroundColor: 'white', border: '1px solid gray', padding: '5px', margin: '5px', color: 'gray', fontSize: '20px' }}>ADD FIELD ACTIVITY</span>
                         </ListItem>
                         <ListItem key="1">
                             <FormControl className={classes.formControl}>
