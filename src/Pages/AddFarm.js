@@ -4,7 +4,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import { fieldIds } from "../fieldIds"
 import { fieldsData } from '../fieldsData';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
@@ -83,7 +82,7 @@ function AddFarm() {
 
                     <List component="nav" aria-label="secondary mailbox folders">
                         <ListItem>
-                            <span style={{ backgroundColor: 'gray', border: '1px solid gray', padding: '5px', margin: '5px', color: 'white', fontSize: '20px' }}>ADD FIELD</span>
+                            <span style={{ backgroundColor: 'white', border: '1px solid gray', padding: '5px', margin: '5px', color: 'gray', fontSize: '20px' }}>ADD FIELD</span>
                         </ListItem>
                         <ListItem key="1">
                             <FormControl className={classes.formControl}>
