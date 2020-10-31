@@ -3,7 +3,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Steps to run
 1. install yarn if you dont have it (For Mac: `brew install yarn`)
 2. run `npm install` on the root
-3. run the app using: `yarn start`
+3. run the app using: `npm start`
 
 ## Available Scripts
 
