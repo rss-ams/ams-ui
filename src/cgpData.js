@@ -1,8 +1,5 @@
-export const cropGrowthProtocolData = [{
-    "id": 1,
-    "name": "ABC 12324234",
-    "season": "RABI",
-    "cropGrowthProtocol": {
+export const cropGrowthProtocolData = [
+    {
         "id": 1,
         "name": "Protocol 2",
         "description": "Test crop growth protocol two",
@@ -18,5 +15,4 @@ export const cropGrowthProtocolData = [{
             ]
         }
     }
-}
 ];

@@ -7,8 +7,8 @@ import ListItem from '@material-ui/core/ListItem';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
-import {seasonsData} from "../seasonData";
-import {cropGrowthProtocolData} from "../cgpData";
+import { seasonsData } from "../seasonData";
+import { cropGrowthProtocolData } from "../cgpData";
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
@@ -31,15 +31,16 @@ function AddCrop() {
 
     const [cropName, setCropName] = React.useState('');
     const [cropSeason, setCropSeason] = React.useState('');
-    const [cropGrowthProtocol, setCropGrowthProtocol] = useState({});
+    const [cropGrowthProtocol, setCropGrowthProtocol] = useState('');
+    const [cropGrowthProtocolObj, setCropGrowthProtocolObj] = useState({});
 
     const handleTextChange = ({ target }) => {
         const { name, value } = target;
         if (name === 'cropName') {
             setCropName(value)
         }
-        
-        
+
+
     }
 
     const handleChange = ({ target }) => {
@@ -49,9 +50,14 @@ function AddCrop() {
             setCropSeason(value)
         }
         else if (name === 'cgp') {
+            console.log(value)
             setCropGrowthProtocol(value)
+            const d1 = cropGrowthProtocolData.filter((d)=>{
+                return d.id === value
+            })
+            setCropGrowthProtocolObj(d1)
         }
-        
+
     };
 
     // {
@@ -81,21 +87,21 @@ function AddCrop() {
 
     const handleCLick = () => {
 
-        const payload= {
-            name:cropName,
-            season:cropSeason,
-            cropGrowthProtocol:{id:cropGrowthProtocol}
+        const payload = {
+            name: cropName,
+            season: cropSeason,
+            cropGrowthProtocol: { id: cropGrowthProtocol }
         };
         axios({
             url: `http://localhost:8080/api/crops`,
             method: 'POST',
-            data:payload,
+            data: payload,
 
             headers: {
                 'Content-Type': 'application/json'
             }
         }).then((r) => {
-            console.log("Crop saved..."+JSON.stringify(r.data))
+            console.log("Crop saved..." + JSON.stringify(r.data))
         })
             .catch(() => {
                 console.log('Internal server error');
@@ -113,7 +119,7 @@ function AddCrop() {
                         <ListItem>
                             <span style={{ backgroundColor: 'white', border: '1px solid gray', padding: '5px', margin: '5px', color: 'gray', fontSize: '20px' }}>ADD CROP</span>
                         </ListItem>
-                       
+
                         <ListItem>
                             <TextField id="cropName" name="cropName" onChange={handleTextChange} label="Name" />
                         </ListItem>
@@ -159,7 +165,7 @@ function AddCrop() {
                                 </Select>
                             </FormControl>
                         </ListItem>
-
+                        {/* <span>{JSON.stringify(cropGrowthProtocolObj)}</span> */}
 
                         <ListItem key="5">
                             <Button variant="outlined" color="primary" onClick={handleCLick}>ADD CROP</Button>
