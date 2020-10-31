@@ -1,5 +1,10 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Steps to run
+1. install yarn if you dont have it (For Mac: `brew install yarn`)
+2. run `npm install` on the root
+3. run the app using: `npm start`
+
 ## Available Scripts
 
 In the project directory, you can run:
