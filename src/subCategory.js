@@ -1,0 +1,21 @@
+export const subCategory = [
+    'Land Leveling',
+    'Ploughing',
+    'Harrowing',
+    'Manuring',
+    'Irrigation',
+    'Cultivation/Paata',
+    'Seed A, B, C, D',
+    'Seed treatment',
+    'Seeding',
+    'Fertigation',
+    'Seed treatment',
+    'Seeding',
+    'Fertigation',
+    'Cutting',
+    'Plucking',
+    'Threshing',
+    'Cleaning',
+    'Hauling',
+    'Stacking/Pilling & Bagging'
+];

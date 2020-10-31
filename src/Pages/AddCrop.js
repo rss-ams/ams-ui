@@ -12,6 +12,7 @@ import { cropGrowthProtocolData } from "../cgpData";
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import Success from "../components/common/Success"
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -34,6 +35,8 @@ function AddCrop() {
     const [cropGrowthProtocol, setCropGrowthProtocol] = useState('');
     const [cropGrowthProtocolObj, setCropGrowthProtocolObj] = useState({});
 
+    const [showSuccess, setShowSuccess] = useState(false);
+
     const handleTextChange = ({ target }) => {
         const { name, value } = target;
         if (name === 'cropName') {
@@ -52,7 +55,7 @@ function AddCrop() {
         else if (name === 'cgp') {
             console.log(value)
             setCropGrowthProtocol(value)
-            const d1 = cropGrowthProtocolData.filter((d)=>{
+            const d1 = cropGrowthProtocolData.filter((d) => {
                 return d.id === value
             })
             setCropGrowthProtocolObj(d1)
@@ -102,6 +105,18 @@ function AddCrop() {
             }
         }).then((r) => {
             console.log("Crop saved..." + JSON.stringify(r.data))
+            
+
+            setShowSuccess(true)
+            setTimeout(() => {
+                document.getElementById('cropName').value = '';
+                document.getElementById('season').value = ''
+                document.getElementById('cgp').innerHTML = ''
+                setShowSuccess(false)
+            }, 3000)
+
+
+
         })
             .catch(() => {
                 console.log('Internal server error');
@@ -110,73 +125,77 @@ function AddCrop() {
 
 
     return (
+        <div>
+            {
+                showSuccess ?
+                    <Success /> : null
+            }
+            <Grid container className={classes.root} spacing={2}>
+                <Grid item xs={12}>
+                    <Grid container justify="center" spacing={2}>
 
-        <Grid container className={classes.root} spacing={2}>
-            <Grid item xs={12}>
-                <Grid container justify="center" spacing={2}>
+                        <List component="nav" aria-label="secondary mailbox folders">
+                            <ListItem>
+                                <span style={{ backgroundColor: 'white', border: '1px solid gray', padding: '5px', margin: '5px', color: 'gray', fontSize: '20px' }}>ADD CROP</span>
+                            </ListItem>
 
-                    <List component="nav" aria-label="secondary mailbox folders">
-                        <ListItem>
-                            <span style={{ backgroundColor: 'white', border: '1px solid gray', padding: '5px', margin: '5px', color: 'gray', fontSize: '20px' }}>ADD CROP</span>
-                        </ListItem>
+                            <ListItem>
+                                <TextField id="cropName" name="cropName" onChange={handleTextChange} label="Name" />
+                            </ListItem>
 
-                        <ListItem>
-                            <TextField id="cropName" name="cropName" onChange={handleTextChange} label="Name" />
-                        </ListItem>
+                            <ListItem key="1">
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel id="season-label">Season</InputLabel>
+                                    <Select
+                                        id="season"
+                                        name="season"
+                                        value={cropSeason}
+                                        onChange={handleChange}
+                                    >
+                                        {
+                                            seasonsData.map((seasonData) => {
+                                                return (
+                                                    <MenuItem key={seasonData} value={seasonData}>{seasonData}</MenuItem>
+                                                );
 
-                        <ListItem key="1">
-                            <FormControl className={classes.formControl}>
-                                <InputLabel id="season-label">Season</InputLabel>
-                                <Select
-                                    id="season"
-                                    name="season"
-                                    value={cropSeason}
-                                    onChange={handleChange}
-                                >
-                                    {
-                                        seasonsData.map((seasonData) => {
-                                            return (
-                                                <MenuItem key={seasonData} value={seasonData}>{seasonData}</MenuItem>
-                                            );
+                                            })
+                                        }
+                                    </Select>
+                                </FormControl>
+                            </ListItem>
 
-                                        })
-                                    }
-                                </Select>
-                            </FormControl>
-                        </ListItem>
+                            <ListItem key="2">
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel id="cgp-label">Crop Growth Protocol</InputLabel>
+                                    <Select
+                                        id="cgp"
+                                        name="cgp"
+                                        value={cropGrowthProtocol}
+                                        onChange={handleChange}
+                                    >
+                                        {
+                                            cropGrowthProtocolData.map((cgpData) => {
+                                                return (
+                                                    <MenuItem key={cgpData.id} value={cgpData.id}>{cgpData.id}</MenuItem>
+                                                );
 
-                        <ListItem key="2">
-                            <FormControl className={classes.formControl}>
-                                <InputLabel id="cgp-label">Crop Growth Protocol</InputLabel>
-                                <Select
-                                    id="cgp"
-                                    name="cgp"
-                                    value={cropGrowthProtocol}
-                                    onChange={handleChange}
-                                >
-                                    {
-                                        cropGrowthProtocolData.map((cgpData) => {
-                                            return (
-                                                <MenuItem key={cgpData.id} value={cgpData.id}>{cgpData.id}</MenuItem>
-                                            );
+                                            })
+                                        }
+                                    </Select>
+                                </FormControl>
+                            </ListItem>
+                            <span>{JSON.stringify(cropGrowthProtocolObj)}</span>
 
-                                        })
-                                    }
-                                </Select>
-                            </FormControl>
-                        </ListItem>
-                        {/* <span>{JSON.stringify(cropGrowthProtocolObj)}</span> */}
-
-                        <ListItem key="5">
-                            <Button variant="outlined" color="primary" onClick={handleCLick}>ADD CROP</Button>
-                        </ListItem>
-                    </List>
+                            <ListItem key="5">
+                                <Button variant="outlined" color="primary" onClick={handleCLick}>SUBMIT</Button>
+                            </ListItem>
+                        </List>
+                    </Grid>
                 </Grid>
+
             </Grid>
 
-        </Grid>
-
-
+        </div>
     )
 }
 

@@ -1,11 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import { fieldIds } from "../fieldIds"
-import { fieldsData } from '../fieldsData';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -19,6 +17,9 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
+import { getAllFields } from '../components/utilities/fieldUtil'
+import {getAllLocalities} from '../components/utilities/locationUtil'
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
+
 
     return (
         <div
@@ -70,6 +72,21 @@ function a11yProps(index) {
 }
 
 function FarmInfoPage() {
+
+    const [fields, setFields] = useState([]);
+    const [locationsDataFromServer, setLocationsDataFromServer] = useState([])
+
+    getAllFields().then(function (d) {
+        d.json().then(function (data) {
+            setFields(data.content)
+        })
+    })
+
+    getAllLocalities().then((locationsData)=>{
+        locationsData.json().then((allLocations)=>{
+            setLocationsDataFromServer(allLocations)
+        })
+    })
 
     const classes = useStyles();
     const [locality, setLocality] = React.useState('');
@@ -122,9 +139,9 @@ function FarmInfoPage() {
                                     onChange={handleChange}
                                 >
                                     {
-                                        fieldsData.map((fieldData) => {
+                                        locationsDataFromServer.map((locationDataFromServer) => {
                                             return (
-                                                <MenuItem key={fieldData} value={fieldData}>{fieldData}</MenuItem>
+                                                <MenuItem key={locationDataFromServer.code} value={locationDataFromServer.code}>{locationDataFromServer.displayStr}</MenuItem>
                                             );
 
                                         })
@@ -143,9 +160,9 @@ function FarmInfoPage() {
                                     onChange={handleChange}
                                 >
                                     {
-                                        fieldIds.map((fieldId) => {
+                                        fields.map((field) => {
                                             return (
-                                                <MenuItem key={fieldId} value={fieldId}>{fieldId}</MenuItem>
+                                                <MenuItem key={field.identifier} value={field.identifier}>{field.identifier}</MenuItem>
                                             );
 
                                         })
@@ -159,7 +176,7 @@ function FarmInfoPage() {
                         <ListItem key="5">
 
                             <Button variant="outlined" color="primary" onClick={handleCLick}>FETCH</Button>
-                            <Button variant="outlined" color="primary" onClick={handleCLick}>ADD ACTIVITY</Button>
+                            <Button variant="outlined" color="primary" onClick={handleCLick}>SUBMIT </Button>
                         </ListItem>
                     </List>
                 </Grid>
@@ -167,7 +184,7 @@ function FarmInfoPage() {
 
             <Grid item xs={12}>
                 <Grid container justify="center" spacing={2}>
-                    <AppBar  position="static" color="default">
+                    <AppBar position="static" color="default">
                         <Tabs value={value} onChange={handleTabChange} aria-label="simple tabs example">
                             <Tab label="Info" {...a11yProps(0)} />
                             <Tab label="Upcoming" {...a11yProps(1)} />
@@ -178,7 +195,7 @@ function FarmInfoPage() {
                         <FarmInfoTable />
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                       <FieldInfoTable2 />
+                        <FieldInfoTable2 />
                     </TabPanel>
                     <TabPanel value={value} index={2}>
                         <FieldInfoTable3 />

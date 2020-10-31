@@ -1,4 +1,4 @@
 export const cropSeasons = [
-    'Rabi',
-    'Kharif'
+    'crop1',
+    'crop2'
 ]

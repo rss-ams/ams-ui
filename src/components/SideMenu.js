@@ -77,7 +77,7 @@ export default function SideMenu() {
                 aria-label="Agri Tabs"
                 className={classes.tabs}
             >
-                <Tab label="FARM" {...a11yProps(0)} />
+                <Tab label="FIELD" {...a11yProps(0)} />
                 <Tab label="ACTIVITY" {...a11yProps(1)} />
                 <Tab label="CROP" {...a11yProps(2)} />
                 <Tab label="VEHICLE" {...a11yProps(3)} />
