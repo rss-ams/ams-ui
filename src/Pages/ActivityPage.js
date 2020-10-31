@@ -62,7 +62,8 @@ function ActivityPage() {
     const [selectedGrowth, setSelectedGrowth] = useState('')
     const [selectedFlowering, setSelectedFlowering] = useState('')
     const [selectedInfestation, setSelectedInfestation] = useState('')
-    
+
+    const [allMainActivityArr, setAllMainActivityArr] = useState([])
 
     const handleCLick = () => {
         console.log("locality,fieldId,cropSeason,activity" + locality, fieldId, cropSeason, activity)
@@ -77,8 +78,23 @@ function ActivityPage() {
         })
     }
 
+    const getActivityDataFromServer = () => {
+        let mainActivityArr = []
+        fetch('http://localhost:8080/api/fieldCropCycles/processCategories').then((activityResponse) => {
+            activityResponse.json().then((activityResponseData) => {
+                activityResponseData.map((eachActivityResponseData) => {
+                    let mainActivity = activityResponseData.displayStr
+                    mainActivityArr.push(eachActivityResponseData)
+
+                })
+            })
+        })
+        console.log(mainActivityArr)
+        setAllMainActivityArr(mainActivityArr)
+    }
     useEffect(() => {
         getAllFieldLocations();
+        getActivityDataFromServer();
     }, [])
 
     const handleStartDateChange = (date) => {
@@ -128,19 +144,19 @@ function ActivityPage() {
             setLocality(value)
             getAllFieldIds(value)
         }
-        else if(name === 'germination'){
+        else if (name === 'germination') {
             setSelectedGermination(value)
         }
 
-        else if(name === 'growth'){
+        else if (name === 'growth') {
             setSelectedGrowth(value)
         }
 
-        else if(name === 'flowering'){
+        else if (name === 'flowering') {
             setSelectedFlowering(value)
         }
 
-        else if(name === 'infestation'){
+        else if (name === 'infestation') {
             setSelectedInfestation(value)
         }
 
@@ -180,6 +196,15 @@ function ActivityPage() {
 
     const handleAddActivity = () => {
         console.log(locality, fieldId, displayCropId, activity, selectedSubActivity, status, comment, selectedDate, selectedEndDate)
+
+        // {
+        //     "processName": 4,
+        //     "processStatus": 1,
+        //     "season": "RABI",
+        //     "fieldCropCycle": {"id": 1},
+        //     "startDueDate": 109809,
+        //     "endDueDate": 7686987
+        // }
 
     }
 
@@ -276,7 +301,7 @@ function ActivityPage() {
                                                 onChange={handleChange}
                                             >
                                                 {
-                                                    activityData.map((activity) => {
+                                                    allMainActivityArr.map((activity) => {
                                                         return (
                                                             <MenuItem key={activity} value={activity}>{activity}</MenuItem>
                                                         );
