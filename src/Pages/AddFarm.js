@@ -4,13 +4,13 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import { fieldsData } from '../fieldsData';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
+import Success from "../components/common/Success"
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -31,24 +31,38 @@ function AddFarm() {
     const [area, setArea] = React.useState('');
     const [fieldName, setFieldName] = useState('');
     const [allfields, setAllfields] = useState([]);
+    const [showSuccess, setShowSuccess] = useState(false);
+
+    const [locations, setLocations] = useState([])
 
     const getAllFields = () => {
         axios({
             url: `http://localhost:8080/api/fields`,
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': 'http://localhost:3000'
             }
         }).then((r) => {
-            console.log("Fields data..." + JSON.stringify(r.data.content))
+            console.log("%c Fields =>..." + JSON.stringify(r.data.content) , "color:yellow;background-color:blue;")
             setAllfields(r.data.content);
         })
             .catch(() => {
-                console.log('Internal server error');
+                console.log('%c Internal server error',"color:red;background-color:blue;");
             });
     }
 
+    const getAllFieldLocations = () => {
+        fetch('http://localhost:8080/api/fields/locations').then((locationsResponse) => {
+            locationsResponse.json().then((locationsData) => {
+                console.log(locationsData)
+                setLocations(locationsData)
+            })
+        })
+    }
+
     useEffect(() => {
+        getAllFieldLocations();
         getAllFields();
     }, [])
 
@@ -72,16 +86,23 @@ function AddFarm() {
                 'Content-Type': 'application/json'
             }
         }).then((r) => {
-            console.log("Field saved..." + JSON.stringify(r.data))
+            console.log("%c Field saved ..." + JSON.stringify(r.data) , 'color:green;background-color:gray;')
+            setShowSuccess(true)
+            setTimeout(() => {
+                document.getElementById('fieldId').value = '';
+                document.getElementById('area').value = ''
+                document.getElementById('locality').innerHTML = ''
+                setShowSuccess(false)
+            }, 3000)
+
             getAllFields();
         })
             .catch(() => {
-                console.log('Internal server error');
+                console.log('%c Internal server error', "color:red ; background-color:gray;");
             });
     }
 
     const handleCLick = () => {
-
         const payload = {
             name: fieldId,
             identifier: fieldId,
@@ -100,6 +121,10 @@ function AddFarm() {
 
     return (
         <div>
+            {
+                showSuccess ?
+                    <Success /> : null
+            }
             <Grid container className={classes.root} spacing={2}>
                 <Grid item xs={12}>
                     <Grid container justify="center" spacing={2}>
@@ -117,9 +142,9 @@ function AddFarm() {
                                         onChange={handleChange}
                                     >
                                         {
-                                            fieldsData.map((fieldData) => {
+                                            locations.map((location) => {
                                                 return (
-                                                    <MenuItem key={fieldData} value={fieldData}>{fieldData}</MenuItem>
+                                                    <MenuItem key={location.code} value={location.code}>{location.displayStr}</MenuItem>
                                                 );
 
                                             })
@@ -132,23 +157,23 @@ function AddFarm() {
                                 <TextField id="fieldId" name="fieldId" onChange={handleTextChange} label="Field ID" />
                             </ListItem>
                             <ListItem>
-                                <TextField id="Area" name="area" onChange={handleTextChange} label="Area" />
+                                <TextField id="area" name="area" onChange={handleTextChange} label="Area" />
                             </ListItem>
 
                             <ListItem key="5">
-                                <Button variant="outlined" color="primary" onClick={handleCLick}>ADD FIELD</Button>
+                                <Button variant="outlined" color="primary" onClick={handleCLick}>Submit</Button>
                             </ListItem>
                         </List>
                     </Grid>
                 </Grid>
             </Grid>
 
-            <div>
+            <div style={{ marginLeft: '115px' }}>
                 {
 
                     allfields.map((field) => {
                         return (
-                            <div style={{backgroundColor:'gray' , color:'white', textAlign:'left' , padding:'5px' , width:'100px'}} key={field.id}>
+                            <div style={{ backgroundColor: 'gray', color: 'white', textAlign: 'left', padding: '5px', width: '100px' }} key={field.id}>
                                 <span>{field.identifier} - {field.area}</span>
                                 <br />
                             </div>
