@@ -4,9 +4,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import { fieldIds } from "../fieldIds"
-import { fieldsData } from '../fieldsData';
-import { cropSeasons } from "../CropSeason";
 import { activityData } from "../ActivityData";
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
@@ -59,6 +56,14 @@ function ActivityPage() {
 
     const [comment, setComment] = useState('')
 
+    const [selectedInspectionDate, setSelectedInspectionDate] = React.useState(new Date('2014-08-18T21:11:54'));
+
+    const [selectedGermination, setSelectedGermination] = useState('')
+    const [selectedGrowth, setSelectedGrowth] = useState('')
+    const [selectedFlowering, setSelectedFlowering] = useState('')
+    const [selectedInfestation, setSelectedInfestation] = useState('')
+    
+
     const handleCLick = () => {
         console.log("locality,fieldId,cropSeason,activity" + locality, fieldId, cropSeason, activity)
     }
@@ -78,12 +83,12 @@ function ActivityPage() {
 
     const handleStartDateChange = (date) => {
         setSelectedDate(date);
-        console.log(locality, fieldId, displayCropId, activity , selectedSubActivity , status , comment, selectedDate , selectedEndDate)
+        console.log(locality, fieldId, displayCropId, activity, selectedSubActivity, status, comment, selectedDate, selectedEndDate)
 
     };
     const handleEndateChange = (date) => {
         setselectedEndDate(date);
-        console.log(locality, fieldId, displayCropId, activity , selectedSubActivity , status , comment, selectedDate , selectedEndDate)
+        console.log(locality, fieldId, displayCropId, activity, selectedSubActivity, status, comment, selectedDate, selectedEndDate)
 
     };
 
@@ -117,18 +122,36 @@ function ActivityPage() {
     const handleChange = ({ target }) => {
 
         const { name, value } = target;
+
+
         if (name === 'locality') {
             setLocality(value)
             getAllFieldIds(value)
         }
+        else if(name === 'germination'){
+            setSelectedGermination(value)
+        }
+
+        else if(name === 'growth'){
+            setSelectedGrowth(value)
+        }
+
+        else if(name === 'flowering'){
+            setSelectedFlowering(value)
+        }
+
+        else if(name === 'infestation'){
+            setSelectedInfestation(value)
+        }
+
         else if (name === 'fieldId') {
             setFieldId(value);
-            let crops=[]
-            fields.map((field)=>{
+            let crops = []
+            fields.map((field) => {
                 if (field.identifier === value) {
-                    field.fieldCropCycles.map((fieldCropCycle)=>{
-                        let dispCrop = fieldCropCycle.crop.name+"-"+fieldCropCycle.season+"-"+fieldCropCycle.year;
-                        let dispCropObj = {id:fieldCropCycle.id , crop:dispCrop}
+                    field.fieldCropCycles.map((fieldCropCycle) => {
+                        let dispCrop = fieldCropCycle.crop.name + "-" + fieldCropCycle.season + "-" + fieldCropCycle.year;
+                        let dispCropObj = { id: fieldCropCycle.id, crop: dispCrop }
                         crops.push(dispCropObj)
                     })
                     setDisplayCrops(crops)
@@ -144,21 +167,30 @@ function ActivityPage() {
             setSubActivity(activityDataObj[value])
         }
 
-        else if(name === 'sub-category'){
+        else if (name === 'sub-category') {
             console.log(value)
             setSelectedSubActivity(value)
         }
-        else if(name === "statusData"){
+        else if (name === "statusData") {
             setStatus(value)
         }
-        console.log(locality, fieldId, displayCropId, activity , selectedSubActivity , status , comment, selectedDate , selectedEndDate)
+        console.log(locality, fieldId, displayCropId, activity, selectedSubActivity, status, comment, selectedDate, selectedEndDate)
     };
 
 
-    const handleAddActivity=()=>{
-        console.log(locality, fieldId, displayCropId, activity , selectedSubActivity , status , comment, selectedDate , selectedEndDate)
+    const handleAddActivity = () => {
+        console.log(locality, fieldId, displayCropId, activity, selectedSubActivity, status, comment, selectedDate, selectedEndDate)
 
     }
+
+    const handleInspectionDateChange = () => {
+
+    }
+
+    const handleAssigneeChange = () => {
+
+    }
+
     return (
 
         <Grid container className={classes.root} spacing={2}>
@@ -276,7 +308,7 @@ function ActivityPage() {
                                     </ListItem>
                                     <ListItem>
                                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                            <Grid container justify="space-around">
+                                            <Grid container>
                                                 <KeyboardDatePicker
                                                     disableToolbar
                                                     variant="inline"
@@ -298,7 +330,7 @@ function ActivityPage() {
 
                                     <ListItem>
                                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                            <Grid container justify="space-around">
+                                            <Grid container>
                                                 <KeyboardDatePicker
                                                     disableToolbar
                                                     variant="inline"
@@ -338,7 +370,7 @@ function ActivityPage() {
                                         </FormControl>
                                     </ListItem>
 
-                                    <ListItem>
+                                    <ListItem key="66">
                                         <TextField id="comment" name="comment" onChange={handleTextChange} label="Comment" />
                                     </ListItem>
 
@@ -357,6 +389,101 @@ function ActivityPage() {
                         {
                             showInspection ?
                                 <div>
+
+
+                                    <ListItem key="55">
+                                        <FormControl className={classes.formControl}>
+                                            <InputLabel id="ac-label">Germination</InputLabel>
+                                            <Select
+                                                id="germination"
+                                                name="germination"
+                                                value={selectedGermination}
+                                                onChange={handleChange}
+                                            >
+                                                <MenuItem key={"yes"} value={"yes"}>Yes</MenuItem>
+                                                <MenuItem key={"no"} value={"no"}>No</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </ListItem>
+
+                                    <ListItem key="56">
+                                        <FormControl className={classes.formControl}>
+                                            <InputLabel id="ac-label">Growth</InputLabel>
+                                            <Select
+                                                id="growth"
+                                                name="growth"
+                                                value={selectedGrowth}
+                                                onChange={handleChange}
+                                            >
+                                                <MenuItem key={"yes"} value={"yes"}>Yes</MenuItem>
+                                                <MenuItem key={"no"} value={"no"}>No</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </ListItem>
+
+
+                                    <ListItem key="57">
+                                        <FormControl className={classes.formControl}>
+                                            <InputLabel id="ac-label">Flowering</InputLabel>
+                                            <Select
+                                                id="flowering"
+                                                name="flowering"
+                                                value={selectedFlowering}
+                                                onChange={handleChange}
+                                            >
+                                                <MenuItem key={"yes"} value={"yes"}>Yes</MenuItem>
+                                                <MenuItem key={"no"} value={"no"}>No</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </ListItem>
+
+                                    <ListItem key="58">
+                                        <FormControl className={classes.formControl}>
+                                            <InputLabel id="ac-label">Infestation</InputLabel>
+                                            <Select
+                                                id="infestation"
+                                                name="infestation"
+                                                value={selectedInfestation}
+                                                onChange={handleChange}
+                                            >
+                                                <MenuItem key={"yes"} value={"yes"}>Yes</MenuItem>
+                                                <MenuItem key={"no"} value={"no"}>No</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </ListItem>
+
+
+
+                                    <ListItem>
+                                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                            <Grid container>
+                                                <KeyboardDatePicker
+                                                    disableToolbar
+                                                    variant="inline"
+                                                    format="MM/dd/yyyy"
+                                                    margin="normal"
+                                                    id="inspection-date"
+                                                    label="Date"
+                                                    value={selectedInspectionDate}
+                                                    onChange={handleInspectionDateChange}
+                                                    KeyboardButtonProps={{
+                                                        'aria-label': 'Date',
+                                                    }}
+                                                />
+
+                                            </Grid>
+                                        </MuiPickersUtilsProvider>
+                                    </ListItem>
+
+                                    <ListItem>
+                                        <TextField id="assignee" name="assignee" onChange={handleAssigneeChange} label="Assignee" />
+                                    </ListItem>
+
+
+
+                                    <ListItem key="100">
+                                        <Button variant="outlined" color="primary" onClick={handleCLick}>Add Inspection</Button>
+                                    </ListItem>
 
                                 </div>
                                 : null
