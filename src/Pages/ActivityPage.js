@@ -59,13 +59,6 @@ function ActivityPage() {
 
     const [comment, setComment] = useState('')
 
-    //not required
-    // getAllFields().then(function (d) {
-    //     d.json().then(function (data) {
-    //         setFields(data.content)
-    //     })
-    // })
-
     const handleCLick = () => {
         console.log("locality,fieldId,cropSeason,activity" + locality, fieldId, cropSeason, activity)
     }
@@ -126,45 +119,28 @@ function ActivityPage() {
         const { name, value } = target;
         if (name === 'locality') {
             setLocality(value)
-
             getAllFieldIds(value)
-            //fetch the field IDs
-
-            console.log(value)
         }
         else if (name === 'fieldId') {
-            console.log("selected field id is" + value)
             setFieldId(value);
             let crops=[]
             fields.map((field)=>{
                 if (field.identifier === value) {
-                    console.log("========***===========")
-                    console.log(field);
                     field.fieldCropCycles.map((fieldCropCycle)=>{
                         let dispCrop = fieldCropCycle.crop.name+"-"+fieldCropCycle.season+"-"+fieldCropCycle.year;
-                        console.log("dispCrop")
-                        console.log(dispCrop);
                         let dispCropObj = {id:fieldCropCycle.id , crop:dispCrop}
                         crops.push(dispCropObj)
                     })
-                    console.log("CROPS DROP DOWN")
-                    console.log(crops);
                     setDisplayCrops(crops)
                 }
-
             })
-            
-
-
         }
         else if (name === 'crop') {
-            // displayCrop
             setDisplayCrop(value);
             setDisplayCropId(value)
         }
         else if (name === 'activityData') {
             setActivity(value)
-
             setSubActivity(activityDataObj[value])
         }
 
