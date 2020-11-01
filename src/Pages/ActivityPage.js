@@ -19,6 +19,9 @@ import { getAllFields } from "../components/utilities/fieldUtil"
 import { statusData } from "../statusData";
 import { subCategory } from "../subCategory"
 import { activityDataObj } from "../activityDataObj"
+import moment from 'moment'
+import axios from 'axios'
+import Success from "../components/common/Success"
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -38,10 +41,9 @@ function ActivityPage() {
     const [cropSeason, setCropSeason] = React.useState('');
     const [activity, setActivity] = React.useState('');
     const [subCat, setSubCat] = useState('')
-    const [subActivity, setSubActivity] = useState([])
+    const [subActivityList, setSubActivityList] = useState([])
     const [status, setStatus] = React.useState('');
 
-    const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
     const [selectedEndDate, setselectedEndDate] = React.useState(new Date('2014-08-18T21:11:54'));
 
     const [displayCrops, setDisplayCrops] = useState([])
@@ -54,6 +56,8 @@ function ActivityPage() {
 
     const [selectedSubActivity, setSelectedSubActivity] = useState('')
 
+    const [selectedSubActivityValue, setSelectedSubActivityValue] = useState('')
+
     const [comment, setComment] = useState('')
 
     const [selectedInspectionDate, setSelectedInspectionDate] = React.useState(new Date('2014-08-18T21:11:54'));
@@ -64,6 +68,12 @@ function ActivityPage() {
     const [selectedInfestation, setSelectedInfestation] = useState('')
 
     const [allMainActivityArr, setAllMainActivityArr] = useState([])
+
+    const [currentSeason, setCurrentSeason] = useState('')
+
+    const [processName, setProcessName] = useState(0);
+
+    const [showSuccess, setShowSuccess] = useState(false);
 
     const handleCLick = () => {
         console.log("locality,fieldId,cropSeason,activity" + locality, fieldId, cropSeason, activity)
@@ -80,11 +90,13 @@ function ActivityPage() {
 
     const getActivityDataFromServer = () => {
         let mainActivityArr = []
+        let mainActivity = ''
         fetch('http://localhost:8080/api/fieldCropCycles/processCategories').then((activityResponse) => {
             activityResponse.json().then((activityResponseData) => {
                 activityResponseData.map((eachActivityResponseData) => {
-                    let mainActivity = activityResponseData.displayStr
-                    mainActivityArr.push(eachActivityResponseData)
+                    console.log(eachActivityResponseData)
+                    mainActivity = eachActivityResponseData
+                    mainActivityArr.push(mainActivity)
 
                 })
             })
@@ -167,7 +179,7 @@ function ActivityPage() {
                 if (field.identifier === value) {
                     field.fieldCropCycles.map((fieldCropCycle) => {
                         let dispCrop = fieldCropCycle.crop.name + "-" + fieldCropCycle.season + "-" + fieldCropCycle.year;
-                        let dispCropObj = { id: fieldCropCycle.id, crop: dispCrop }
+                        let dispCropObj = { id: fieldCropCycle.id, crop: dispCrop, season: fieldCropCycle.season }
                         crops.push(dispCropObj)
                     })
                     setDisplayCrops(crops)
@@ -175,17 +187,25 @@ function ActivityPage() {
             })
         }
         else if (name === 'crop') {
+            console.log(value)
             setDisplayCrop(value);
-            setDisplayCropId(value)
+            setDisplayCropId(value.id);
+            setCurrentSeason(value.season)
+
         }
         else if (name === 'activityData') {
+            console.log(value)
             setActivity(value)
-            setSubActivity(activityDataObj[value])
+            setSubActivityList(value.processNames)
         }
 
-        else if (name === 'sub-category') {
+        else if (name === 'sub-activity') {
             console.log(value)
-            setSelectedSubActivity(value)
+            console.log(value.displayStr)
+            // setSelectedSubActivity(value.displayStr)
+            setSelectedSubActivityValue(value.displayStr)
+            setProcessName(value.code)
+            // console.log("processName"+value.code)
         }
         else if (name === "statusData") {
             setStatus(value)
@@ -195,147 +215,202 @@ function ActivityPage() {
 
 
     const handleAddActivity = () => {
-        console.log(locality, fieldId, displayCropId, activity, selectedSubActivity, status, comment, selectedDate, selectedEndDate)
+        // console.log(locality, fieldId, displayCropId, activity, selectedSubActivity, status, comment, selectedDate, selectedEndDate)
 
         // {
-        //     "processName": 4,
+        //     "processName": 4,d
         //     "processStatus": 1,
-        //     "season": "RABI",
-        //     "fieldCropCycle": {"id": 1},
+        //     "season": "RABI",d
+        //     "fieldCropCycle": {"id": 1},d
         //     "startDueDate": 109809,
         //     "endDueDate": 7686987
         // }
 
+        console.log(processName, currentSeason, displayCropId, selectedDate)
+
+        const payload = {
+            processName: processName,
+            processStatus: 1,
+            season: currentSeason,
+            fieldCropCycle: { id: displayCropId },
+            startDueDate: displaySelectedDate,
+            endDueDate: selectedDate
+        }
+
+        console.log(payload)
+
+        axios({
+            url: `http://localhost:8080/api/fieldCropCycles/${displayCropId}/processes`,
+            method: 'POST',
+            data: payload,
+
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then((r) => {
+            console.log("Crop process cycle saved..." + JSON.stringify(r.data))
+            alert("success")
+            setShowSuccess(true)
+            setTimeout(() => {
+                setShowSuccess(false)
+            }, 3000)
+
+
+
+        })
+            .catch(() => {
+                console.log('Internal server error');
+            });
+
+
     }
 
-    const handleInspectionDateChange = () => {
-
+    const handleInspectionDateChange = (d) => {
+        console.log(d)
     }
 
     const handleAssigneeChange = () => {
 
     }
 
+    const [selectedDate, setSelectedDate] = React.useState(new Date());
+    const [displaySelectedDate, setDisplaySelectedDate] = useState(new Date())
+
+    const handleDateChange = (date) => {
+        setSelectedDate(date);
+        setDisplaySelectedDate(moment(date).format('MMDDYYYY'));
+    };
+
     return (
+        <div>
+            {
+                showSuccess ?
+                    <Success /> : null
+            }
 
-        <Grid container className={classes.root} spacing={2}>
-            <Grid item xs={12}>
-                <Grid container justify="center" spacing={2}>
 
-                    <List component="nav" aria-label="secondary mailbox folders">
-                        <ListItem>
-                            <span style={{ backgroundColor: 'white', border: '1px solid gray', padding: '5px', margin: '5px', color: 'gray', fontSize: '20px' }}>ADD FIELD ACTIVITY | INSPECTION</span>
-                        </ListItem>
-                        <ListItem key="1">
-                            <FormControl className={classes.formControl}>
-                                <InputLabel id="locality-label">Locality</InputLabel>
-                                <Select
-                                    id="locality"
-                                    name="locality"
-                                    value={locality}
-                                    onChange={handleChange}
-                                >
-                                    {
-                                        locations.map((fieldLocation) => {
-                                            return (
-                                                <MenuItem key={fieldLocation.code} value={fieldLocation.code}>{fieldLocation.displayStr}</MenuItem>
-                                            );
+            <Grid container className={classes.root} spacing={2}>
+                <Grid item xs={12}>
+                    <Grid container justify="center" spacing={2}>
 
-                                        })
-                                    }
-                                </Select>
-                            </FormControl>
-                        </ListItem>
+                        <List component="nav" aria-label="secondary mailbox folders">
+                            <ListItem>
+                                <span style={{ backgroundColor: 'white', border: '1px solid gray', padding: '5px', margin: '5px', color: 'gray', fontSize: '20px' }}>ADD FIELD ACTIVITY | INSPECTION</span>
+                            </ListItem>
+                            <ListItem key="1">
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel id="locality-label">Locality</InputLabel>
+                                    <Select
+                                        id="locality"
+                                        name="locality"
+                                        value={locality}
+                                        onChange={handleChange}
+                                    >
+                                        {
+                                            locations.map((fieldLocation) => {
+                                                return (
+                                                    <MenuItem key={fieldLocation.displayStr} value={fieldLocation.code}>{fieldLocation.displayStr}</MenuItem>
+                                                );
 
-                        <ListItem key="2">
-                            <FormControl className={classes.formControl}>
-                                <InputLabel id="fId-label">Field ID</InputLabel>
-                                <Select
-                                    id="fieldId"
-                                    name="fieldId"
-                                    value={fieldId}
-                                    onChange={handleChange}
-                                >
-                                    {
-                                        fields.map((field) => {
-                                            return (
-                                                <MenuItem key={field.identifier} value={field.identifier}>{field.identifier}</MenuItem>
-                                            );
+                                            })
+                                        }
+                                    </Select>
+                                </FormControl>
+                            </ListItem>
 
-                                        })
-                                    }
-                                </Select>
-                            </FormControl>
-                        </ListItem>
+                            <ListItem key="2">
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel id="fId-label">Field ID</InputLabel>
+                                    <Select
+                                        id="fieldId"
+                                        name="fieldId"
+                                        value={fieldId}
+                                        onChange={handleChange}
+                                    >
+                                        {
+                                            fields.map((field) => {
+                                                return (
+                                                    <MenuItem key={field.identifier} value={field.identifier}>{field.identifier}</MenuItem>
+                                                );
 
-                        {
-                            showActivity ?
-                                <div>
-                                    <ListItem key="3">
-                                        <FormControl className={classes.formControl}>
-                                            <InputLabel id="cs-label">Crop</InputLabel>
-                                            <Select
-                                                id="crop"
-                                                name="crop"
-                                                value={displayCrop}
-                                                onChange={handleChange}
-                                            >
-                                                {
-                                                    displayCrops.map((displayedCrop) => {
-                                                        return (
-                                                            <MenuItem key={displayedCrop.id} value={displayedCrop.id}>{displayedCrop.crop}</MenuItem>
-                                                        );
+                                            })
+                                        }
+                                    </Select>
+                                </FormControl>
+                            </ListItem>
 
-                                                    })
-                                                }
-                                            </Select>
-                                        </FormControl>
-                                    </ListItem>
-                                    <ListItem key="4">
-                                        <FormControl className={classes.formControl}>
-                                            <InputLabel id="ac-label">Activity type</InputLabel>
-                                            <Select
-                                                id="activityData"
-                                                name="activityData"
-                                                value={activity}
-                                                onChange={handleChange}
-                                            >
-                                                {
-                                                    allMainActivityArr.map((activity) => {
-                                                        return (
-                                                            <MenuItem key={activity} value={activity}>{activity}</MenuItem>
-                                                        );
+                            {
+                                showActivity ?
+                                    <div>
+                                        <ListItem key="3">
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel id="cs-label">Crop</InputLabel>
+                                                <Select
+                                                    id="crop"
+                                                    name="crop"
+                                                    value={displayCrop}
+                                                    onChange={handleChange}
+                                                >
+                                                    {
+                                                        displayCrops.map((displayedCrop) => {
+                                                            return (
+                                                                <MenuItem key={displayedCrop} value={displayedCrop}>{displayedCrop.crop}</MenuItem>
+                                                            );
 
-                                                    })
-                                                }
-                                            </Select>
-                                        </FormControl>
-                                    </ListItem>
-                                    <ListItem key="5">
-                                        <FormControl className={classes.formControl}>
-                                            <InputLabel id="ac-label">Sub activity</InputLabel>
-                                            <Select
-                                                id="sub-category"
-                                                name="sub-category"
-                                                value={selectedSubActivity}
-                                                onChange={handleChange}
-                                            >
-                                                {
-                                                    subActivity.map((subCat) => {
-                                                        return (
-                                                            <MenuItem key={subCat} value={subCat}>{subCat}</MenuItem>
-                                                        );
+                                                        })
+                                                    }
+                                                </Select>
+                                            </FormControl>
+                                        </ListItem>
+                                        <ListItem key="4">
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel id="ac-label">Activity type</InputLabel>
+                                                <Select
+                                                    id="activityData"
+                                                    name="activityData"
+                                                    value={activity}
+                                                    onChange={handleChange}
+                                                >
+                                                    {
+                                                        allMainActivityArr.map((activity) => {
+                                                            return (
+                                                                <MenuItem key={activity.displayStr} value={activity}>{activity.displayStr}</MenuItem>
+                                                            );
 
-                                                    })
-                                                }
-                                            </Select>
-                                        </FormControl>
-                                    </ListItem>
-                                    <ListItem>
+                                                        })
+                                                    }
+                                                </Select>
+                                            </FormControl>
+                                        </ListItem>
+                                        <ListItem key="568">
+                                            {selectedSubActivityValue}
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel id="ac-label">Sub activity</InputLabel>
+                                                <Select
+                                                    id="sub-category"
+                                                    name="sub-activity"
+                                                    value={selectedSubActivityValue}
+                                                    onChange={handleChange}
+                                                >
+                                                    {
+                                                        subActivityList.map((subActivity) => {
+                                                            return (
+                                                                <MenuItem key={subActivity.displayStr} value={subActivity}>{subActivity.displayStr}</MenuItem>
+                                                            );
+
+                                                        })
+                                                    }
+                                                </Select>
+                                            </FormControl>
+                                        </ListItem>
+                                        {/* <ListItem>
                                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                             <Grid container>
                                                 <KeyboardDatePicker
-                                                    disableToolbar
+
+                                                    margin="normal"
+                                                    id="date-picker-dialog"
+                                                    label="Date picker dialog"
                                                     variant="inline"
                                                     format="MM/dd/yyyy"
                                                     margin="normal"
@@ -350,10 +425,10 @@ function ActivityPage() {
 
                                             </Grid>
                                         </MuiPickersUtilsProvider>
-                                    </ListItem>
+                                    </ListItem> */}
 
 
-                                    <ListItem>
+                                        {/* <ListItem>
                                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                             <Grid container>
                                                 <KeyboardDatePicker
@@ -372,162 +447,203 @@ function ActivityPage() {
 
                                             </Grid>
                                         </MuiPickersUtilsProvider>
-                                    </ListItem>
-
-                                    <ListItem>
-                                        <FormControl className={classes.formControl}>
-                                            <InputLabel id="ac-label">Status</InputLabel>
-                                            <Select
-                                                id="statusData"
-                                                name="statusData"
-                                                value={status}
-                                                onChange={handleChange}
-                                            >
-                                                {
-                                                    statusData.map((status) => {
-                                                        return (
-                                                            <MenuItem key={status} value={status}>{status}</MenuItem>
-                                                        );
-
-                                                    })
-                                                }
-                                            </Select>
-                                        </FormControl>
-                                    </ListItem>
-
-                                    <ListItem key="66">
-                                        <TextField id="comment" name="comment" onChange={handleTextChange} label="Comment" />
-                                    </ListItem>
-
-                                    <ListItem key="6">
-                                        <Button variant="outlined" color="primary" onClick={handleAddActivity}>ADD/UPDATE</Button>
-                                    </ListItem>
-
-                                    <ListItem key="7">
-                                        <Button variant="outlined" color="primary" onClick={handleCLick}>SHOW MAP</Button>
-                                    </ListItem>
-
-                                </div> : null
-                        }
+                                    </ListItem> */}
 
 
-                        {
-                            showInspection ?
-                                <div>
+                                        <ListItem>
+                                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                                <Grid container>
+                                                    <KeyboardDatePicker
+                                                        margin="normal"
+                                                        id="start-date"
+                                                        label="Start date"
+                                                        format="MMddyyyy"
+                                                        value={selectedDate}
+                                                        onChange={handleDateChange}
+                                                        KeyboardButtonProps={{
+                                                            'aria-label': 'change date',
+                                                        }}
+                                                    />
+
+                                                </Grid>
+                                            </MuiPickersUtilsProvider>
+                                        </ListItem>
+
+                                        <ListItem>
+                                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                                <Grid container>
+                                                    <KeyboardDatePicker
+                                                        margin="normal"
+                                                        id="start-date"
+                                                        label="End date"
+                                                        format="MMddyyyy"
+                                                        value={selectedDate}
+                                                        onChange={handleDateChange}
+                                                        KeyboardButtonProps={{
+                                                            'aria-label': 'change date',
+                                                        }}
+                                                    />
+
+                                                </Grid>
+                                            </MuiPickersUtilsProvider>
+                                        </ListItem>
 
 
-                                    <ListItem key="55">
-                                        <FormControl className={classes.formControl}>
-                                            <InputLabel id="ac-label">Germination</InputLabel>
-                                            <Select
-                                                id="germination"
-                                                name="germination"
-                                                value={selectedGermination}
-                                                onChange={handleChange}
-                                            >
-                                                <MenuItem key={"yes"} value={"yes"}>Yes</MenuItem>
-                                                <MenuItem key={"no"} value={"no"}>No</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </ListItem>
+                                        <ListItem>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel id="ac-label">Status</InputLabel>
+                                                <Select
+                                                    id="statusData"
+                                                    name="statusData"
+                                                    value={status}
+                                                    onChange={handleChange}
+                                                >
+                                                    {
+                                                        statusData.map((status) => {
+                                                            return (
+                                                                <MenuItem key={status} value={status}>{status}</MenuItem>
+                                                            );
 
-                                    <ListItem key="56">
-                                        <FormControl className={classes.formControl}>
-                                            <InputLabel id="ac-label">Growth</InputLabel>
-                                            <Select
-                                                id="growth"
-                                                name="growth"
-                                                value={selectedGrowth}
-                                                onChange={handleChange}
-                                            >
-                                                <MenuItem key={"yes"} value={"yes"}>Yes</MenuItem>
-                                                <MenuItem key={"no"} value={"no"}>No</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </ListItem>
+                                                        })
+                                                    }
+                                                </Select>
+                                            </FormControl>
+                                        </ListItem>
 
+                                        {/* <ListItem key="66">
+                                            <TextField id="comment" name="comment" onChange={handleTextChange} label="Comment" />
+                                        </ListItem> */}
 
-                                    <ListItem key="57">
-                                        <FormControl className={classes.formControl}>
-                                            <InputLabel id="ac-label">Flowering</InputLabel>
-                                            <Select
-                                                id="flowering"
-                                                name="flowering"
-                                                value={selectedFlowering}
-                                                onChange={handleChange}
-                                            >
-                                                <MenuItem key={"yes"} value={"yes"}>Yes</MenuItem>
-                                                <MenuItem key={"no"} value={"no"}>No</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </ListItem>
+                                        <ListItem key="6">
+                                            <Button variant="outlined" color="primary" onClick={handleAddActivity}>ADD/UPDATE</Button>
+                                        </ListItem>
 
-                                    <ListItem key="58">
-                                        <FormControl className={classes.formControl}>
-                                            <InputLabel id="ac-label">Infestation</InputLabel>
-                                            <Select
-                                                id="infestation"
-                                                name="infestation"
-                                                value={selectedInfestation}
-                                                onChange={handleChange}
-                                            >
-                                                <MenuItem key={"yes"} value={"yes"}>Yes</MenuItem>
-                                                <MenuItem key={"no"} value={"no"}>No</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </ListItem>
+                                        <ListItem key="7">
+                                            <Button variant="outlined" color="primary" onClick={handleCLick}>SHOW MAP</Button>
+                                        </ListItem>
+
+                                    </div> : null
+                            }
 
 
-
-                                    <ListItem>
-                                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                            <Grid container>
-                                                <KeyboardDatePicker
-                                                    disableToolbar
-                                                    variant="inline"
-                                                    format="MM/dd/yyyy"
-                                                    margin="normal"
-                                                    id="inspection-date"
-                                                    label="Date"
-                                                    value={selectedInspectionDate}
-                                                    onChange={handleInspectionDateChange}
-                                                    KeyboardButtonProps={{
-                                                        'aria-label': 'Date',
-                                                    }}
-                                                />
-
-                                            </Grid>
-                                        </MuiPickersUtilsProvider>
-                                    </ListItem>
-
-                                    <ListItem>
-                                        <TextField id="assignee" name="assignee" onChange={handleAssigneeChange} label="Assignee" />
-                                    </ListItem>
+                            {
+                                showInspection ?
+                                    <div>
 
 
+                                        <ListItem key="55">
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel id="ac-label">Germination</InputLabel>
+                                                <Select
+                                                    id="germination"
+                                                    name="germination"
+                                                    value={selectedGermination}
+                                                    onChange={handleChange}
+                                                >
+                                                    <MenuItem key={"yes"} value={"yes"}>Yes</MenuItem>
+                                                    <MenuItem key={"no"} value={"no"}>No</MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </ListItem>
 
-                                    <ListItem key="100">
-                                        <Button variant="outlined" color="primary" onClick={handleCLick}>Add Inspection</Button>
-                                    </ListItem>
+                                        <ListItem key="56">
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel id="ac-label">Growth</InputLabel>
+                                                <Select
+                                                    id="growth"
+                                                    name="growth"
+                                                    value={selectedGrowth}
+                                                    onChange={handleChange}
+                                                >
+                                                    <MenuItem key={"yes"} value={"yes"}>Yes</MenuItem>
+                                                    <MenuItem key={"no"} value={"no"}>No</MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </ListItem>
 
-                                </div>
-                                : null
-                        }
 
+                                        <ListItem key="57">
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel id="ac-label">Flowering</InputLabel>
+                                                <Select
+                                                    id="flowering"
+                                                    name="flowering"
+                                                    value={selectedFlowering}
+                                                    onChange={handleChange}
+                                                >
+                                                    <MenuItem key={"yes"} value={"yes"}>Yes</MenuItem>
+                                                    <MenuItem key={"no"} value={"no"}>No</MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </ListItem>
 
-                        <Button onClick={showAddActivity}>Toggle Add Activity</Button>
-
-                        <Button onClick={showAddInspection}>Toggle Add Inspection</Button>
+                                        <ListItem key="58">
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel id="ac-label">Infestation</InputLabel>
+                                                <Select
+                                                    id="infestation"
+                                                    name="infestation"
+                                                    value={selectedInfestation}
+                                                    onChange={handleChange}
+                                                >
+                                                    <MenuItem key={"yes"} value={"yes"}>Yes</MenuItem>
+                                                    <MenuItem key={"no"} value={"no"}>No</MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </ListItem>
 
 
 
-                    </List>
+                                        <ListItem>
+                                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                                <Grid container>
+                                                    <KeyboardDatePicker
+                                                        disableToolbar
+                                                        variant="inline"
+                                                        format="MM/dd/yyyy"
+                                                        margin="normal"
+                                                        id="inspection-date"
+                                                        label="Date"
+                                                        value={selectedInspectionDate}
+                                                        formatDate={(date) => moment(new Date()).format('MMDDYYYY')}
+                                                        onChange={handleInspectionDateChange}
+                                                        KeyboardButtonProps={{
+                                                            'aria-label': 'Date',
+                                                        }}
+                                                    />
+
+                                                </Grid>
+                                            </MuiPickersUtilsProvider>
+                                        </ListItem>
+
+                                        <ListItem>
+                                            <TextField id="assignee" name="assignee" onChange={handleAssigneeChange} label="Assignee" />
+                                        </ListItem>
+
+
+
+                                        <ListItem key="100">
+                                            <Button variant="outlined" color="primary" onClick={handleCLick}>Add Inspection</Button>
+                                        </ListItem>
+
+                                    </div>
+                                    : null
+                            }
+
+
+                            <Button onClick={showAddActivity}>Toggle Add Activity</Button>
+
+                            <Button onClick={showAddInspection}>Toggle Add Inspection</Button>
+
+
+
+                        </List>
+                    </Grid>
                 </Grid>
+
             </Grid>
 
-        </Grid>
-
-
+        </div>
     )
 }
 
