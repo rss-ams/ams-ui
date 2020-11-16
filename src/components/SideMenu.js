@@ -5,10 +5,11 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import AddFarm from "../Pages/AddFarm"
-import AddVehicle from "../Pages/AddVehicle"
-import ActivityPage from "../Pages/ActivityPage"
-import DynamicTabs from "../components/DynamicTabs"
+import AddFarm from "../Pages/AddFarm";
+import AddVehicle from "../Pages/AddVehicle";
+import ActivityPage from "../Pages/ActivityPage";
+import AddCropCycle from "../Pages/AddCropCycle";
+import DynamicTabs from "../components/DynamicTabs";
 import FarmInfoPage from '../Pages/FarmInfoPage';
 import FarmTimeline from '../Pages/FarmTImeLine';
 import AddCrop from '../Pages/AddCrop';
@@ -78,24 +79,27 @@ export default function SideMenu() {
                 className={classes.tabs}
             >
                 <Tab label="FIELD" {...a11yProps(0)} />
-                <Tab label="ACTIVITY" {...a11yProps(1)} />
-                <Tab label="CROP" {...a11yProps(2)} />
-                <Tab label="VEHICLE" {...a11yProps(3)} />
+                <Tab label="CROP" {...a11yProps(1)} />
+                <Tab label="CROP CYCLE" {...a11yProps(2)} />
+                <Tab label="ACTIVITY" {...a11yProps(3)} />
+                <Tab label="VEHICLE" {...a11yProps(4)} />
 
             </Tabs>
             <TabPanel value={value} index={0}>
                 <DynamicTabs component1={<AddFarm />} component2={<FarmInfoPage />} component3={<FarmTimeline />} />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <ActivityPage />
-            </TabPanel>
-            <TabPanel value={value} index={2}>
                 <DynamicTabs component1={<AddCrop />} component2={"c2"} component3={"c3"} />
             </TabPanel>
+            <TabPanel value={value} index={2}>
+                <DynamicTabs component1={<AddCropCycle />} component2={"c2"} component3={"c3"} />
+            </TabPanel>
             <TabPanel value={value} index={3}>
+                <ActivityPage />
+            </TabPanel>
+            <TabPanel value={value} index={4}>
                 <AddVehicle />
             </TabPanel>
-
         </div>
     );
 }
