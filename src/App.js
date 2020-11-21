@@ -3,7 +3,6 @@ import logo from './logo.svg';
 import './App.css';
 import ApplnBar from "./components/ApplnBar";
 import SideMenu from "./components/SideMenu";
-import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
