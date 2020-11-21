@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AddCropCycle() {
+const AddCropCycle = () => {
   const classes = useStyles();
 
   const [crop, setCrop] = useState("");
@@ -94,11 +94,6 @@ function AddCropCycle() {
       setCropSeason(value);
     } else if (name === "crop") {
       setCrop(value);
-    } else if (name === "fields") {
-      // var newValue = [];
-      // for (var i = 0; i < value.length; i++) {
-      //   newValue.push({id: i})
-      // }
     } else {
       console.log("handleChange on invalid target!");
     }
@@ -181,7 +176,6 @@ function AddCropCycle() {
                     fontSize: "20px",
                   }}
                 >
-                  {" "}
                   ADD CROP CYCLE
                 </span>
               </ListItem>
