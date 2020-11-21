@@ -17,7 +17,6 @@ import "date-fns";
 import React, { useEffect, useState } from "react";
 import { seasonsData } from "../seasonData";
 import { Autocomplete, Alert } from "@material-ui/lab";
-import { toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -48,6 +47,7 @@ function AddCropCycle() {
   const [allFields, setAllFields] = useState([]);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertStatus, setAlertStatus] = useState(false);
+  const [alertSeverity, setAlertSeverity] = useState('');
 
   const getAllCrops = () => {
     fetch("http://localhost:8080/api/crops").then((cropsResponse) => {
@@ -115,12 +115,25 @@ function AddCropCycle() {
     setAlertStatus(false);
   };
 
-  const handleClick = () => {
+  const showAlert = (message, severity) => {
+    setAlertMessage(message);
+    setAlertSeverity(severity);
+    setAlertStatus(true);
+  }
+
+  const handleErrors = (response) => {
+    if (!response.ok) {
+      throw Error(response.statusText);
+    }
+    return response;
+  }
+
+  const handleSubmit = () => {
     let fieldIds = [];
     fields.map((field) => fieldIds.push({ id: field.id }));
 
     // {
-    //     "fields": {"id": 10},
+    //     "fields": [{"id": 10}, {...}],
     //     "year": 2000,
     //     "season": "RABI",
     //     "crop": {"id": 10}
@@ -140,13 +153,15 @@ function AddCropCycle() {
         "Content-Type": "application/json",
       },
     })
+      .then(handleErrors)
       .then((response) => {
+        if (response.ok) { }
         console.log("fieldCropCycles saved..." + response);
-        setAlertMessage("Crop cycles successfully created");
+        showAlert("Crop cycles successfully created", "info");
       })
       .catch((e) => {
         console.log("Internal server error");
-        setAlertMessage("Crop cycles creation failed: " + e);
+        showAlert("Crop cycles creation failed: " + e.message, "error");
       });
   };
 
@@ -258,13 +273,13 @@ function AddCropCycle() {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={handleClick}
+                  onClick={handleSubmit}
                 >
                   Submit
                 </Button>
               </ListItem>
               <Snackbar open={alertStatus} onClose={handleAlertClose}>
-                <Alert onClose={handleAlertClose} severity="error">
+                <Alert onClose={handleAlertClose} severity={alertSeverity}>
                   {alertMessage}
                 </Alert>
               </Snackbar>
