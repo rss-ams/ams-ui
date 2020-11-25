@@ -5,7 +5,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import AddFarm from "../Pages/AddFarm";
+import AddField from "../Pages/AddField";
 import AddVehicle from "../Pages/AddVehicle";
 import ActivityPage from "../Pages/ActivityPage";
 import AddCropCycle from "../Pages/AddCropCycle";
@@ -27,7 +27,7 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box p={3}>
-                    <Typography>{children}</Typography>
+                    <h1>{children}</h1>
                 </Box>
             )}
         </div>
@@ -86,7 +86,7 @@ export default function SideMenu() {
 
             </Tabs>
             <TabPanel value={value} index={0}>
-                <DynamicTabs component1={<AddFarm />} component2={<FarmInfoPage />} component3={<FarmTimeline />} />
+                <DynamicTabs component1={<AddField />} component2={<FarmInfoPage />} component3={<FarmTimeline />} />
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <DynamicTabs component1={<AddCrop />} component2={"c2"} component3={"c3"} />

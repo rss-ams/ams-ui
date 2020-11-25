@@ -7,8 +7,8 @@ import ListItem from '@material-ui/core/ListItem';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
-import { seasonsData } from "../seasonData";
-import { cropGrowthProtocolData } from "../cgpData";
+import { CropSeasons } from "../utils/CropConstants";
+import { cropGrowthProtocolData } from "../data/cgpData";
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
@@ -17,7 +17,6 @@ import Success from "../components/common/Success"
 const useStyles = makeStyles((theme) => ({
     formControl: {
         margin: theme.spacing(1),
-        minWidth: 120,
     },
     selectEmpty: {
         marginTop: theme.spacing(2),
@@ -153,9 +152,9 @@ function AddCrop() {
                                         onChange={handleChange}
                                     >
                                         {
-                                            seasonsData.map((seasonData) => {
+                                            CropSeasons.map((cropSeason) => {
                                                 return (
-                                                    <MenuItem key={seasonData} value={seasonData}>{seasonData}</MenuItem>
+                                                    <MenuItem key={cropSeason} value={cropSeason}>{cropSeason}</MenuItem>
                                                 );
 
                                             })
@@ -184,7 +183,6 @@ function AddCrop() {
                                     </Select>
                                 </FormControl>
                             </ListItem>
-                            <span>{JSON.stringify(cropGrowthProtocolObj)}</span>
 
                             <ListItem key="5">
                                 <Button variant="outlined" color="primary" onClick={handleCLick}>SUBMIT</Button>

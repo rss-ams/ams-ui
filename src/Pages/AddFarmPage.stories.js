@@ -1,14 +1,14 @@
 import React from 'react'
-import AddFarm from "./AddFarm"
+import AddField from "./AddField"
 
 
 export default {
     title: 'Organisms/AddField',
-    component: AddFarm
+    component: AddField
 }
 
 
-export const FIELD = () => <AddFarm></AddFarm>
+export const FIELD = () => <AddField></AddField>
 
 
 
