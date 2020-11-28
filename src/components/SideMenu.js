@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import AddField from "../Pages/AddField";
 import AddVehicle from "../Pages/AddVehicle";
-import ActivityPage from "../Pages/ActivityPage";
+import AddActivityPage from "../Pages/AddActivityPage";
 import AddCropCycle from "../Pages/AddCropCycle";
 import DynamicTabs from "../components/DynamicTabs";
 import FarmInfoPage from '../Pages/FarmInfoPage';
@@ -95,7 +95,7 @@ export default function SideMenu() {
                 <DynamicTabs component1={<AddCropCycle />} component2={"c2"} component3={"c3"} />
             </TabPanel>
             <TabPanel value={value} index={3}>
-                <ActivityPage />
+                <AddActivityPage />
             </TabPanel>
             <TabPanel value={value} index={4}>
                 <AddVehicle />

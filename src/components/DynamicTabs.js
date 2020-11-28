@@ -1,7 +1,7 @@
 import { AppBar, Box, Tab, Tabs } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -45,9 +45,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function DynamicTabs(props) {
+const DynamicTabs = (props) => {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -55,16 +55,17 @@ export default function DynamicTabs(props) {
 
   return (
     <div className={classes.root}>
-      <AppBar position='static' color='default'>
+      <AppBar position='static' color='default' >
         <Tabs
           value={value}
           onChange={handleChange}
           aria-label='simple tabs example'
+          variant='fullWidth'
           centered
         >
-          <Tab label='Add' {...a11yProps(0)} />
-          <Tab label='Info' {...a11yProps(1)} />
-          <Tab label='Timeline' {...a11yProps(2)} />
+          {props.component1 && <Tab label='Add' {...a11yProps(0)} />}
+          {props.component2 && <Tab label='Info' {...a11yProps(1)} />}
+          {props.component3 && <Tab label='Timeline' {...a11yProps(2)} />}
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -78,4 +79,6 @@ export default function DynamicTabs(props) {
       </TabPanel>
     </div>
   );
-}
+};
+
+export default DynamicTabs;
