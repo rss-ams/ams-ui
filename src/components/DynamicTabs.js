@@ -1,18 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import { AppBar, Box, Tab, Tabs } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
     <div
-      role="tabpanel"
+      role='tabpanel'
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
@@ -44,6 +40,8 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
+    maxWidth: 728,
+    margin: 'auto',
   },
 }));
 
@@ -57,21 +55,26 @@ export default function DynamicTabs(props) {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" color="default">
-        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-          <Tab label="Add" {...a11yProps(0)} />
-          <Tab label="Info" {...a11yProps(1)} />
-          <Tab label="Timeline" {...a11yProps(2)} />
+      <AppBar position='static' color='default'>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label='simple tabs example'
+          centered
+        >
+          <Tab label='Add' {...a11yProps(0)} />
+          <Tab label='Info' {...a11yProps(1)} />
+          <Tab label='Timeline' {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-      {props.component1}
+        {props.component1}
       </TabPanel>
       <TabPanel value={value} index={1}>
-      {props.component2}
+        {props.component2}
       </TabPanel>
       <TabPanel value={value} index={2}>
-      {props.component3}
+        {props.component3}
       </TabPanel>
     </div>
   );

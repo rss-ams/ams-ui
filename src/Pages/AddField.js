@@ -17,8 +17,12 @@ import React, { useEffect, useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    minWidth: 250,
+    maxWidth: 300,
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -92,7 +96,7 @@ const AddField = () => {
   };
 
   return (
-    <FormGroup>
+    <FormGroup className={classes.formGroup}>
       <Typography align='center' variant='h6' className={classes.title}>
         Add Field
       </Typography>
@@ -131,7 +135,12 @@ const AddField = () => {
         label='Area'
       />
 
-      <Button variant='contained' color='primary' onClick={handleCLick}>
+      <Button
+        variant='contained'
+        color='primary'
+        className={classes.formControl}
+        onClick={handleCLick}
+      >
         Submit
       </Button>
 
