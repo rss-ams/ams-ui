@@ -13,7 +13,7 @@ import { Alert } from '@material-ui/lab';
 import React, { useState, useEffect } from 'react';
 import { getAllFields } from 'dataclients/FieldsClient';
 import { getLocations } from 'dataclients/LocationsClient';
-import TableComponent from '../components/common/Table';
+import TableComponent from '../components/common/TableComponent';
 
 /**
  * css styles for Field Info Page
