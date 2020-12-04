@@ -91,7 +91,7 @@ function FieldInfoPage() {
    * shows alert in case call fails
    */
   const getFieldData = () => {
-    getAllFields(locality)
+    getAllFields()
       .then((fields) => {
         setFields(fields.content);
       }).catch((e) => {
@@ -102,7 +102,7 @@ function FieldInfoPage() {
 
   useEffect(() => {
     getFieldData();
-  });
+  }, []);
 
   /**
    * Function to create and return row data for binding to table
