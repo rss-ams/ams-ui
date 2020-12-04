@@ -39,7 +39,7 @@ const columnData = [
   { id: 'name', label: 'Field Name', minWidth: 30 },
   {
     id: 'location',
-    label: 'Location',
+    label: 'Locality',
     minWidth: 30
   },
   {
