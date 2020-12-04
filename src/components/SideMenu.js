@@ -10,7 +10,7 @@ import AddVehicle from "../Pages/AddVehicle";
 import ActivityPage from "../Pages/ActivityPage";
 import AddCropCycle from "../Pages/AddCropCycle";
 import DynamicTabs from "../components/DynamicTabs";
-import FarmInfoPage from '../Pages/FarmInfoPage';
+import FieldInfoPage from '../Pages/FieldInfoPage';
 import FarmTimeline from '../Pages/FarmTImeLine';
 import AddCrop from '../Pages/AddCrop';
 
@@ -86,7 +86,7 @@ export default function SideMenu() {
 
             </Tabs>
             <TabPanel value={value} index={0}>
-                <DynamicTabs component1={<AddField />} component2={<FarmInfoPage />} component3={<FarmTimeline />} />
+                <DynamicTabs component1={<AddField />} component2={<FieldInfoPage />} component3={<FarmTimeline />} />
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <DynamicTabs component1={<AddCrop />} component2={"c2"} component3={"c3"} />
