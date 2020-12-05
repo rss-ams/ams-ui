@@ -11,7 +11,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
 import React, { useState, useEffect } from 'react';
-import { getAllFields } from 'dataclients/FieldsClient';
+import { getAllFields, getFieldsByLocation } from 'dataclients/FieldsClient';
 import { getLocations } from 'dataclients/LocationsClient';
 import TableComponent from 'components/common/TableComponent';
 
@@ -159,7 +159,7 @@ function FieldInfoPage() {
    * shows alert in case call fails
    */
   const fetchFieldsForLocation = () => {
-    getAllFields(locality)
+    getFieldsByLocation(locality)
       .then(setFields)
       .catch((e) => {
         console.log(`Fetching fields for ${locality} failed`, e);
