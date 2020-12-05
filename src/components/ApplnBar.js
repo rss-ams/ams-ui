@@ -12,7 +12,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import DynamicTabs from 'components/DynamicTabs';
-import ActivityPage from 'Pages/ActivityPage';
+import AddActivityPage from 'Pages/AddActivityPage';
 import AddCrop from 'Pages/AddCrop';
 import AddCropCycle from 'Pages/AddCropCycle';
 import AddField from 'Pages/AddField';
@@ -40,7 +40,7 @@ const ApplnBar = () => {
   const classes = useStyles();
 
   const [drawerState, setDrawerState] = useState(false);
-  const [page, setPage] = useState('CROP');
+  const [page, setPage] = useState('FIELD');
 
   const toggleDrawer = (open) => (event) => {
     if (
@@ -106,7 +106,12 @@ const ApplnBar = () => {
         />
       );
     } else if (page === 'ACTIVITY') {
-      return <ActivityPage />;
+      return (
+        <DynamicTabs
+          component1={<AddActivityPage />}
+          component2={'c2'}
+        />
+      );
     } else if (page === 'VEHICLE') {
       return <AddVehicle />;
     }
