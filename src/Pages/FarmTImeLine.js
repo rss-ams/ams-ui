@@ -15,6 +15,7 @@ import {
 import React, { useState } from "react";
 import { getAllFields } from "../dataclients/FieldsClient";
 import { getLocations } from "../dataclients/LocationsClient";
+import Timeline from "../components/molecules/Timeline/Timeline"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -33,6 +34,8 @@ function FarmTimeline() {
 
   const [fields, setFields] = useState([]);
   const [locationsDataFromServer, setLocationsDataFromServer] = useState([]);
+
+  const [processHistory, setProcessHistory] = useState([]);
 
   getAllFields()
     .then((fields) => setFields(fields.content))
@@ -60,8 +63,26 @@ function FarmTimeline() {
     setselectedEndDate(date);
   };
 
+  const [showTimeLine, setShowTimeLine] = useState(false);
+
   const handleCLick = () => {
     console.log("locality,fieldId,cropSeason,activity" + locality, fieldId);
+    
+    fetch(`http://localhost:8080/api/fieldCropCycles/1`).then(
+      (resp) => {
+        resp.json().then((data) => {
+          console.log(data.processHistory);
+          setProcessHistory([...data.processHistory])
+        });
+      },
+    );
+
+    setShowTimeLine(true);
+    setTimeout(function(){
+      console.log("showing timeline")
+     
+      console.log(showTimeLine)
+    },5000)
   };
 
   const handleChange = ({ target }) => {
@@ -79,9 +100,18 @@ function FarmTimeline() {
     );
   };
 
+  console.log(processHistory)
   return (
     <Grid container className={classes.root} spacing={2}>
       <Grid item xs={12}>
+        <Grid container justify="center">
+          {
+            showTimeLine ? 
+            processHistory.map(function(obj,index){
+            <li>{index}</li>
+            }) : null
+          }
+        </Grid>
         <Grid container justify="center" spacing={2}>
           <List component="nav" aria-label="secondary mailbox folders">
             <ListItem>
@@ -189,6 +219,7 @@ function FarmTimeline() {
             </ListItem>
           </List>
         </Grid>
+
       </Grid>
     </Grid>
   );
