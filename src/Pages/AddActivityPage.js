@@ -67,6 +67,46 @@ const AddActivityPage = () => {
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
 
+
+  const [showFollowUpActivity,setShowFollowUpActivity] = useState(false);
+  const [followUpActivities,setFollowUpActivties] = useState([{name:''}]);
+  const activityList = [{id:1,value:"Watering"},{id:2,value:"Sowing"},{id:3,value:"Spraying"}];
+  const handleInputChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...followUpActivities];
+    list[index].name = value;
+    setFollowUpActivties(list);
+  };
+
+  // handle click event of the Remove button
+  const handleRemoveClick = index => {
+    const list = [...followUpActivities];
+    list.splice(index, 1);
+    setFollowUpActivties(list);
+  };
+
+  // handle click event of the Add button
+  const handleAddClick = () => {
+    setFollowUpActivties([...followUpActivities, { name:"" }]);
+  };
+
+  const showInspectionActivity = () =>
+  {
+    console.log("Flowering:"+selectedFlowering);
+    console.log("Germination:"+selectedGermination);
+    console.log("Infestation:"+selectedInfestation);
+    console.log("Growth:"+selectedGrowth);
+    if((selectedFlowering === "no") || (selectedGermination === "no") || (selectedInfestation === "yes" ) ||(selectedGrowth === "no"))
+    {
+      console.log("Inside if for setting true");
+      setShowFollowUpActivity(true);
+    }else{
+      console.log("Inside if for setting false");
+      setShowFollowUpActivity(false);
+    }
+  }
+  
+
   const handleClick = () => {
     console.log(
       'locality,fieldId,cropSeason,activity' + locality,
@@ -104,6 +144,10 @@ const AddActivityPage = () => {
         showAlert('Fetching process category list failed', 'error');
       });
   }, []);
+
+  useEffect(() => {
+    showInspectionActivity()
+  },[selectedGrowth,selectedInfestation,setSelectedFlowering,selectedGermination]);
 
   const handleStartDateChange = (date) => {
     setSelectedDate(date);
@@ -148,12 +192,16 @@ const AddActivityPage = () => {
       getAllFieldIds(value);
     } else if (name === 'germination') {
       setSelectedGermination(value);
+      //showInspectionActivity();
     } else if (name === 'growth') {
       setSelectedGrowth(value);
+      //showInspectionActivity();
     } else if (name === 'flowering') {
       setSelectedFlowering(value);
+      //showInspectionActivity();
     } else if (name === 'infestation') {
       setSelectedInfestation(value);
+      //showInspectionActivity();
     } else if (name === 'fieldId') {
       setFieldIdentifier(value);
       let crops = [];
@@ -564,7 +612,7 @@ const AddActivityPage = () => {
                     </Select>
                   </FormControl>
                 </ListItem>
-
+              
                 <ListItem>
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <Grid container>
@@ -596,7 +644,36 @@ const AddActivityPage = () => {
                     label='Assignee'
                   />
                 </ListItem>
-
+                {showFollowUpActivity? 
+                  followUpActivities.map((x,i) =>{
+                    return(
+                      <ListItem key='2'>
+                        <FormControl className={classes.formControl}>
+                          <InputLabel id='fId-label'>Add Activity</InputLabel>
+                          <Select
+                            id='fieldId'
+                            name='fieldId'
+                            value={x.name}
+                            onChange={e => handleInputChange(e, i)}
+                            
+                          >
+                            {activityList.map((activity) => {
+                              return (
+                                <MenuItem key={activity.id} value={activity.value}>
+                                  {activity.value}
+                                </MenuItem>
+                              );
+                            })}
+                          </Select>
+                          {followUpActivities.length !== 1 && <button
+                              className="mr10"
+                              onClick={() => handleRemoveClick(i)}>Remove</button>}
+                            {followUpActivities.length - 1 === i && <button onClick={handleAddClick}>Add</button>}
+                        </FormControl>
+                      </ListItem>
+                    )
+                  }):null  
+                }
                 <ListItem key='100'>
                   <Button
                     variant='outlined'
