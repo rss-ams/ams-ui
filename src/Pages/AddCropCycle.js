@@ -13,30 +13,32 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert, Autocomplete } from '@material-ui/lab';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import 'date-fns';
-import React, { useEffect, useState } from 'react';
 import { createCropCycles } from 'dataclients/CropCyclesClient';
 import { getAllCrops } from 'dataclients/CropsClient';
 import { getAllFields } from 'dataclients/FieldsClient';
+import 'date-fns';
+import React, { useEffect, useState } from 'react';
 import { CropSeasons } from 'utils/CropConstants';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
   formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    minWidth: 300,
+    maxWidth: 300,
   },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
+  submitButton: {
+    margin: theme.spacing(3),
+    width: 'fit-content',
+    minWidth: '150px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
-  chips: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  chip: {
-    margin: 2,
+  menuItem: {
+    maxWidth: 300,
+    whiteSpace: 'normal',
   },
 }));
 
@@ -102,13 +104,6 @@ const AddCropCycle = () => {
     let fieldIds = [];
     fields.map((field) => fieldIds.push({ id: field.id }));
 
-    // {
-    //     "fields": [{"id": 10}, {...}],
-    //     "year": 2000,
-    //     "season": "RABI",
-    //     "crop": {"id": 10}
-    // }
-
     const payload = {
       fields: fieldIds,
       season: cropSeason,
@@ -132,7 +127,7 @@ const AddCropCycle = () => {
       <Typography align='center' variant='h6' className={classes.title}>
         Add Crop Cycles
       </Typography>
-      
+
       <FormControl className={classes.formControl}>
         <InputLabel shrink id='crop-label'>
           Crop
@@ -202,7 +197,12 @@ const AddCropCycle = () => {
         </MuiPickersUtilsProvider>
       </FormControl>
 
-      <Button variant='contained' color='primary' fullWidth={false} onClick={handleSubmit}>
+      <Button
+        variant='contained'
+        color='primary'
+        className={classes.submitButton}
+        onClick={handleSubmit}
+      >
         Submit
       </Button>
 

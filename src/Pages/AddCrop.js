@@ -1,200 +1,183 @@
-import React, { useState } from 'react';
+import {
+  Button,
+  FormControl,
+  FormGroup,
+  InputLabel,
+  MenuItem,
+  Select,
+  Snackbar,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import Grid from '@material-ui/core/Grid';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import axios from 'axios';
-import { CropSeasons } from "../utils/CropConstants";
-import { cropGrowthProtocolData } from "../data/cgpData";
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import Success from "../components/common/Success"
+import { Alert } from '@material-ui/lab';
+import { getAllCropGrowthProtocols } from 'dataclients/CropGrowthProtocolsClient';
+import { createCrop } from 'dataclients/CropsClient';
+import React, { useEffect, useState } from 'react';
+import { CropSeasons } from 'utils/CropConstants';
 
 const useStyles = makeStyles((theme) => ({
-    formControl: {
-        margin: theme.spacing(1),
-    },
-    selectEmpty: {
-        marginTop: theme.spacing(2),
-    },
+  formControl: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    minWidth: 300,
+    maxWidth: 300,
+  },
+  submitButton: {
+    margin: theme.spacing(3),
+    width: 'fit-content',
+    minWidth: '150px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+  menuItem: {
+    maxWidth: 300,
+    whiteSpace: 'normal',
+  },
 }));
 
+const AddCrop = () => {
+  const classes = useStyles();
+  const [cropName, setCropName] = useState('');
+  const [cropSeason, setCropSeason] = useState('');
+  const [cropGrowthProtocol, setCropGrowthProtocol] = useState('');
+  const [cropGrowthProtocols, setCropGrowthProtocols] = useState([]);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertStatus, setAlertStatus] = useState(false);
+  const [alertSeverity, setAlertSeverity] = useState('');
 
-function AddCrop() {
+  useEffect(() => {
+    getAllCropGrowthProtocols()
+      .then(setCropGrowthProtocols)
+      .catch((e) => {
+        console.log('Fetching crop growth protocols failed', e);
+        showAlert('Fetching crop growth protocols failed', 'error');
+      });
+  }, []);
 
-    const classes = useStyles();
-
-
-    const [cropName, setCropName] = React.useState('');
-    const [cropSeason, setCropSeason] = React.useState('');
-    const [cropGrowthProtocol, setCropGrowthProtocol] = useState('');
-    const [cropGrowthProtocolObj, setCropGrowthProtocolObj] = useState({});
-
-    const [showSuccess, setShowSuccess] = useState(false);
-
-    const handleTextChange = ({ target }) => {
-        const { name, value } = target;
-        if (name === 'cropName') {
-            setCropName(value)
-        }
-
-
+  const handleAlertClose = (_event, reason) => {
+    if (reason === 'clickaway') {
+      return;
     }
+    setAlertStatus(false);
+  };
 
-    const handleChange = ({ target }) => {
+  const showAlert = (message, severity) => {
+    setAlertMessage(message);
+    setAlertSeverity(severity);
+    setAlertStatus(true);
+  };
 
-        const { name, value } = target;
-        if (name === 'season') {
-            setCropSeason(value)
-        }
-        else if (name === 'cgp') {
-            console.log(value)
-            setCropGrowthProtocol(value)
-            const d1 = cropGrowthProtocolData.filter((d) => {
-                return d.id === value
-            })
-            setCropGrowthProtocolObj(d1)
-        }
+  const handleTextChange = ({ target }) => {
+    const { name, value } = target;
+    if (name === 'cropName') {
+      setCropName(value);
+    }
+  };
 
+  const handleChange = ({ target }) => {
+    const { name, value } = target;
+    if (name === 'season') {
+      setCropSeason(value);
+    } else if (name === 'cropGrowthProtocol') {
+      setCropGrowthProtocol(value);
+    }
+  };
+
+  const handleSubmit = () => {
+    const payload = {
+      name: cropName,
+      season: cropSeason,
+      cropGrowthProtocol: { id: cropGrowthProtocol },
     };
+    createCrop(payload)
+      .then((_response) => {
+        showAlert('Crop successfully created', 'info');
+      })
+      .catch((e) => {
+        console.log('Internal server error', e);
+        showAlert('Crop creation failed: ' + e.message, 'error');
+      });
+  };
 
-    // {
-    //     "name": "cropGrowthProtocol1",
-    //     "description": "desc1",
-    //     "fertilization": {
-    //             "sprays": [
-    //                 {
-    //                     "a": "b",
-    //                     "c": 2
-    //                 },
-    //                 {
-    //                     "a": "b"
-    //                 }
-    //             ]
-    //         }
-    // }
+  return (
+    <FormGroup className={classes.formGroup}>
+      <Typography align='center' variant='h6' className={classes.title}>
+        Add Crop
+      </Typography>
 
+      <TextField
+        className={classes.formControl}
+        id='cropName'
+        name='cropName'
+        onChange={handleTextChange}
+        label='Crop Name'
+      />
 
-    // {
-    //     "name": "ABC 12324234",
-    //     "season": "RABI",
-    //     "cropGrowthProtocol": {
-    //         "id": 1
-    //     }
-    // }
+      <FormControl className={classes.formControl}>
+        <InputLabel id='season-label'>Season</InputLabel>
+        <Select
+          id='season'
+          name='season'
+          value={cropSeason}
+          onChange={handleChange}
+        >
+          {CropSeasons.map((cropSeason) => {
+            return (
+              <MenuItem
+                key={cropSeason}
+                value={cropSeason}
+                className={classes.menuItem}
+              >
+                {cropSeason}
+              </MenuItem>
+            );
+          })}
+        </Select>
+      </FormControl>
 
-    const handleCLick = () => {
+      <FormControl className={classes.formControl}>
+        <InputLabel id='cropGrowthProtocol-label'>
+          Crop Growth Protocol
+        </InputLabel>
+        <Select
+          id='cropGrowthProtocol'
+          name='cropGrowthProtocol'
+          value={cropGrowthProtocol}
+          onChange={handleChange}
+        >
+          {cropGrowthProtocols.map((item) => {
+            return (
+              <MenuItem
+                key={item.id}
+                value={item.id}
+                className={classes.menuItem}
+              >
+                {item.name + ' - ' + item.description}
+              </MenuItem>
+            );
+          })}
+        </Select>
+      </FormControl>
 
-        const payload = {
-            name: cropName,
-            season: cropSeason,
-            cropGrowthProtocol: { id: cropGrowthProtocol }
-        };
-        axios({
-            url: `http://localhost:8080/api/crops`,
-            method: 'POST',
-            data: payload,
+      <Button
+        variant='contained'
+        color='primary'
+        className={classes.submitButton}
+        onClick={handleSubmit}
+      >
+        Submit
+      </Button>
 
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then((r) => {
-            console.log("Crop saved..." + JSON.stringify(r.data))
-            
+      <Snackbar open={alertStatus} onClose={handleAlertClose}>
+        <Alert onClose={handleAlertClose} severity={alertSeverity}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
+    </FormGroup>
+  );
+};
 
-            setShowSuccess(true)
-            setTimeout(() => {
-                document.getElementById('cropName').value = '';
-                document.getElementById('season').value = ''
-                document.getElementById('cgp').innerHTML = ''
-                setShowSuccess(false)
-            }, 3000)
-
-
-
-        })
-            .catch(() => {
-                console.log('Internal server error');
-            });
-    }
-
-
-    return (
-        <div>
-            {
-                showSuccess ?
-                    <Success /> : null
-            }
-            <Grid container className={classes.root} spacing={2}>
-                <Grid item xs={12}>
-                    <Grid container justify="center" spacing={2}>
-
-                        <List component="nav" aria-label="secondary mailbox folders">
-                            <ListItem>
-                                <span style={{ backgroundColor: 'white', border: '1px solid gray', padding: '5px', margin: '5px', color: 'gray', fontSize: '20px' }}>ADD CROP</span>
-                            </ListItem>
-
-                            <ListItem>
-                                <TextField id="cropName" name="cropName" onChange={handleTextChange} label="Name" />
-                            </ListItem>
-
-                            <ListItem key="1">
-                                <FormControl className={classes.formControl}>
-                                    <InputLabel id="season-label">Season</InputLabel>
-                                    <Select
-                                        id="season"
-                                        name="season"
-                                        value={cropSeason}
-                                        onChange={handleChange}
-                                    >
-                                        {
-                                            CropSeasons.map((cropSeason) => {
-                                                return (
-                                                    <MenuItem key={cropSeason} value={cropSeason}>{cropSeason}</MenuItem>
-                                                );
-
-                                            })
-                                        }
-                                    </Select>
-                                </FormControl>
-                            </ListItem>
-
-                            <ListItem key="2">
-                                <FormControl className={classes.formControl}>
-                                    <InputLabel id="cgp-label">Crop Growth Protocol</InputLabel>
-                                    <Select
-                                        id="cgp"
-                                        name="cgp"
-                                        value={cropGrowthProtocol}
-                                        onChange={handleChange}
-                                    >
-                                        {
-                                            cropGrowthProtocolData.map((cgpData) => {
-                                                return (
-                                                    <MenuItem key={cgpData.id} value={cgpData.id}>{cgpData.id}</MenuItem>
-                                                );
-
-                                            })
-                                        }
-                                    </Select>
-                                </FormControl>
-                            </ListItem>
-
-                            <ListItem key="5">
-                                <Button variant="outlined" color="primary" onClick={handleCLick}>SUBMIT</Button>
-                            </ListItem>
-                        </List>
-                    </Grid>
-                </Grid>
-
-            </Grid>
-
-        </div>
-    )
-}
-
-export default AddCrop
+export default AddCrop;

@@ -21,8 +21,19 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(1),
     marginLeft: 'auto',
     marginRight: 'auto',
-    minWidth: 250,
+    minWidth: 300,
     maxWidth: 300,
+  },
+  submitButton: {
+    margin: theme.spacing(3),
+    width: 'fit-content',
+    minWidth: '150px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+  menuItem: {
+    maxWidth: 300,
+    whiteSpace: 'normal',
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -43,7 +54,8 @@ const AddField = () => {
     getLocations()
       .then(setLocations)
       .catch((e) => {
-        console.log('Fetching all locations failed', e);
+        console.log('Fetching location list failed', e);
+        showAlert('Fetching location list failed', 'error');
       });
   }, []);
 
@@ -69,7 +81,7 @@ const AddField = () => {
     }
   };
 
-  const handleCLick = () => {
+  const handleSubmit = () => {
     const payload = {
       name: fieldIdentifier,
       identifier: fieldIdentifier,
@@ -79,7 +91,6 @@ const AddField = () => {
 
     createField(payload)
       .then((response) => {
-        console.log('fieldCropCycles saved...' + response);
         showAlert('Field successfully created', 'info');
       })
       .catch((e) => {
@@ -111,7 +122,11 @@ const AddField = () => {
         >
           {locations.map((location) => {
             return (
-              <MenuItem key={location.code} value={location.code}>
+              <MenuItem
+                key={location.code}
+                value={location.code}
+                className={classes.menuItem}
+              >
                 {location.displayStr}
               </MenuItem>
             );
@@ -138,8 +153,9 @@ const AddField = () => {
       <Button
         variant='contained'
         color='primary'
-        className={classes.formControl}
-        onClick={handleCLick}
+        size='medium'
+        className={classes.submitButton}
+        onClick={handleSubmit}
       >
         Submit
       </Button>
