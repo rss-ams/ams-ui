@@ -16,7 +16,7 @@ import React, { useState, useEffect } from "react";
 import { getAllFields } from "../dataclients/FieldsClient";
 import { getLocations } from "../dataclients/LocationsClient";
 
-
+import { sortBy } from "../components/particles/util/sort-util";
 import Card from "../components/molecules/Card/Card"
 import TimeLine from "../components/molecules/Timeline/Timeline"
 
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function FarmTimeline() {
-  var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var months = ["","January","February","March","April","May","June","July","August","September","October","November","December"];
   const classes = useStyles();
   const [locality, setLocality] = React.useState("");
   const [fieldId, setFieldId] = React.useState("");
@@ -54,7 +54,7 @@ function FarmTimeline() {
         console.log("Fetching all locations failed: " + e.message);
       });
 
-
+      console.log(locationsDataFromServer)
   }, []);
 
 
@@ -76,9 +76,9 @@ function FarmTimeline() {
   const [showTimeLine, setShowTimeLine] = useState(false);
 
   const handleCLick = () => {
-    console.log("locality,fieldId,cropSeason,activity" + locality, fieldId);
+    console.log(locality);
 
-    fetch(`http://localhost:8080/api/fieldCropCycles/1`).then(
+    fetch(`http://localhost:8080/api/fieldCropCycles/${locality.value}`).then(
       (resp) => {
         resp.json().then((data) => {
           console.log(data.processHistory);
@@ -95,9 +95,9 @@ function FarmTimeline() {
     console.log("locality,fieldId,cropSeason,activity" + locality, fieldId);
     const { name, value } = target;
     if (name === "locality") {
-      setLocality(value);
+      setLocality(target);
     } else if (name === "fieldId") {
-      setFieldId(value);
+      setFieldId(target);
     }
 
     console.log(
@@ -106,16 +106,19 @@ function FarmTimeline() {
     );
   };
 
-  let timeLine = processHistory.map(function (obj, index) {
+  let timeLine = processHistory.sortBy(function (o) { return [ o.startDueDate ] }).map(function (obj, index) {
+
     return (<TimeLine key={index} process={<Card
       processName={obj.processName.displayStr}
       processStatus={obj.processStatus.displayStr}
       startDueDate={obj.startDueDate.substring(0, 4)+" - "+months[parseInt(obj.startDueDate.substring(obj.startDueDate.indexOf("-")+1 ,obj.startDueDate.indexOf("-")+3 ), 10)]+" - "+obj.startDueDate.substring(obj.startDueDate.lastIndexOf("-")+1 ,obj.startDueDate.lastIndexOf("-")+3 )}
-      endDueDate={obj.endDueDate.substring(0, 4)+" - "+ months[obj.endDueDate.substring(obj.endDueDate.indexOf("-")+1 ,obj.endDueDate.indexOf("-")+3 )]+" - "+obj.endDueDate.substring(obj.endDueDate.lastIndexOf("-")+1 ,obj.endDueDate.lastIndexOf("-")+3 )}
+      endDueDate={obj.endDueDate.substring(0, 4)+" - "+ months[parseInt(obj.endDueDate.substring(obj.endDueDate.indexOf("-")+1 ,obj.endDueDate.indexOf("-")+3 ),10)]+" - "+obj.endDueDate.substring(obj.endDueDate.lastIndexOf("-")+1 ,obj.endDueDate.lastIndexOf("-")+3 )}
+    
     />}>
     </TimeLine>
     );
-  })
+  });
+
   return (
     <div>
       {!showTimeLine ?
@@ -138,7 +141,7 @@ function FarmTimeline() {
                     }}
                   >
                     {" "}
-              FEILD TIMELINE
+              FIELD TIMELINE
             </span>
                 </ListItem>
                 <ListItem key="1">
