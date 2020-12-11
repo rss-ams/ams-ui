@@ -6,6 +6,7 @@ import {
   MenuItem,
   Select,
   Snackbar,
+  FormHelperText,
   Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -37,34 +38,34 @@ const columnData = [
   {
     id: 'id',
     label: 'Id',
-    minWidth: 5,
+    width: 5,
   },
   {
     id: 'name',
     label: 'Field Name',
-    minWidth: 30,
+    width: 30,
   },
   {
     id: 'location',
     label: 'Locality',
-    minWidth: 30,
+    width: 30,
   },
   {
     id: 'area',
-    label: 'Area',
-    minWidth: 10,
+    label: 'Area (in acres)',
+    width: 30,
   },
   {
     id: 'edit',
     type: 'icon',
-    minWidth: 5,
+    width: 5,
     align: 'left',
     label: '',
   },
   {
     id: 'delete',
     type: 'icon',
-    minWidth: 5,
+    width: 5,
     align: 'left',
     label: '',
   },
@@ -79,6 +80,7 @@ function FieldInfoPage() {
   const classes = useStyles();
   const [locations, setLocations] = useState([]);
   const [locality, setLocality] = useState('');
+  const [showLocalityError, setLocalityError] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
@@ -154,17 +156,22 @@ function FieldInfoPage() {
   };
 
   /**
-   * Function to fetch fields for a selected ocation using API
+   * Function to fetch fields for a selected location using API
    * updates fieldsData if call is successful
    * shows alert in case call fails
    */
   const fetchFieldsForLocation = () => {
-    getFieldsByLocation(locality)
-      .then(setFields)
-      .catch((e) => {
-        console.log(`Fetching fields for ${locality} failed`, e);
-        showAlert(`Fetching fields for ${locality} failed`, 'error');
-      });
+    if (locality) {
+      setLocalityError(false);
+      getFieldsByLocation(locality)
+        .then(setFields)
+        .catch((e) => {
+          console.log(`Fetching fields for ${locality} failed`, e);
+          showAlert(`Fetching fields for ${locality} failed`, 'error');
+        });
+    } else {
+      setLocalityError(true);
+    }
   };
 
   /**
@@ -222,6 +229,9 @@ function FieldInfoPage() {
             );
           })}
         </Select>
+        {showLocalityError ? (
+          <FormHelperText>Select a locality</FormHelperText>
+        ) : null}
       </FormControl>
       {/* fetch results button */}
       <Button
