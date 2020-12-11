@@ -12,10 +12,13 @@ import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { getAllFields } from "../dataclients/FieldsClient";
 import { getLocations } from "../dataclients/LocationsClient";
-import Timeline from "../components/molecules/Timeline/Timeline"
+
+
+import Card from "../components/molecules/Card/Card"
+import TimeLine from "../components/molecules/Timeline/Timeline"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -37,17 +40,23 @@ function FarmTimeline() {
 
   const [processHistory, setProcessHistory] = useState([]);
 
-  getAllFields()
-    .then((fields) => setFields(fields.content))
-    .catch((e) => {
-      console.log("Fetching all fields failed: " + e.message);
-    });
+  useEffect(() => {
+    getAllFields()
+      .then((fields) => setFields(fields.content))
+      .catch((e) => {
+        console.log("Fetching all fields failed: " + e.message);
+      });
 
-  getLocations()
-    .then(setLocationsDataFromServer)
-    .catch((e) => {
-      console.log("Fetching all locations failed: " + e.message);
-    });
+    getLocations()
+      .then(setLocationsDataFromServer)
+      .catch((e) => {
+        console.log("Fetching all locations failed: " + e.message);
+      });
+
+
+  }, []);
+
+
 
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
@@ -67,7 +76,7 @@ function FarmTimeline() {
 
   const handleCLick = () => {
     console.log("locality,fieldId,cropSeason,activity" + locality, fieldId);
-    
+
     fetch(`http://localhost:8080/api/fieldCropCycles/1`).then(
       (resp) => {
         resp.json().then((data) => {
@@ -78,11 +87,7 @@ function FarmTimeline() {
     );
 
     setShowTimeLine(true);
-    setTimeout(function(){
-      console.log("showing timeline")
-     
-      console.log(showTimeLine)
-    },5000)
+
   };
 
   const handleChange = ({ target }) => {
@@ -100,128 +105,141 @@ function FarmTimeline() {
     );
   };
 
-  console.log(processHistory)
+  let timeLine = processHistory.map(function (obj, index) {
+    return (<TimeLine key={index} process={<Card
+      processName={obj.processName.displayStr}
+      processStatus={obj.processStatus.displayStr}
+      startDueDate={obj.startDueDate.substring(0, 4)}
+      endDueDate={obj.endDueDate.substring(0, 4)}
+    />}>
+    </TimeLine>
+    );
+  })
   return (
-    <Grid container className={classes.root} spacing={2}>
-      <Grid item xs={12}>
-        <Grid container justify="center">
-          {
-            showTimeLine ? 
-            processHistory.map(function(obj,index){
-            <li>{index}</li>
-            }) : null
-          }
-        </Grid>
-        <Grid container justify="center" spacing={2}>
-          <List component="nav" aria-label="secondary mailbox folders">
-            <ListItem>
-              <span
-                style={{
-                  backgroundColor: "white",
-                  border: "1px solid gray",
-                  padding: "5px",
-                  margin: "5px",
-                  color: "gray",
-                  fontSize: "20px",
-                }}
-              >
-                {" "}
-                FEILD TIMELINE
-              </span>
-            </ListItem>
-            <ListItem key="1">
-              <FormControl className={classes.formControl}>
-                <InputLabel id="locality-label">Locality</InputLabel>
-                <Select
-                  id="locality"
-                  name="locality"
-                  value={locality}
-                  onChange={handleChange}
-                >
-                  {locationsDataFromServer.map((locationDataFromServer) => {
-                    return (
-                      <MenuItem
-                        key={locationDataFromServer.code}
-                        value={locationDataFromServer.code}
-                      >
-                        {locationDataFromServer.displayStr}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-            </ListItem>
+    <div>
+      {!showTimeLine ?
+        <Grid container className={classes.root} spacing={2} >
+          <Grid item xs={12}>
+            <Grid container justify="center">
 
-            <ListItem key="2">
-              <FormControl className={classes.formControl}>
-                <InputLabel id="fId-label">Field ID</InputLabel>
-                <Select
-                  id="fieldId"
-                  name="fieldId"
-                  value={fieldId}
-                  onChange={handleChange}
-                >
-                  {fields.map((field) => {
-                    return (
-                      <MenuItem key={field.identifier} value={field.identifier}>
-                        {field.identifier}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-            </ListItem>
-
-            <ListItem>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <Grid container justify="space-around">
-                  <KeyboardDatePicker
-                    disableToolbar
-                    variant="inline"
-                    format="MM/dd/yyyy"
-                    margin="normal"
-                    id="start-date"
-                    label="From"
-                    value={selectedDate}
-                    onChange={handleStartDateChange}
-                    KeyboardButtonProps={{
-                      "aria-label": "change date",
+            </Grid>
+            <Grid container justify="center" spacing={2}>
+              <List component="nav" aria-label="secondary mailbox folders">
+                <ListItem>
+                  <span
+                    style={{
+                      backgroundColor: "white",
+                      border: "1px solid gray",
+                      padding: "5px",
+                      margin: "5px",
+                      color: "gray",
+                      fontSize: "20px",
                     }}
-                  />
-                </Grid>
-              </MuiPickersUtilsProvider>
-            </ListItem>
+                  >
+                    {" "}
+              FEILD TIMELINE
+            </span>
+                </ListItem>
+                <ListItem key="1">
+                  <FormControl className={classes.formControl}>
+                    <InputLabel id="locality-label">Locality</InputLabel>
+                    <Select
+                      id="locality"
+                      name="locality"
+                      value={locality}
+                      onChange={handleChange}
+                    >
+                      {locationsDataFromServer.map((locationDataFromServer) => {
+                        return (
+                          <MenuItem
+                            key={locationDataFromServer.code}
+                            value={locationDataFromServer.code}
+                          >
+                            {locationDataFromServer.displayStr}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </ListItem>
 
-            <ListItem>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <Grid container justify="space-around">
-                  <KeyboardDatePicker
-                    disableToolbar
-                    variant="inline"
-                    format="MM/dd/yyyy"
-                    margin="normal"
-                    id="en-date"
-                    label="To"
-                    value={selectedEndDate}
-                    onChange={handleEndateChange}
-                    KeyboardButtonProps={{
-                      "aria-label": "change date",
-                    }}
-                  />
-                </Grid>
-              </MuiPickersUtilsProvider>
-            </ListItem>
+                <ListItem key="2">
+                  <FormControl className={classes.formControl}>
+                    <InputLabel id="fId-label">Field ID</InputLabel>
+                    <Select
+                      id="fieldId"
+                      name="fieldId"
+                      value={fieldId}
+                      onChange={handleChange}
+                    >
+                      {fields.map((field) => {
+                        return (
+                          <MenuItem key={field.identifier} value={field.identifier}>
+                            {field.identifier}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </ListItem>
 
-            <ListItem key="5">
-              <Button variant="outlined" color="primary" onClick={handleCLick}>
-                SHOW
-              </Button>
-            </ListItem>
-          </List>
-        </Grid>
+                <ListItem>
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Grid container justify="space-around">
+                      <KeyboardDatePicker
+                        disableToolbar
+                        variant="inline"
+                        format="MM/dd/yyyy"
+                        margin="normal"
+                        id="start-date"
+                        label="From"
+                        value={selectedDate}
+                        onChange={handleStartDateChange}
+                        KeyboardButtonProps={{
+                          "aria-label": "change date",
+                        }}
+                      />
+                    </Grid>
+                  </MuiPickersUtilsProvider>
+                </ListItem>
 
-      </Grid>
-    </Grid>
+                <ListItem>
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Grid container justify="space-around">
+                      <KeyboardDatePicker
+                        disableToolbar
+                        variant="inline"
+                        format="MM/dd/yyyy"
+                        margin="normal"
+                        id="en-date"
+                        label="To"
+                        value={selectedEndDate}
+                        onChange={handleEndateChange}
+                        KeyboardButtonProps={{
+                          "aria-label": "change date",
+                        }}
+                      />
+                    </Grid>
+                  </MuiPickersUtilsProvider>
+                </ListItem>
+
+                <ListItem key="5">
+                  <Button variant="outlined" color="primary" onClick={handleCLick}>
+                    SHOW
+            </Button>
+                </ListItem>
+              </List>
+            </Grid>
+
+          </Grid>
+        </Grid > : null
+
+      }
+
+      {
+        timeLine
+      }
+    </div>
   );
 }
 

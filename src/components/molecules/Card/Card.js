@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
     root: {
-        minWidth: 275,
+        minWidth: 40,
     },
     bullet: {
         display: 'inline-block',
@@ -14,10 +14,10 @@ const useStyles = makeStyles({
         transform: 'scale(0.8)',
     },
     title: {
-        fontSize: 14,
+        fontSize: 20,
     },
     pos: {
-        marginBottom: 12,
+        marginBottom: 6,
     },
 });
 

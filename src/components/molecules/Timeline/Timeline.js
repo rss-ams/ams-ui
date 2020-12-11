@@ -16,8 +16,7 @@ export default function BasicTimeline(props) {
                     <TimelineConnector />
                 </TimelineSeparator>
                 <TimelineContent>
-                    HI
-                    {/* <OutlinedCard process={props.process} /> */}
+                    {props.process}
                 </TimelineContent>
             </TimelineItem>
         </Timeline>
