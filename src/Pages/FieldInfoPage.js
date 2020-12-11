@@ -229,9 +229,9 @@ function FieldInfoPage() {
             );
           })}
         </Select>
-        {showLocalityError ? (
+        {showLocalityError && (
           <FormHelperText>Select a locality</FormHelperText>
-        ) : null}
+        )}
       </FormControl>
       {/* fetch results button */}
       <Button
