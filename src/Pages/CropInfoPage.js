@@ -69,7 +69,7 @@ function CropInfoPage() {
   const [alertMessage, setAlertMessage] = useState('');
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
-  const [cropsData, setCrops] = useState([]);
+  const [crops, setCrops] = useState([]);
 
   /**
    * Function to fetch all crop information using API
@@ -94,7 +94,7 @@ function CropInfoPage() {
    *
    */
   const getRowData = () => {
-    let data = cropsData.map((obj) => {
+    let data = crops.map((obj) => {
       return {
         id: obj.id,
         name: obj.name,
