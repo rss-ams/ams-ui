@@ -38,3 +38,19 @@ export const createField = async (payload) => {
     .then(handleErrors)
     .then((response) => response.json());
 };
+
+/**
+ * API to create a new field
+ * @param {object} payload
+ */
+export const updateField = async (payload) => {
+  return fetch(API_URL + 'fields', {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(handleErrors)
+    .then((response) => response.json());
+};
