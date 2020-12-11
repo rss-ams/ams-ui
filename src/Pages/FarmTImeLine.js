@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function FarmTimeline() {
+  var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
   const classes = useStyles();
   const [locality, setLocality] = React.useState("");
   const [fieldId, setFieldId] = React.useState("");
@@ -109,8 +110,8 @@ function FarmTimeline() {
     return (<TimeLine key={index} process={<Card
       processName={obj.processName.displayStr}
       processStatus={obj.processStatus.displayStr}
-      startDueDate={obj.startDueDate.substring(0, 4)}
-      endDueDate={obj.endDueDate.substring(0, 4)}
+      startDueDate={obj.startDueDate.substring(0, 4)+" - "+months[parseInt(obj.startDueDate.substring(obj.startDueDate.indexOf("-")+1 ,obj.startDueDate.indexOf("-")+3 ), 10)]+" - "+obj.startDueDate.substring(obj.startDueDate.lastIndexOf("-")+1 ,obj.startDueDate.lastIndexOf("-")+3 )}
+      endDueDate={obj.endDueDate.substring(0, 4)+" - "+ months[obj.endDueDate.substring(obj.endDueDate.indexOf("-")+1 ,obj.endDueDate.indexOf("-")+3 )]+" - "+obj.endDueDate.substring(obj.endDueDate.lastIndexOf("-")+1 ,obj.endDueDate.lastIndexOf("-")+3 )}
     />}>
     </TimeLine>
     );
