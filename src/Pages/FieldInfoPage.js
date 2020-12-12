@@ -1,5 +1,4 @@
 import {
-  Button,
   FormControl,
   FormGroup,
   InputLabel,
@@ -84,7 +83,7 @@ function FieldInfoPage() {
   const [alertMessage, setAlertMessage] = useState('');
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
-  const [fieldsData, setFieldData] = useState([]);
+  const [fieldsData, setFieldsData] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState('');
   const [fieldTableRows, setFieldTableRows] = useState([]);
@@ -106,7 +105,7 @@ function FieldInfoPage() {
   const getFieldData = () => {
     getAllFields()
       .then((fields) => {
-        setFieldData(fields.content);
+        setFieldsData(fields.content);
       })
       .catch((e) => {
         console.log('Fetching all fields failed', e);
@@ -115,8 +114,9 @@ function FieldInfoPage() {
   };
 
   useEffect(() => {
-    getFieldData();
-  }, []);
+    if(locality === '') getFieldData();
+    else fetchFieldsForLocation();
+  }, [locality]);
 
   useEffect(() => {
     updateRowData();
@@ -131,14 +131,13 @@ function FieldInfoPage() {
         id: obj.id,
         name: obj.identifier,
         location: obj.location.displayStr,
-        locationId: obj.location.code,
-        area: obj.area,
-        obj: obj,
+        locationCode: obj.location.code,
+        area: obj.area,        
       };
     });
     data.sort((a, b) => (a.id > b.id) ? 1 : -1);
     setFieldTableRows(data);
-  };
+  }; 
 
   /**
    * Handler called on closing alert
@@ -165,13 +164,13 @@ function FieldInfoPage() {
   };
 
   /**
-   * Function to fetch fields for a selected ocation using API
+   * Function to fetch fields for a selected location using API
    * updates fieldsData if call is successful
    * shows alert in case call fails
    */
   const fetchFieldsForLocation = () => {
     getFieldsByLocation(locality)
-      .then(setFieldData)
+      .then(setFieldsData)
       .catch((e) => {
         console.log(`Fetching fields for ${locality} failed`, e);
         showAlert(`Fetching fields for ${locality} failed`, 'error');
@@ -180,7 +179,7 @@ function FieldInfoPage() {
 
   /**
    * 
-   //TODO edit implementation for fields
+   //Opens the edit modal and passed the relevant row information
    * @param {object} selectedRow 
    */
   const editField = (selectedRow) => {
@@ -212,9 +211,14 @@ function FieldInfoPage() {
     setAlertStatus(true);
   };
 
+  /**
+   * closes the edit modal
+   * refreshes the table with updated data
+   */
   const handleClose = () => {
     setIsEditModalOpen(false);
-    getFieldData();
+    if(locality === '') getFieldData();
+    else fetchFieldsForLocation();
   };
 
   return (
@@ -240,16 +244,7 @@ function FieldInfoPage() {
             );
           })}
         </Select>
-      </FormControl>
-      {/* fetch results button */}
-      <Button
-        variant='contained'
-        color='primary'
-        className={classes.formControl}
-        onClick={fetchFieldsForLocation}
-      >
-        Fetch
-      </Button>
+      </FormControl> 
 
       {/* custom table to show field info */}
       <TableComponent
@@ -258,16 +253,18 @@ function FieldInfoPage() {
         deleteHandler={deleteField}
         editHandler={editField}
       />
+      {/* modal to show selected field data and edit */}
       <SimpleModal
         isOpen={isEditModalOpen}
-        closeHandler={handleClose}
-        modalBody={
+        closeHandler={handleClose}        
+        modalBody={          
           <FieldForm
             operation='UPDATE'
             title='Edit Field'
             selectedRow={selectedRow}
             isOpen={isEditModalOpen}
             closeHandler={handleClose}
+            submitButtonText='Save'
           />
         }
       ></SimpleModal>

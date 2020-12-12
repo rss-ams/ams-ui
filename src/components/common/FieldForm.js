@@ -40,9 +40,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FieldForm = ({ operation, title, selectedRow, closeHandler }) => {
+const FieldForm = ({ operation, title, selectedRow, closeHandler, submitButtonText }) => {
   const classes = useStyles();
-  const [locality, setLocality] = useState(selectedRow.locationId);
+  const [locality, setLocality] = useState(selectedRow.locationCode);
   const [fieldIdentifier, setFieldIdentifier] = useState(selectedRow.name);
   const [area, setArea] = useState(selectedRow.area);
   const [locations, setLocations] = useState([]);
@@ -72,28 +72,16 @@ const FieldForm = ({ operation, title, selectedRow, closeHandler }) => {
     setAlertStatus(true);
   };
 
-  const handleTextChange = ({ target }) => {
-    const { name, value } = target;
-    if (name === 'fieldId') {
-      setFieldIdentifier(value);
-    } else if (name === 'area') {
-      setArea(value);
-    }
-  };
-
   const handleSubmit = () => {
     let payload = {};
-    // payload.name = fieldIdentifier;
     payload.identifier = fieldIdentifier;
     payload.location = locality;
     payload.area = Number(area);
-    payload.id = selectedRow.obj.id;
+    payload.id = selectedRow.id;
     
-    // console.log(selectedRow.obj);
     if (operation === 'UPDATE') {
       updateField(payload)
         .then((response) => {
-          // showAlert('Field successfully updated', 'info');
           closeHandler();          
         })
         .catch((e) => {
@@ -116,6 +104,10 @@ const FieldForm = ({ operation, title, selectedRow, closeHandler }) => {
     const { name, value } = target;
     if (name === 'locality') {
       setLocality(value);
+    } else if (name === 'fieldId') {
+      setFieldIdentifier(value);
+    } else if (name === 'area') {
+      setArea(value);
     }
   };
 
@@ -151,7 +143,7 @@ const FieldForm = ({ operation, title, selectedRow, closeHandler }) => {
         className={classes.formControl}
         id='fieldId'
         name='fieldId'
-        onChange={handleTextChange}
+        onChange={handleChange}
         label='Field Name'
         value={fieldIdentifier}
       />
@@ -160,7 +152,7 @@ const FieldForm = ({ operation, title, selectedRow, closeHandler }) => {
         className={classes.formControl}
         id='area'
         name='area'
-        onChange={handleTextChange}
+        onChange={handleChange}
         label='Area'
         value={area}
       />
@@ -172,7 +164,7 @@ const FieldForm = ({ operation, title, selectedRow, closeHandler }) => {
         className={classes.submitButton}
         onClick={handleSubmit}
       >
-        Submit
+        {submitButtonText}
       </Button>
 
       <Snackbar open={alertStatus} onClose={handleAlertClose}>
