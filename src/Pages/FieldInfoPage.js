@@ -7,6 +7,7 @@ import {
   Snackbar,
   FormHelperText,
   Typography,
+  Button,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
@@ -120,13 +121,13 @@ function FieldInfoPage() {
   };
 
   useEffect(() => {
-    if(locality === '') getFieldData();
-    else fetchFieldsForLocation();
-  }, [locality]);
+    getFieldData();
+  },[]);
 
   useEffect(() => {
     updateRowData();
   }, [fieldsData]);
+
   /**
    * Function to create and return row data for binding to table
    *
@@ -138,12 +139,12 @@ function FieldInfoPage() {
         name: obj.identifier,
         location: obj.location.displayStr,
         locationCode: obj.location.code,
-        area: obj.area,        
+        area: obj.area,
       };
     });
-    data.sort((a, b) => (a.id > b.id) ? 1 : -1);
+    data.sort((a, b) => (a.id > b.id ? 1 : -1));
     setFieldTableRows(data);
-  }; 
+  };
 
   /**
    * Handler called on closing alert
@@ -178,7 +179,7 @@ function FieldInfoPage() {
     if (Number.isInteger(locality)) {
       setLocalityError(false);
       getFieldsByLocation(locality)
-        .then(setFields)
+        .then(setFieldsData)
         .catch((e) => {
           console.log(`Fetching fields for ${locality} failed`, e);
           showAlert(`Fetching fields for ${locality} failed`, 'error');
@@ -228,7 +229,7 @@ function FieldInfoPage() {
    */
   const handleClose = () => {
     setIsEditModalOpen(false);
-    if(locality === '') getFieldData();
+    if (locality === '') getFieldData();
     else fetchFieldsForLocation();
   };
 
@@ -279,8 +280,8 @@ function FieldInfoPage() {
       {/* modal to show selected field data and edit */}
       <SimpleModal
         isOpen={isEditModalOpen}
-        closeHandler={handleClose}        
-        modalBody={          
+        closeHandler={handleClose}
+        modalBody={
           <FieldForm
             operation='UPDATE'
             title='Edit Field'
