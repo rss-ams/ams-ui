@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ActivityPage = () => {
+const ProcessPage = () => {
   const classes = useStyles();
   const [locationCode, setLocationCode] = useState('');
   const [locations, setLocations] = useState([]);
@@ -317,4 +317,4 @@ const ActivityPage = () => {
   );
 };
 
-export default ActivityPage;
+export default ProcessPage;

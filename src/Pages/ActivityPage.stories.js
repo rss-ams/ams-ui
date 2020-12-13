@@ -1,9 +1,9 @@
 import React from 'react';
-import ActivityPage from './ActivityPage';
+import ProcessPage from './ProcessPage';
 
 export default {
-  title: 'Organisms/ActivityPage',
-  component: ActivityPage,
+  title: 'Organisms/ProcessPage',
+  component: ProcessPage,
 };
 
-export const Activity = () => <ActivityPage></ActivityPage>;
+export const Activity = () => <ProcessPage></ProcessPage>;

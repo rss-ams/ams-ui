@@ -13,7 +13,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import DynamicTabs from 'components/DynamicTabs';
-import ActivityPage from 'Pages/ActivityPage';
+import ProcessPage from 'Pages/ProcessPage';
 import AddCrop from 'Pages/AddCrop';
 import AddCropCycle from 'Pages/AddCropCycle';
 import AddField from 'Pages/AddField';
@@ -120,7 +120,7 @@ const ApplnBar = () => {
         />
       );
     } else if (page === 'ACTIVITY') {
-      return <DynamicTabs component1={<ActivityPage />} component2={'c2'} />;
+      return <DynamicTabs component1={<ProcessPage />} component2={'c2'} />;
     } else if (page === 'VEHICLE') {
       return <AddVehicle />;
     }
