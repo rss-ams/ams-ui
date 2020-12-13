@@ -161,7 +161,7 @@ function FieldInfoPage() {
    * shows alert in case call fails
    */
   const fetchFieldsForLocation = () => {
-    if (Number.isInteger(locality) {
+    if (Number.isInteger(locality)) {
       setLocalityError(false);
       getFieldsByLocation(locality)
         .then(setFields)
