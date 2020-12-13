@@ -174,7 +174,7 @@ function FieldInfoPage() {
     if (Number.isInteger(locality)) {
       setLocalityError(false);
       getFieldsByLocation(locality)
-        .then(setFields)
+        .then(setFieldsData)
         .catch((e) => {
           console.log(`Fetching fields for ${locality} failed`, e);
           showAlert(`Fetching fields for ${locality} failed`, 'error');
@@ -255,16 +255,6 @@ function FieldInfoPage() {
           <FormHelperText>Select a locality</FormHelperText>
         )}
       </FormControl>
-      {/* fetch results button */}
-      <Button
-        variant='contained'
-        color='primary'
-        className={classes.formControl}
-        onClick={fetchFieldsForLocation}
-      >
-        Fetch
-      </Button>
-
       {/* custom table to show field info */}
       <TableComponent
         cols={columnData}

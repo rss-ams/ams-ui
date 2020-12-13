@@ -12,6 +12,22 @@ export const createCrop = async (payload) => {
     .then((response) => response.json());
 };
 
+/**
+ * API to update a crop
+ * @param {object} payload
+ */
+export const updateCrop = async (payload) => {
+  return fetch(API_URL + 'crops', {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(handleErrors)
+    .then((response) => response.json());
+};
+
 export const getAllCrops = async () => {
   return fetch(API_URL + 'crops')
     .then(handleErrors)
