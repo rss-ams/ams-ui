@@ -47,7 +47,7 @@ const AddCropCycle = () => {
 
   const [crop, setCrop] = useState('');
   const [cropSeason, setCropSeason] = useState('');
-  const [year, handleYearChange] = useState(new Date());
+  const [year, setYear] = useState(new Date());
   const [fields, setFields] = useState([]);
 
   const [allCrops, setAllCrops] = useState([]);
@@ -191,7 +191,7 @@ const AddCropCycle = () => {
             label='Year'
             name='year'
             value={year}
-            onChange={handleYearChange}
+            onChange={setYear}
             views={['year']}
           />
         </MuiPickersUtilsProvider>

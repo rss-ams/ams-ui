@@ -27,3 +27,15 @@ export const getCropCyclesByField = async (fieldId) => {
     .then(handleErrors)
     .then((response) => response.json());
 };
+
+/**
+ * API to fetch crop-cycles associated with the specified field
+ *
+ * @param {number} fieldId ID for the field
+ */
+export const getCropCyclesByField = async (fieldId) => {
+  let url = `${API_URL}fieldCropCycles?fieldId=${parseInt(fieldId)}`;
+  return fetch(url)
+    .then(handleErrors)
+    .then((response) => response.json());
+};
