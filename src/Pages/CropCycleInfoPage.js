@@ -6,6 +6,7 @@ import {
   MenuItem,
   Select,
   Snackbar,
+  FormHelperText,
   Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -32,62 +33,61 @@ const useStyles = makeStyles((theme) => ({
 
 /**
  * Define columns for Crop Cycle Info Table
- * * Need to add last two entries for edit and delete icons to be visible
+ *
  */
 const columnData = [
   {
     id: 'id',
     type: 'text',
     label: 'Id',
-    minWidth: 5,
+    width: 5,
   },
   {
     id: 'fieldName',
     type: 'text',
     label: 'Field Name',
-    minWidth: 30,
+    width: 30,
   },
   {
     id: 'cropName',
     type: 'text',
     label: 'Crop',
-    minWidth: 30,
+    width: 30,
   },
   {
     id: 'season',
     type: 'text',
     label: 'Season',
-    minWidth: 10,
+    width: 10,
   },
   {
-    id: 'processHistory',
-    label: '',
-    minWidth: 40,
-    type: 'link',
-    align: 'left',
-    text: 'Process history'
+    id: 'year',
+    type: 'text',
+    label: 'Year',
+    width: 10,
   },
   {
-    id: 'currentProcesses',
-    label: '',
-    minWidth: 40,
-    type: 'link',
-    align: 'left',
-    text: 'Current processes'
-  },
-  {
-    id: 'edit',
-    type: 'icon',
-    minWidth: 5,
-    align: 'left',
-    label: '',
-  },
-  {
-    id: 'delete',
-    type: 'icon',
-    minWidth: 5,
-    align: 'left',
-    label: '',
+    id: 'actions',
+    type: 'menu',
+    label: 'Actions',
+    actions: [
+      {
+        id: 'processHistory',
+        label: 'Process History',
+      },
+      {
+        id: 'currentProcesses',
+        label: 'Current Processes',
+      },
+      {
+        id: 'edit',
+        label: 'Edit',
+      },
+      {
+        id: 'delete',
+        label: 'Delete',
+      },
+    ],
   },
 ];
 
@@ -105,6 +105,8 @@ function CropCycleInfoPage() {
   const [alertMessage, setAlertMessage] = useState('');
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
+  const [showLocalityError, setLocalityError] = useState(false);
+  const [showFieldError, setFieldError] = useState(false);
   const [fields, setFields] = useState([]);
   const [cropCycles, setCropCycles] = useState([]);
 
@@ -118,13 +120,16 @@ function CropCycleInfoPage() {
   }, []);
 
   useEffect(() => {
-    if(Number.isInteger(locality)){
-    getFieldsByLocation(locality)
-      .then(setFields)
-      .catch((e) => {
-        console.log('Fetching fields failed', e);
-        showAlert(`Fetching fields failed`, 'error');
-      });
+    if (Number.isInteger(locality)) {
+      setLocalityError(false);
+      getFieldsByLocation(locality)
+        .then(setFields)
+        .catch((e) => {
+          console.log('Fetching fields failed', e);
+          showAlert(`Fetching fields failed`, 'error');
+        });
+    } else {
+      setLocalityError(true);
     }
   }, [locality]);
 
@@ -134,15 +139,18 @@ function CropCycleInfoPage() {
    * shows alert in case call fails
    */
   const getCropCycles = () => {
-    if(Number.isInteger(field)){
-    getCropCyclesByField(field)
-      .then((resp) => {
-        setCropCycles(resp.content);
-      })
-      .catch((e) => {
-        console.log('Fetching crop cycles failed', e);
-        showAlert(`Fetching crop cycles failed`, 'error');
-      });
+    if (Number.isInteger(field)) {
+      setFieldError(false);
+      getCropCyclesByField(field)
+        .then((resp) => {
+          setCropCycles(resp.content);
+        })
+        .catch((e) => {
+          console.log('Fetching crop cycles failed', e);
+          showAlert(`Fetching crop cycles failed`, 'error');
+        });
+    } else {
+      setFieldError(true);
     }
   };
 
@@ -204,23 +212,28 @@ function CropCycleInfoPage() {
     }
   };
 
-
   /**
-   * 
-   //TODO edit implementation for crop cycles
-   * @param {object} selectedRow 
+   //TODO action implementation for crop cycles
+   * @param {*} id 
+   * @param {*} selectedRow 
    */
-  const editCropCycle = (selectedRow) => {
-    console.log(selectedRow);
-  };
-
-  /**
-   *
-   //TODO delete implementation for crop cycles
-   * @param {object} selectedRow 
-   */
-  const deleteCropCycle = (selectedRow) => {
-    console.log(selectedRow);
+  const handleCropCycleOptions = (id, selectedRow) => {
+    switch (id) {
+      case 'edit':
+        console.log(id, selectedRow);
+        break;
+      case 'delete':
+        console.log(id, selectedRow);
+        break;
+      case 'currentProcesses':
+        console.log(id, selectedRow);
+        break;
+      case 'processHistory':
+        console.log(id, selectedRow);
+        break;
+      default:
+        console.log(selectedRow);
+    }
   };
 
   /**
@@ -260,6 +273,9 @@ function CropCycleInfoPage() {
             );
           })}
         </Select>
+        {showLocalityError && (
+          <FormHelperText>Select a locality</FormHelperText>
+        )}
       </FormControl>
       {/* control for field selection */}
       <FormControl className={classes.formControl}>
@@ -278,6 +294,7 @@ function CropCycleInfoPage() {
             );
           })}
         </Select>
+        {showFieldError && <FormHelperText>Select a field</FormHelperText>}
       </FormControl>
       {/* fetch results button */}
       <Button
@@ -293,8 +310,7 @@ function CropCycleInfoPage() {
       <TableComponent
         cols={columnData}
         rows={getRowData()}
-        deleteHandler={deleteCropCycle}
-        editHandler={editCropCycle}
+        contextMenuActionHandler={handleCropCycleOptions}
       />
       {/* alert UI */}
       <Snackbar open={alertStatus} onClose={handleAlertClose}>

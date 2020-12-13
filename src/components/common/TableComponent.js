@@ -1,8 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
-// import Chip from '@material-ui/core/Chip';
+import ContextMenu from 'components/common/ContextMenu';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -53,6 +52,7 @@ export default function TableComponent({
   rows,
   deleteHandler,
   editHandler,
+  contextMenuActionHandler,
 }) {
   const classes = useStyles();
   return (
@@ -83,18 +83,22 @@ export default function TableComponent({
                   {cols.map((column) => {
                     const value = row[column.id];
                     return (
-                      <TableCell key={column.id} align={column.align} >
+                      <TableCell key={column.id} align={column.align}>
+                        {/* when column is simple text */}
                         {column.type === 'text'
                           ? column.format && typeof value === 'number'
                             ? column.format(value)
                             : value
                           : null}
-                        {column.type === 'link' && (
-                          <Link href='#' color='primary'>
-                            {column.text}
-                          </Link>
-                          // <Chip label={column.text} href="#" clickable variant='outlined' color='primary'/>
+                        {/* when column is actions menu */}
+                        {column.type === 'menu' && (
+                          <ContextMenu
+                            menuActions={column.actions}
+                            row={row}
+                            contextMenuActionHandler={contextMenuActionHandler}
+                          />
                         )}
+                        {/* when column is edit or delete icon */}
                         {column.type === 'icon' ? (
                           <Tooltip title={column.id}>
                             {column.id === 'delete' ? (
