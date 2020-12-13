@@ -7,6 +7,7 @@ import {
   Snackbar,
   FormHelperText,
   Typography,
+  Button
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
@@ -174,7 +175,7 @@ function FieldInfoPage() {
     if (Number.isInteger(locality)) {
       setLocalityError(false);
       getFieldsByLocation(locality)
-        .then(setFields)
+        .then(setFieldsData)
         .catch((e) => {
           console.log(`Fetching fields for ${locality} failed`, e);
           showAlert(`Fetching fields for ${locality} failed`, 'error');
@@ -260,8 +261,7 @@ function FieldInfoPage() {
         variant='contained'
         color='primary'
         className={classes.formControl}
-        onClick={fetchFieldsForLocation}
-      >
+        onClick={fetchFieldsForLocation}>
         Fetch
       </Button>
 
