@@ -173,6 +173,7 @@ function CropCycleInfoPage() {
         currentProcesses: obj.currentProcesses,
       };
     });
+    data.sort((a, b) => (a.year > b.year ? 1 : -1));
     return data;
   };
 
