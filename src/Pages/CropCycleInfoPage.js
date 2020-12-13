@@ -197,6 +197,7 @@ function CropCycleInfoPage() {
     const { name, value } = target;
     if (name === 'locality') {
       setLocality(value);
+      setField('');
     }
   };
 
