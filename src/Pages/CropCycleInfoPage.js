@@ -288,10 +288,10 @@ function CropCycleInfoPage() {
           value={field}
           onChange={handleFieldChange}
         >
-          {fields.map((field) => {
+          {fields.map((fieldObj) => {
             return (
-              <MenuItem key={field.id} value={field.id}>
-                {field.identifier}
+              <MenuItem key={fieldObj.id} value={fieldObj.id}>
+                {fieldObj.identifier}
               </MenuItem>
             );
           })}
