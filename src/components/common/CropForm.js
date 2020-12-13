@@ -68,14 +68,7 @@ const AddCrop = ({ operation, title, selectedRow, closeHandler, submitButtonText
     setAlertMessage(message);
     setAlertSeverity(severity);
     setAlertStatus(true);
-  };
-
-  const handleTextChange = ({ target }) => {
-    const { name, value } = target;
-    if (name === 'cropName') {
-      setCropName(value);
-    }
-  };
+  };  
 
   const handleChange = ({ target }) => {
     const { name, value } = target;
@@ -83,6 +76,8 @@ const AddCrop = ({ operation, title, selectedRow, closeHandler, submitButtonText
       setCropSeason(value);
     } else if (name === 'cropGrowthProtocol') {
       setCropGrowthProtocol(value);
+    } else if (name === 'cropName') {
+      setCropName(value);
     }
   };
 
@@ -126,7 +121,7 @@ const AddCrop = ({ operation, title, selectedRow, closeHandler, submitButtonText
         className={classes.formControl}
         id='cropName'
         name='cropName'
-        onChange={handleTextChange}
+        onChange={handleChange}
         label='Crop Name'
         value={cropName}
       />
