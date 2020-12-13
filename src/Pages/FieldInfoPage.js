@@ -38,21 +38,25 @@ const useStyles = makeStyles((theme) => ({
 const columnData = [
   {
     id: 'id',
+    type: 'text',
     label: 'Id',
     width: 5,
   },
   {
     id: 'name',
+    type: 'text',
     label: 'Field Name',
     width: 30,
   },
   {
     id: 'location',
+    type: 'text',
     label: 'Locality',
     width: 30,
   },
   {
     id: 'area',
+    type: 'text',
     label: 'Area (in acres)',
     width: 30,
   },

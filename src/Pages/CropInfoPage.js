@@ -25,21 +25,25 @@ const useStyles = makeStyles((theme) => ({
 const columnData = [
   {
     id: 'id',
+    type: 'text',
     label: 'Id',
     width: 5,
   },
   {
     id: 'name',
+    type: 'text',
     label: 'Crop Name',
     width: 50,
   },
   {
     id: 'season',
+    type: 'text',
     label: 'Season',
     width: 30,
   },
   {
     id: 'cgp',
+    type: 'text',
     label: 'Crop Growth Protocol',
     width: 20,
   },
