@@ -12,12 +12,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
 import React, { useState, useEffect } from 'react';
 import { getFieldsByLocation } from 'dataclients/FieldsClient';
-import { getCropCyclesbyField } from 'dataclients/CropCyclesClient';
+import { getCropCyclesByField } from 'dataclients/CropCyclesClient';
 import { getLocations } from 'dataclients/LocationsClient';
 import TableComponent from 'components/common/TableComponent';
 
 /**
- * css styles for Field Info Page
+ * css styles for Crop Cycle Info Page
  */
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -31,29 +31,49 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 /**
- * Define columns for Fields Info Table
+ * Define columns for Crop Cycle Info Table
  * * Need to add last two entries for edit and delete icons to be visible
  */
 const columnData = [
   {
     id: 'id',
+    type: 'text',
     label: 'Id',
     minWidth: 5,
   },
   {
     id: 'fieldName',
+    type: 'text',
     label: 'Field Name',
     minWidth: 30,
   },
   {
     id: 'cropName',
+    type: 'text',
     label: 'Crop',
     minWidth: 30,
   },
   {
     id: 'season',
+    type: 'text',
     label: 'Season',
     minWidth: 10,
+  },
+  {
+    id: 'processHistory',
+    label: '',
+    minWidth: 40,
+    type: 'link',
+    align: 'left',
+    text: 'Process history'
+  },
+  {
+    id: 'currentProcesses',
+    label: '',
+    minWidth: 40,
+    type: 'link',
+    align: 'left',
+    text: 'Current processes'
   },
   {
     id: 'edit',
@@ -72,9 +92,10 @@ const columnData = [
 ];
 
 /**
- * Component to show Field Information
+ * Component to show Crop Cycle Information
  * @returns form allowing location selection
- * @returns Table to show field info
+ * @returns form allowing field selection
+ * @returns Table to show crop cycle info
  */
 function CropCycleInfoPage() {
   const classes = useStyles();
@@ -115,7 +136,9 @@ function CropCycleInfoPage() {
   const getCropCycles = () => {
     if(Number.isInteger(field)){
     getCropCyclesByField(field)
-      .then(setCropCycles)
+      .then((resp) => {
+        setCropCycles(resp.content);
+      })
       .catch((e) => {
         console.log('Fetching crop cycles failed', e);
         showAlert(`Fetching crop cycles failed`, 'error');
@@ -137,7 +160,7 @@ function CropCycleInfoPage() {
         fieldName: obj.field.identifier,
         cropId: obj.crop.id,
         cropName: obj.crop.name,
-        ...obj.crop.cropGrowthProtocol,
+        ...obj.crop.cropGrowthProtocol.fertilization,
         processHistory: obj.processHistory,
         currentProcesses: obj.currentProcesses,
       };
@@ -170,8 +193,8 @@ function CropCycleInfoPage() {
   };
 
   /**
-   * Handler called when user selects location from dropdown
-   * sets the locality value to the selection
+   * Handler called when user selects field from dropdown
+   * sets the field value to the selection
    * @param {*} object
    */
   const handleFieldChange = ({ target }) => {
@@ -184,19 +207,19 @@ function CropCycleInfoPage() {
 
   /**
    * 
-   //TODO edit implementation for fields
+   //TODO edit implementation for crop cycles
    * @param {object} selectedRow 
    */
-  const editField = (selectedRow) => {
+  const editCropCycle = (selectedRow) => {
     console.log(selectedRow);
   };
 
   /**
    *
-   //TODO delete implementation for fields
+   //TODO delete implementation for crop cycles
    * @param {object} selectedRow 
    */
-  const deleteField = (selectedRow) => {
+  const deleteCropCycle = (selectedRow) => {
     console.log(selectedRow);
   };
 
@@ -249,7 +272,7 @@ function CropCycleInfoPage() {
         >
           {fields.map((field) => {
             return (
-              <MenuItem key={field.identifier} value={field.identifier}>
+              <MenuItem key={field.id} value={field.id}>
                 {field.identifier}
               </MenuItem>
             );
@@ -261,7 +284,7 @@ function CropCycleInfoPage() {
         variant='contained'
         color='primary'
         className={classes.formControl}
-        onClick={getCropCycles()}
+        onClick={getCropCycles}
       >
         Fetch
       </Button>
@@ -270,8 +293,8 @@ function CropCycleInfoPage() {
       <TableComponent
         cols={columnData}
         rows={getRowData()}
-        deleteHandler={deleteField}
-        editHandler={editField}
+        deleteHandler={deleteCropCycle}
+        editHandler={editCropCycle}
       />
       {/* alert UI */}
       <Snackbar open={alertStatus} onClose={handleAlertClose}>

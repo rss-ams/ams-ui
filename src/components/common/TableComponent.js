@@ -1,6 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import Link from '@material-ui/core/Link';
+// import Chip from '@material-ui/core/Chip';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -81,10 +83,18 @@ export default function TableComponent({
                   {cols.map((column) => {
                     const value = row[column.id];
                     return (
-                      <TableCell key={column.id} align={column.align}>
-                        {column.format && typeof value === 'number'
-                          ? column.format(value)
-                          : value}
+                      <TableCell key={column.id} align={column.align} >
+                        {column.type === 'text'
+                          ? column.format && typeof value === 'number'
+                            ? column.format(value)
+                            : value
+                          : null}
+                        {column.type === 'link' && (
+                          <Link href='#' color='primary'>
+                            {column.text}
+                          </Link>
+                          // <Chip label={column.text} href="#" clickable variant='outlined' color='primary'/>
+                        )}
                         {column.type === 'icon' ? (
                           <Tooltip title={column.id}>
                             {column.id === 'delete' ? (
