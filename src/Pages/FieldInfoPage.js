@@ -1,5 +1,4 @@
 import {
-  Button,
   FormControl,
   FormGroup,
   InputLabel,
@@ -15,6 +14,8 @@ import React, { useState, useEffect } from 'react';
 import { getAllFields, getFieldsByLocation } from 'dataclients/FieldsClient';
 import { getLocations } from 'dataclients/LocationsClient';
 import TableComponent from 'components/common/TableComponent';
+import SimpleModal from 'components/common/SimpleModal';
+import FieldForm from 'components/common/FieldForm';
 
 /**
  * css styles for Field Info Page
@@ -84,7 +85,10 @@ function FieldInfoPage() {
   const [alertMessage, setAlertMessage] = useState('');
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
-  const [fieldsData, setFields] = useState([]);
+  const [fieldsData, setFieldsData] = useState([]);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState('');
+  const [fieldTableRows, setFieldTableRows] = useState([]);
 
   useEffect(() => {
     getLocations()
@@ -103,7 +107,7 @@ function FieldInfoPage() {
   const getFieldData = () => {
     getAllFields()
       .then((fields) => {
-        setFields(fields.content);
+        setFieldsData(fields.content);
       })
       .catch((e) => {
         console.log('Fetching all fields failed', e);
@@ -112,24 +116,30 @@ function FieldInfoPage() {
   };
 
   useEffect(() => {
-    getFieldData();
-  }, []);
+    if(locality === '') getFieldData();
+    else fetchFieldsForLocation();
+  }, [locality]);
 
+  useEffect(() => {
+    updateRowData();
+  }, [fieldsData]);
   /**
    * Function to create and return row data for binding to table
    *
    */
-  const getRowData = () => {
+  const updateRowData = () => {
     let data = fieldsData.map((obj) => {
       return {
         id: obj.id,
         name: obj.identifier,
         location: obj.location.displayStr,
-        area: obj.area,
+        locationCode: obj.location.code,
+        area: obj.area,        
       };
     });
-    return data;
-  };
+    data.sort((a, b) => (a.id > b.id) ? 1 : -1);
+    setFieldTableRows(data);
+  }; 
 
   /**
    * Handler called on closing alert
@@ -176,10 +186,12 @@ function FieldInfoPage() {
 
   /**
    * 
-   //TODO edit implementation for fields
+   //Opens the edit modal and passed the relevant row information
    * @param {object} selectedRow 
    */
   const editField = (selectedRow) => {
+    setIsEditModalOpen(true);
+    setSelectedRow(selectedRow);
     console.log(selectedRow);
   };
 
@@ -204,6 +216,16 @@ function FieldInfoPage() {
     setAlertMessage(message);
     setAlertSeverity(severity);
     setAlertStatus(true);
+  };
+
+  /**
+   * closes the edit modal
+   * refreshes the table with updated data
+   */
+  const handleClose = () => {
+    setIsEditModalOpen(false);
+    if(locality === '') getFieldData();
+    else fetchFieldsForLocation();
   };
 
   return (
@@ -246,10 +268,25 @@ function FieldInfoPage() {
       {/* custom table to show field info */}
       <TableComponent
         cols={columnData}
-        rows={getRowData()}
+        rows={fieldTableRows}
         deleteHandler={deleteField}
         editHandler={editField}
       />
+      {/* modal to show selected field data and edit */}
+      <SimpleModal
+        isOpen={isEditModalOpen}
+        closeHandler={handleClose}        
+        modalBody={          
+          <FieldForm
+            operation='UPDATE'
+            title='Edit Field'
+            selectedRow={selectedRow}
+            isOpen={isEditModalOpen}
+            closeHandler={handleClose}
+            submitButtonText='Save'
+          />
+        }
+      ></SimpleModal>
       {/* alert UI */}
       <Snackbar open={alertStatus} onClose={handleAlertClose}>
         <Alert onClose={handleAlertClose} severity={alertSeverity}>
