@@ -5,6 +5,7 @@ import {
   MenuItem,
   Select,
   Snackbar,
+  FormHelperText,
   Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -38,34 +39,34 @@ const columnData = [
   {
     id: 'id',
     label: 'Id',
-    minWidth: 5,
+    width: 5,
   },
   {
     id: 'name',
     label: 'Field Name',
-    minWidth: 30,
+    width: 30,
   },
   {
     id: 'location',
     label: 'Locality',
-    minWidth: 30,
+    width: 30,
   },
   {
     id: 'area',
-    label: 'Area',
-    minWidth: 10,
+    label: 'Area (in acres)',
+    width: 30,
   },
   {
     id: 'edit',
     type: 'icon',
-    minWidth: 5,
+    width: 5,
     align: 'left',
     label: '',
   },
   {
     id: 'delete',
     type: 'icon',
-    minWidth: 5,
+    width: 5,
     align: 'left',
     label: '',
   },
@@ -80,6 +81,7 @@ function FieldInfoPage() {
   const classes = useStyles();
   const [locations, setLocations] = useState([]);
   const [locality, setLocality] = useState('');
+  const [showLocalityError, setLocalityError] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
@@ -169,12 +171,17 @@ function FieldInfoPage() {
    * shows alert in case call fails
    */
   const fetchFieldsForLocation = () => {
-    getFieldsByLocation(locality)
-      .then(setFieldsData)
-      .catch((e) => {
-        console.log(`Fetching fields for ${locality} failed`, e);
-        showAlert(`Fetching fields for ${locality} failed`, 'error');
-      });
+    if (Number.isInteger(locality)) {
+      setLocalityError(false);
+      getFieldsByLocation(locality)
+        .then(setFields)
+        .catch((e) => {
+          console.log(`Fetching fields for ${locality} failed`, e);
+          showAlert(`Fetching fields for ${locality} failed`, 'error');
+        });
+    } else {
+      setLocalityError(true);
+    }
   };
 
   /**
@@ -244,7 +251,19 @@ function FieldInfoPage() {
             );
           })}
         </Select>
-      </FormControl> 
+        {showLocalityError && (
+          <FormHelperText>Select a locality</FormHelperText>
+        )}
+      </FormControl>
+      {/* fetch results button */}
+      <Button
+        variant='contained'
+        color='primary'
+        className={classes.formControl}
+        onClick={fetchFieldsForLocation}
+      >
+        Fetch
+      </Button>
 
       {/* custom table to show field info */}
       <TableComponent
