@@ -64,6 +64,8 @@ const columnData = [
     id: 'actions',
     type: 'menu',
     label: 'Actions',
+    width: 30,
+    align: 'center',
     actions: [
       {
         id: 'processHistory',
