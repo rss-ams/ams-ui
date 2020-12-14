@@ -2,20 +2,21 @@ import {
   Button,
   FormControl,
   FormGroup,
-  InputLabel,
+
+  FormHelperText, InputLabel,
   MenuItem,
   Select,
   Snackbar,
-  FormHelperText,
-  Typography,
+
+  Typography
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
-import React, { useState, useEffect } from 'react';
-import { getFieldsByLocation } from 'dataclients/FieldsClient';
-import { getCropCyclesByField } from 'dataclients/CropCyclesClient';
-import { getLocations } from 'dataclients/LocationsClient';
 import TableComponent from 'components/common/TableComponent';
+import { getCropCyclesByField } from 'dataclients/CropCyclesClient';
+import { getFieldsByLocation } from 'dataclients/FieldsClient';
+import { getLocations } from 'dataclients/LocationsClient';
+import React, { useEffect, useState } from 'react';
 
 /**
  * css styles for Crop Cycle Info Page

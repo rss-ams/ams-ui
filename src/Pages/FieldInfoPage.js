@@ -1,22 +1,22 @@
 import {
-  FormControl,
+  Button, FormControl,
   FormGroup,
-  InputLabel,
+
+  FormHelperText, InputLabel,
   MenuItem,
   Select,
   Snackbar,
-  FormHelperText,
-  Typography,
-  Button,
+
+  Typography
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
-import React, { useState, useEffect } from 'react';
+import FieldForm from 'components/common/FieldForm';
+import SimpleModal from 'components/common/SimpleModal';
+import TableComponent from 'components/common/TableComponent';
 import { getAllFields, getFieldsByLocation } from 'dataclients/FieldsClient';
 import { getLocations } from 'dataclients/LocationsClient';
-import TableComponent from 'components/common/TableComponent';
-import SimpleModal from 'components/common/SimpleModal';
-import FieldForm from 'components/common/FieldForm';
+import React, { useEffect, useState } from 'react';
 
 /**
  * css styles for Field Info Page
