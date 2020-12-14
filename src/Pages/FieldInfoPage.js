@@ -1,12 +1,10 @@
 import {
-  Button, FormControl,
+  FormControl,
   FormGroup,
-
-  FormHelperText, InputLabel,
+  InputLabel,
   MenuItem,
   Select,
   Snackbar,
-
   Typography
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -86,7 +84,6 @@ function FieldInfoPage() {
   const classes = useStyles();
   const [locations, setLocations] = useState([]);
   const [locality, setLocality] = useState('');
-  const [showLocalityError, setLocalityError] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
@@ -121,8 +118,9 @@ function FieldInfoPage() {
   };
 
   useEffect(() => {
-    getFieldData();
-  },[]);
+    if (locality === '') getFieldData();
+    else fetchFieldsForLocation();
+  }, [locality]);
 
   useEffect(() => {
     updateRowData();
@@ -176,17 +174,12 @@ function FieldInfoPage() {
    * shows alert in case call fails
    */
   const fetchFieldsForLocation = () => {
-    if (Number.isInteger(locality)) {
-      setLocalityError(false);
-      getFieldsByLocation(locality)
-        .then(setFieldsData)
-        .catch((e) => {
-          console.log(`Fetching fields for ${locality} failed`, e);
-          showAlert(`Fetching fields for ${locality} failed`, 'error');
-        });
-    } else {
-      setLocalityError(true);
-    }
+    getFieldsByLocation(locality)
+      .then(setFieldsData)
+      .catch((e) => {
+        console.log(`Fetching fields for ${locality} failed`, e);
+        showAlert(`Fetching fields for ${locality} failed`, 'error');
+      });
   };
 
   /**
@@ -256,19 +249,7 @@ function FieldInfoPage() {
             );
           })}
         </Select>
-        {showLocalityError && (
-          <FormHelperText>Select a locality</FormHelperText>
-        )}
       </FormControl>
-      {/* fetch results button */}
-      <Button
-        variant='contained'
-        color='primary'
-        className={classes.formControl}
-        onClick={fetchFieldsForLocation}
-      >
-        Fetch
-      </Button>
 
       {/* custom table to show field info */}
       <TableComponent
