@@ -40,7 +40,7 @@ export const createField = async (payload) => {
 };
 
 /**
- * API to update a new field
+ * API to update a field
  * @param {object} payload
  */
 export const updateField = async (payload) => {

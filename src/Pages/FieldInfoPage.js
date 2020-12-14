@@ -260,16 +260,6 @@ function FieldInfoPage() {
           <FormHelperText>Select a locality</FormHelperText>
         )}
       </FormControl>
-      {/* fetch results button */}
-      <Button
-        variant='contained'
-        color='primary'
-        className={classes.formControl}
-        onClick={fetchFieldsForLocation}
-      >
-        Fetch
-      </Button>
-
       {/* custom table to show field info */}
       <TableComponent
         cols={columnData}
