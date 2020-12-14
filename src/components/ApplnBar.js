@@ -19,6 +19,7 @@ import AddField from 'Pages/AddField';
 import AddVehicle from 'Pages/AddVehicle';
 import FieldInfoPage from 'Pages/FieldInfoPage';
 import CropInfoPage from 'Pages/CropInfoPage';
+import CropCycleInfoPage from 'Pages/CropCycleInfoPage';
 import FarmTimeline from 'Pages/FarmTImeLine';
 import React, { useState } from 'react';
 
@@ -102,7 +103,7 @@ const ApplnBar = () => {
       return (
         <DynamicTabs
           component1={<AddCropCycle />}
-          component2={'c2'}
+          component2={<CropCycleInfoPage />}
           component3={'c3'}
         />
       );

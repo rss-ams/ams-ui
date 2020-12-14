@@ -1,12 +1,11 @@
 import { FormGroup, Snackbar, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
-import React, { useState, useEffect } from 'react';
-import { getAllCrops } from 'dataclients/CropsClient';
 import TableComponent from 'components/common/TableComponent';
+import { getAllCrops } from 'dataclients/CropsClient';
+import React, { useEffect, useState } from 'react';
 import SimpleModal from 'components/common/SimpleModal';
 import CropForm from 'components/common/CropForm';
-
 
 /**
  * css styles for Crop Info Page
@@ -28,21 +27,25 @@ const useStyles = makeStyles((theme) => ({
 const columnData = [
   {
     id: 'id',
+    type: 'text',
     label: 'Id',
     width: 5,
   },
   {
     id: 'name',
+    type: 'text',
     label: 'Crop Name',
     width: 50,
   },
   {
     id: 'season',
+    type: 'text',
     label: 'Season',
     width: 30,
   },
   {
     id: 'cgp',
+    type: 'text',
     label: 'Crop Growth Protocol',
     width: 20,
   },

@@ -5,17 +5,16 @@ import {
   MenuItem,
   Select,
   Snackbar,
-  FormHelperText,
-  Typography,
+  Typography
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
-import React, { useState, useEffect } from 'react';
+import FieldForm from 'components/common/FieldForm';
+import SimpleModal from 'components/common/SimpleModal';
+import TableComponent from 'components/common/TableComponent';
 import { getAllFields, getFieldsByLocation } from 'dataclients/FieldsClient';
 import { getLocations } from 'dataclients/LocationsClient';
-import TableComponent from 'components/common/TableComponent';
-import SimpleModal from 'components/common/SimpleModal';
-import FieldForm from 'components/common/FieldForm';
+import React, { useEffect, useState } from 'react';
 
 /**
  * css styles for Field Info Page
@@ -38,21 +37,25 @@ const useStyles = makeStyles((theme) => ({
 const columnData = [
   {
     id: 'id',
+    type: 'text',
     label: 'Id',
     width: 5,
   },
   {
     id: 'name',
+    type: 'text',
     label: 'Field Name',
     width: 30,
   },
   {
     id: 'location',
+    type: 'text',
     label: 'Locality',
     width: 30,
   },
   {
     id: 'area',
+    type: 'text',
     label: 'Area (in acres)',
     width: 30,
   },
@@ -80,8 +83,7 @@ const columnData = [
 function FieldInfoPage() {
   const classes = useStyles();
   const [locations, setLocations] = useState([]);
-  const [locality, setLocality] = useState('');
-  const [showLocalityError, setLocalityError] = useState(false);
+  const [locationCode, setLocationCode] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
@@ -116,13 +118,14 @@ function FieldInfoPage() {
   };
 
   useEffect(() => {
-    if(locality === '') getFieldData();
+    if (locationCode === '') getFieldData();
     else fetchFieldsForLocation();
-  }, [locality]);
+  }, [locationCode]);
 
   useEffect(() => {
     updateRowData();
   }, [fieldsData]);
+
   /**
    * Function to create and return row data for binding to table
    *
@@ -134,12 +137,12 @@ function FieldInfoPage() {
         name: obj.identifier,
         location: obj.location.displayStr,
         locationCode: obj.location.code,
-        area: obj.area,        
+        area: obj.area,
       };
     });
-    data.sort((a, b) => (a.id > b.id) ? 1 : -1);
+    data.sort((a, b) => (a.id > b.id ? 1 : -1));
     setFieldTableRows(data);
-  }; 
+  };
 
   /**
    * Handler called on closing alert
@@ -161,7 +164,7 @@ function FieldInfoPage() {
   const handleLocationChange = ({ target }) => {
     const { name, value } = target;
     if (name === 'locality') {
-      setLocality(value);
+      setLocationCode(value);
     }
   };
 
@@ -171,17 +174,12 @@ function FieldInfoPage() {
    * shows alert in case call fails
    */
   const fetchFieldsForLocation = () => {
-    if (Number.isInteger(locality)) {
-      setLocalityError(false);
-      getFieldsByLocation(locality)
-        .then(setFieldsData)
-        .catch((e) => {
-          console.log(`Fetching fields for ${locality} failed`, e);
-          showAlert(`Fetching fields for ${locality} failed`, 'error');
-        });
-    } else {
-      setLocalityError(true);
-    }
+    getFieldsByLocation(locationCode)
+      .then(setFieldsData)
+      .catch((e) => {
+        console.log(`Fetching fields for ${locationCode} failed`, e);
+        showAlert(`Fetching fields for ${locationCode} failed`, 'error');
+      });
   };
 
   /**
@@ -224,7 +222,7 @@ function FieldInfoPage() {
    */
   const handleClose = () => {
     setIsEditModalOpen(false);
-    if(locality === '') getFieldData();
+    if (locationCode === '') getFieldData();
     else fetchFieldsForLocation();
   };
 
@@ -240,7 +238,7 @@ function FieldInfoPage() {
         <Select
           id='locality'
           name='locality'
-          value={locality}
+          value={locationCode}
           onChange={handleLocationChange}
         >
           {locations.map((location) => {
@@ -251,9 +249,6 @@ function FieldInfoPage() {
             );
           })}
         </Select>
-        {showLocalityError && (
-          <FormHelperText>Select a locality</FormHelperText>
-        )}
       </FormControl>
       {/* custom table to show field info */}
       <TableComponent
@@ -265,8 +260,8 @@ function FieldInfoPage() {
       {/* modal to show selected field data and edit */}
       <SimpleModal
         isOpen={isEditModalOpen}
-        closeHandler={handleClose}        
-        modalBody={          
+        closeHandler={handleClose}
+        modalBody={
           <FieldForm
             operation='UPDATE'
             title='Edit Field'
