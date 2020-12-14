@@ -83,7 +83,7 @@ const columnData = [
 function FieldInfoPage() {
   const classes = useStyles();
   const [locations, setLocations] = useState([]);
-  const [locality, setLocality] = useState('');
+  const [locationCode, setLocationCode] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
@@ -118,9 +118,9 @@ function FieldInfoPage() {
   };
 
   useEffect(() => {
-    if (locality === '') getFieldData();
+    if (locationCode === '') getFieldData();
     else fetchFieldsForLocation();
-  }, [locality]);
+  }, [locationCode]);
 
   useEffect(() => {
     updateRowData();
@@ -164,7 +164,7 @@ function FieldInfoPage() {
   const handleLocationChange = ({ target }) => {
     const { name, value } = target;
     if (name === 'locality') {
-      setLocality(value);
+      setLocationCode(value);
     }
   };
 
@@ -174,11 +174,11 @@ function FieldInfoPage() {
    * shows alert in case call fails
    */
   const fetchFieldsForLocation = () => {
-    getFieldsByLocation(locality)
+    getFieldsByLocation(locationCode)
       .then(setFieldsData)
       .catch((e) => {
-        console.log(`Fetching fields for ${locality} failed`, e);
-        showAlert(`Fetching fields for ${locality} failed`, 'error');
+        console.log(`Fetching fields for ${locationCode} failed`, e);
+        showAlert(`Fetching fields for ${locationCode} failed`, 'error');
       });
   };
 
@@ -222,7 +222,7 @@ function FieldInfoPage() {
    */
   const handleClose = () => {
     setIsEditModalOpen(false);
-    if (locality === '') getFieldData();
+    if (locationCode === '') getFieldData();
     else fetchFieldsForLocation();
   };
 
@@ -238,7 +238,7 @@ function FieldInfoPage() {
         <Select
           id='locality'
           name='locality'
-          value={locality}
+          value={locationCode}
           onChange={handleLocationChange}
         >
           {locations.map((location) => {

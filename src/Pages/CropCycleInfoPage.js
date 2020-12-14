@@ -2,12 +2,11 @@ import {
   Button,
   FormControl,
   FormGroup,
-
-  FormHelperText, InputLabel,
+  FormHelperText,
+  InputLabel,
   MenuItem,
   Select,
   Snackbar,
-
   Typography
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -101,7 +100,7 @@ const columnData = [
 function CropCycleInfoPage() {
   const classes = useStyles();
   const [locations, setLocations] = useState([]);
-  const [locality, setLocality] = useState('');
+  const [locationCode, setLocationCode] = useState('');
   const [field, setField] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   const [alertStatus, setAlertStatus] = useState(false);
@@ -121,9 +120,9 @@ function CropCycleInfoPage() {
   }, []);
 
   useEffect(() => {
-    if (Number.isInteger(locality)) {
+    if (Number.isInteger(locationCode)) {
       setLocalityError(false);
-      getFieldsByLocation(locality)
+      getFieldsByLocation(locationCode)
         .then(setFields)
         .catch((e) => {
           console.log('Fetching fields failed', e);
@@ -132,7 +131,7 @@ function CropCycleInfoPage() {
     } else {
       setLocalityError(true);
     }
-  }, [locality]);
+  }, [locationCode]);
 
   /**
    * Function to fetch all crop cycle information using API
@@ -192,13 +191,13 @@ function CropCycleInfoPage() {
 
   /**
    * Handler called when user selects location from dropdown
-   * sets the locality value to the selection
+   * sets the locationCode value to the selection
    * @param {*} object
    */
   const handleLocationChange = ({ target }) => {
     const { name, value } = target;
-    if (name === 'locality') {
-      setLocality(value);
+    if (name === 'locationCode') {
+      setLocationCode(value);
       setField('');
     }
   };
@@ -263,9 +262,9 @@ function CropCycleInfoPage() {
       <FormControl className={classes.formControl}>
         <InputLabel id='locality-label'>Locality</InputLabel>
         <Select
-          id='locality'
-          name='locality'
-          value={locality}
+          id='locationCode'
+          name='locationCode'
+          value={locationCode}
           onChange={handleLocationChange}
         >
           {locations.map((location) => {
@@ -282,7 +281,7 @@ function CropCycleInfoPage() {
       </FormControl>
       {/* control for field selection */}
       <FormControl className={classes.formControl}>
-        <InputLabel id='locality-label'>Field</InputLabel>
+        <InputLabel id='field-label'>Field</InputLabel>
         <Select
           id='field'
           name='field'
