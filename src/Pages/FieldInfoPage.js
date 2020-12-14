@@ -250,7 +250,6 @@ function FieldInfoPage() {
           })}
         </Select>
       </FormControl>
-
       {/* custom table to show field info */}
       <TableComponent
         cols={columnData}

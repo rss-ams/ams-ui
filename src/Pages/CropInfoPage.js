@@ -4,6 +4,8 @@ import { Alert } from '@material-ui/lab';
 import TableComponent from 'components/common/TableComponent';
 import { getAllCrops } from 'dataclients/CropsClient';
 import React, { useEffect, useState } from 'react';
+import SimpleModal from 'components/common/SimpleModal';
+import CropForm from 'components/common/CropForm';
 
 /**
  * css styles for Crop Info Page
@@ -74,6 +76,8 @@ function CropInfoPage() {
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
   const [crops, setCrops] = useState([]);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState('');
 
   /**
    * Function to fetch all crop information using API
@@ -104,8 +108,10 @@ function CropInfoPage() {
         name: obj.name,
         season: obj.season,
         cgp: `${obj.cropGrowthProtocol.name} - ${obj.cropGrowthProtocol.description}`,
+        cgpid: obj.cropGrowthProtocol.id
       };
     });
+    data.sort((a, b) => (a.id > b.id) ? 1 : -1);
     return data;
   };
 
@@ -127,6 +133,8 @@ function CropInfoPage() {
    * @param {object} selectedRow 
    */
   const editCrop = (selectedRow) => {
+    setIsEditModalOpen(true);
+    setSelectedRow(selectedRow);
     console.log(selectedRow);
   };
 
@@ -153,6 +161,15 @@ function CropInfoPage() {
     setAlertStatus(true);
   };
 
+  /**
+   * closes the edit modal
+   * refreshes the table with updated data
+   */
+  const handleClose = () => {
+    setIsEditModalOpen(false);
+    getCropData();
+  };
+
   return (
     <FormGroup className={classes.formGroup}>
       {/* page title */}
@@ -167,6 +184,21 @@ function CropInfoPage() {
         deleteHandler={deleteCrop}
         editHandler={editCrop}
       />
+      {/* modal to show selected field data and edit */}
+      <SimpleModal
+        isOpen={isEditModalOpen}
+        closeHandler={handleClose}        
+        modalBody={          
+          <CropForm
+            operation='UPDATE'
+            title='Edit Crop'
+            selectedRow={selectedRow}
+            setOpen={setIsEditModalOpen}
+            closeHandler={handleClose}
+            submitButtonText='Save'
+          />
+        }
+      ></SimpleModal>
       {/* alert UI */}
       <Snackbar open={alertStatus} onClose={handleAlertClose}>
         <Alert onClose={handleAlertClose} severity={alertSeverity}>
