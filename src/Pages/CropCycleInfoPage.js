@@ -37,15 +37,9 @@ const useStyles = makeStyles((theme) => ({
  */
 const columnData = [
   {
-    id: 'id',
-    type: 'text',
-    label: 'Id',
-    width: 5,
-  },
-  {
     id: 'fieldName',
     type: 'text',
-    label: 'Field Name',
+    label: 'Field',
     width: 30,
   },
   {

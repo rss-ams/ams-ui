@@ -36,15 +36,9 @@ const useStyles = makeStyles((theme) => ({
  */
 const columnData = [
   {
-    id: 'id',
-    type: 'text',
-    label: 'Id',
-    width: 5,
-  },
-  {
     id: 'name',
     type: 'text',
-    label: 'Field Name',
+    label: 'Name',
     width: 30,
   },
   {
@@ -60,19 +54,20 @@ const columnData = [
     width: 30,
   },
   {
-    id: 'edit',
-    type: 'icon',
-    width: 5,
-    align: 'left',
-    label: '',
-  },
-  {
-    id: 'delete',
-    type: 'icon',
-    width: 5,
-    align: 'left',
-    label: '',
-  },
+    id: 'actions',
+    type: 'menu',
+    label: 'Actions',
+    actions: [
+      {
+        id: 'edit',
+        label: 'Edit',
+      },
+      {
+        id: 'delete',
+        label: 'Delete',
+      },
+    ],
+  }
 ];
 
 /**
@@ -190,7 +185,26 @@ function FieldInfoPage() {
   const editField = (selectedRow) => {
     setIsEditModalOpen(true);
     setSelectedRow(selectedRow);
-    console.log(selectedRow);
+  };
+
+  /**
+   * context menu actions handler for fields
+   * @param {*} id 
+   * @param {*} selectedRow 
+   */
+  const handleFieldOptions = (id, selectedRow) => {
+    switch (id) {
+      case 'edit':
+        editField(selectedRow);
+        console.log(id, selectedRow);
+        break;
+      case 'delete':
+        deleteField(selectedRow)
+        console.log(id, selectedRow);
+        break;
+      default:
+        console.log(selectedRow);
+    }
   };
 
   /**
@@ -199,7 +213,6 @@ function FieldInfoPage() {
    * @param {object} selectedRow 
    */
   const deleteField = (selectedRow) => {
-    console.log(selectedRow);
   };
 
   /**
@@ -254,8 +267,7 @@ function FieldInfoPage() {
       <TableComponent
         cols={columnData}
         rows={fieldTableRows}
-        deleteHandler={deleteField}
-        editHandler={editField}
+        contextMenuActionHandler={handleFieldOptions}
       />
       {/* modal to show selected field data and edit */}
       <SimpleModal
