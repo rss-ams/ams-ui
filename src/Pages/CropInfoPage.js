@@ -44,18 +44,21 @@ const columnData = [
     width: 20,
   },
   {
-    id: 'edit',
-    type: 'icon',
-    width: 5,
-    align: 'left',
-    label: '',
-  },
-  {
-    id: 'delete',
-    type: 'icon',
-    width: 5,
-    align: 'left',
-    label: '',
+    id: 'actions',
+    type: 'menu',
+    label: 'Actions',
+    width: 30,
+    align: 'center',
+    actions: [
+      {
+        id: 'edit',
+        label: 'Edit',
+      },
+      {
+        id: 'delete',
+        label: 'Delete',
+      },
+    ],
   },
 ];
 
@@ -102,10 +105,10 @@ function CropInfoPage() {
         name: obj.name,
         season: obj.season,
         cgp: `${obj.cropGrowthProtocol.name} - ${obj.cropGrowthProtocol.description}`,
-        cgpid: obj.cropGrowthProtocol.id
+        cgpid: obj.cropGrowthProtocol.id,
       };
     });
-    data.sort((a, b) => (a.id > b.id) ? 1 : -1);
+    data.sort((a, b) => (a.id > b.id ? 1 : -1));
     return data;
   };
 
@@ -142,6 +145,24 @@ function CropInfoPage() {
   };
 
   /**
+   * context menu actions handler for crops
+   * @param {*} id
+   * @param {*} selectedRow
+   */
+  const handleCropOptions = (id, selectedRow) => {
+    switch (id) {
+      case 'edit':
+        editCrop(selectedRow);
+        break;
+      case 'delete':
+        deleteCrop(selectedRow);
+        break;
+      default:
+        console.log(selectedRow);
+    }
+  };
+
+  /**
    * Shows alert on UI
    * sets values of severity - info/error
    * sets alert message
@@ -175,14 +196,13 @@ function CropInfoPage() {
       <TableComponent
         cols={columnData}
         rows={getRowData()}
-        deleteHandler={deleteCrop}
-        editHandler={editCrop}
+        contextMenuActionHandler={handleCropOptions}
       />
       {/* modal to show selected field data and edit */}
       <SimpleModal
         isOpen={isEditModalOpen}
-        closeHandler={handleClose}        
-        modalBody={          
+        closeHandler={handleClose}
+        modalBody={
           <CropForm
             operation='UPDATE'
             title='Edit Crop'

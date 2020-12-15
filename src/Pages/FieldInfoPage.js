@@ -45,18 +45,21 @@ const columnData = [
     id: 'location',
     type: 'text',
     label: 'Locality',
-    width: 30,
+    width: 50,
   },
   {
     id: 'area',
     type: 'text',
     label: 'Area (in acres)',
-    width: 30,
+    width: 10,
+    align: 'center',
   },
   {
     id: 'actions',
     type: 'menu',
     label: 'Actions',
+    width: 30,
+    align: 'center',
     actions: [
       {
         id: 'edit',
@@ -67,7 +70,7 @@ const columnData = [
         label: 'Delete',
       },
     ],
-  }
+  },
 ];
 
 /**
@@ -189,8 +192,8 @@ function FieldInfoPage() {
 
   /**
    * context menu actions handler for fields
-   * @param {*} id 
-   * @param {*} selectedRow 
+   * @param {*} id
+   * @param {*} selectedRow
    */
   const handleFieldOptions = (id, selectedRow) => {
     switch (id) {
@@ -199,7 +202,7 @@ function FieldInfoPage() {
         console.log(id, selectedRow);
         break;
       case 'delete':
-        deleteField(selectedRow)
+        deleteField(selectedRow);
         console.log(id, selectedRow);
         break;
       default:
@@ -212,8 +215,7 @@ function FieldInfoPage() {
    //TODO delete implementation for fields
    * @param {object} selectedRow 
    */
-  const deleteField = (selectedRow) => {
-  };
+  const deleteField = (selectedRow) => {};
 
   /**
    * Shows alert on UI
