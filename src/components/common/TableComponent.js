@@ -79,11 +79,15 @@ export default function TableComponent({
           <TableBody>
             {rows.map((row) => {
               return (
-                <TableRow hover role='checkbox' tabIndex={-1} key={row.code}>
+                <TableRow hover role='checkbox' tabIndex={-1} key={row.key}>
                   {cols.map((column) => {
                     const value = row[column.id];
                     return (
-                      <TableCell key={column.id} align={column.align} style={{width: column.width}}>
+                      <TableCell
+                        key={column.id}
+                        align={column.align}
+                        style={{ width: column.width }}
+                      >
                         {/* when column is simple text */}
                         {column.type === 'text'
                           ? column.format && typeof value === 'number'

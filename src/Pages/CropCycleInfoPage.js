@@ -69,18 +69,22 @@ const columnData = [
     actions: [
       {
         id: 'processHistory',
+        index: '0',
         label: 'Process History',
       },
       {
         id: 'currentProcesses',
+        index: '1',
         label: 'Current Processes',
       },
       {
         id: 'edit',
+        index: '2',
         label: 'Edit',
       },
       {
         id: 'delete',
+        index: '3',
         label: 'Delete',
       },
     ],

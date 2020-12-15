@@ -52,10 +52,12 @@ const columnData = [
     actions: [
       {
         id: 'edit',
+        index: '0',
         label: 'Edit',
       },
       {
         id: 'delete',
+        index: '1',
         label: 'Delete',
       },
     ],

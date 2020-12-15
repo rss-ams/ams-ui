@@ -63,10 +63,12 @@ const columnData = [
     actions: [
       {
         id: 'edit',
+        index: '0',
         label: 'Edit',
       },
       {
         id: 'delete',
+        index: '1',
         label: 'Delete',
       },
     ],
@@ -129,8 +131,9 @@ function FieldInfoPage() {
    *
    */
   const updateRowData = () => {
-    let data = fieldsData.map((obj) => {
+    let data = fieldsData.map((obj, index) => {
       return {
+        key: index,
         id: obj.id,
         name: obj.identifier,
         location: obj.location.displayStr,

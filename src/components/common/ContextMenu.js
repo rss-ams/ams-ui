@@ -71,6 +71,7 @@ export default function ContextMenu({
         {menuActions.map((action) => {
           return (
             <StyledMenuItem
+              key={parseInt(row.key + '' + action.index)}
               style={{ paddingTop: 0, paddingBottom: 0 }}
               onClick={() => {
                 handleClose();
