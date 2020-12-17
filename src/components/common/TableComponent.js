@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import ContextMenu from 'components/common/ContextMenu';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -51,6 +52,7 @@ export default function TableComponent({
   rows,
   deleteHandler,
   editHandler,
+  contextMenuActionHandler,
 }) {
   const classes = useStyles();
   return (
@@ -63,7 +65,11 @@ export default function TableComponent({
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth }}
+                  style={{
+                    width: column.width,
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
                 >
                   {column.label}
                 </TableCell>
@@ -78,9 +84,21 @@ export default function TableComponent({
                     const value = row[column.id];
                     return (
                       <TableCell key={column.id} align={column.align}>
-                        {column.format && typeof value === 'number'
-                          ? column.format(value)
-                          : value}
+                        {/* when column is simple text */}
+                        {column.type === 'text'
+                          ? column.format && typeof value === 'number'
+                            ? column.format(value)
+                            : value
+                          : null}
+                        {/* when column is actions menu */}
+                        {column.type === 'menu' && (
+                          <ContextMenu
+                            menuActions={column.actions}
+                            row={row}
+                            contextMenuActionHandler={contextMenuActionHandler}
+                          />
+                        )}
+                        {/* when column is edit or delete icon */}
                         {column.type === 'icon' ? (
                           <Tooltip title={column.id}>
                             {column.id === 'delete' ? (
