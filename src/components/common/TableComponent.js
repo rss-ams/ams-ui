@@ -1,17 +1,17 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
-import ContextMenu from 'components/common/ContextMenu';
+import { makeStyles } from '@material-ui/core/styles';
+import SvgIcon from '@material-ui/core/SvgIcon';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
-import SvgIcon from '@material-ui/core/SvgIcon';
+import ContextMenu from 'components/common/ContextMenu';
+import React from 'react';
 
 /**
  * css styles for table
@@ -79,11 +79,15 @@ export default function TableComponent({
           <TableBody>
             {rows.map((row) => {
               return (
-                <TableRow hover role='checkbox' tabIndex={-1} key={row.code}>
+                <TableRow hover role='checkbox' tabIndex={-1} key={row.key}>
                   {cols.map((column) => {
                     const value = row[column.id];
                     return (
-                      <TableCell key={column.id} align={column.align}>
+                      <TableCell
+                        key={column.id}
+                        align={column.align}
+                        style={{ width: column.width }}
+                      >
                         {/* when column is simple text */}
                         {column.type === 'text'
                           ? column.format && typeof value === 'number'

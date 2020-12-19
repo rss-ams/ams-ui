@@ -1,15 +1,15 @@
-import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import IconButton from '@material-ui/core/IconButton';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import DeleteIcon from '@material-ui/icons/Delete';
-import IconButton from '@material-ui/core/IconButton';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import { withStyles } from '@material-ui/core/styles';
 import SvgIcon from '@material-ui/core/SvgIcon';
-import HistoryIcon from '@material-ui/icons/History';
 import AssessmentIcon from '@material-ui/icons/Assessment';
+import DeleteIcon from '@material-ui/icons/Delete';
+import HistoryIcon from '@material-ui/icons/History';
+import React from 'react';
 
 const StyledMenu = withStyles({
   paper: {
@@ -71,8 +71,12 @@ export default function ContextMenu({
         {menuActions.map((action) => {
           return (
             <StyledMenuItem
+              key={parseInt(row.key + '' + action.index)}
               style={{ paddingTop: 0, paddingBottom: 0 }}
-              onClick={() => contextMenuActionHandler(action.id, row)}
+              onClick={() => {
+                handleClose();
+                contextMenuActionHandler(action.id, row);
+              }}
             >
               <ListItemIcon>
                 {action.id === 'currentProcesses' && (
