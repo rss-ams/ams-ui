@@ -83,7 +83,7 @@ const ApplnBar = () => {
           '',
           'VEHICLE',
         ].map((text, _index) => {
-          if (text === '') return <Divider />;
+          if (text === '') return <Divider key={_index} />;
           return (
             <ListItem button key={text} onClick={handlePageSelection(text)}>
               <ListItemText primary={text} />

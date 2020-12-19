@@ -55,7 +55,7 @@ const ProcessPage = () => {
   const [fields, setFields] = useState([]);
   const [cropCycleId, setCropCycleId] = useState('');
   const [cropCycles, setCropCycles] = useState([]);
-  const [processStatuses, setPprocessStatuses] = useState([]);
+  const [processStatuses, setProcessStatuses] = useState([]);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
@@ -82,7 +82,7 @@ const ProcessPage = () => {
       });
 
     getProcessStatuses()
-      .then(setPprocessStatuses)
+      .then(setProcessStatuses)
       .catch((e) => {
         console.log('Fetching process statuses failed', e);
         showAlert('Fetching process statuses failed', 'error');
@@ -213,6 +213,7 @@ const ProcessPage = () => {
       selectedCropCycle.currentProcesses.map((currentProcess) => {
         return (
           <ProcessCard
+            key={currentProcess.id}
             process={currentProcess}
             processStatuses={processStatuses}
             cropCycleId={cropCycleId}

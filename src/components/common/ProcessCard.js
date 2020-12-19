@@ -19,7 +19,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import clsx from 'clsx';
 import { updateProcess } from 'dataclients/ProcessesClient';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,6 +81,16 @@ const ProcessCard = ({
       setStatusCode(value);
     }
   };
+
+  // we need to update the state whenever the cropCycleId changes
+  useEffect(() => {
+    setStatusCode(process.processStatus.code);
+    setStartDueDate(process.startDueDate);
+    setEndDueDate(process.endDueDate);
+    setStartDate(process.startDate);
+    setEndDate(process.endDate);
+    handleAccordionExpand(null, false);
+  }, [cropCycleId]);
 
   const getStatusName = () =>
     processStatuses.filter((obj) => obj.code === statusCode)[0].displayStr;
@@ -202,9 +212,6 @@ const ProcessCard = ({
                   label='Start due date'
                   value={startDueDate}
                   onChange={setStartDueDate}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change start due date',
-                  }}
                 />
               </Grid>
 
@@ -219,9 +226,6 @@ const ProcessCard = ({
                   label='End due date'
                   value={endDueDate}
                   onChange={setEndDueDate}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change end due date',
-                  }}
                 />
               </Grid>
 
@@ -236,9 +240,6 @@ const ProcessCard = ({
                   label='Start date'
                   value={startDate}
                   onChange={setStartDate}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change start date',
-                  }}
                 />
               </Grid>
 
@@ -253,9 +254,6 @@ const ProcessCard = ({
                   label='End date'
                   value={endDate}
                   onChange={setEndDate}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change end date',
-                  }}
                 />
               </Grid>
             </Grid>
