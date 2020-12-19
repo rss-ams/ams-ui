@@ -228,9 +228,9 @@ function FarmTimeline() {
                 </ListItem>
 
                 <ListItem key="5">
-                  <Button variant="outlined" color="primary" onClick={handleCLick}>
+                  <Button variant='contained' color='primary' className={classes.submitButton} onClick={handleCLick}>
                     SHOW
-            </Button>
+                  </Button>
                 </ListItem>
               </List>
             </Grid>
