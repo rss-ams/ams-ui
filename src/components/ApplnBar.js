@@ -18,6 +18,8 @@ import AddCropCycle from 'Pages/AddCropCycle';
 import AddField from 'Pages/AddField';
 import AddVehicle from 'Pages/AddVehicle';
 import FieldInfoPage from 'Pages/FieldInfoPage';
+import CropInfoPage from 'Pages/CropInfoPage';
+import CropCycleInfoPage from 'Pages/CropCycleInfoPage';
 import FarmTimeline from 'Pages/FarmTImeLine';
 import React, { useState } from 'react';
 
@@ -93,7 +95,7 @@ const ApplnBar = () => {
       return (
         <DynamicTabs
           component1={<AddCrop />}
-          component2={'c2'}
+          component2={<CropInfoPage />}
           component3={'c3'}
         />
       );
@@ -101,17 +103,12 @@ const ApplnBar = () => {
       return (
         <DynamicTabs
           component1={<AddCropCycle />}
-          component2={'c2'}
           component3={<FarmTimeline />}
+          component2={<CropCycleInfoPage />}
         />
       );
     } else if (page === 'ACTIVITY') {
-      return (
-        <DynamicTabs
-          component1={<AddActivityPage />}
-          component2={'c2'}
-        />
-      );
+      return <DynamicTabs component1={<AddActivityPage />} component2={'c2'} />;
     } else if (page === 'VEHICLE') {
       return <AddVehicle />;
     }
