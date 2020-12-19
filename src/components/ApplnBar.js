@@ -22,6 +22,7 @@ import CropInfoPage from 'Pages/CropInfoPage';
 import CropCycleInfoPage from 'Pages/CropCycleInfoPage';
 import FarmTimeline from 'Pages/FarmTImeLine';
 import React, { useState } from 'react';
+import AddInspectionPage from 'Pages/AddInspectionPage';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -71,7 +72,7 @@ const ApplnBar = () => {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-        {['FIELD', 'CROP', 'CROP CYCLE', 'ACTIVITY', 'VEHICLE'].map(
+        {['FIELD', 'CROP', 'CROP CYCLE', 'ACTIVITY','INSPECTION', 'VEHICLE'].map(
           (text, _index) => (
             <ListItem button key={text} onClick={handlePageSelection(text)}>
               <ListItemText primary={text} />
@@ -108,7 +109,9 @@ const ApplnBar = () => {
         />
       );
     } else if (page === 'ACTIVITY') {
-      return <DynamicTabs component1={<AddActivityPage />} component2={'c2'} />;
+      return <DynamicTabs component1={<AddActivityPage />} />;
+    } else if (page === 'INSPECTION') {
+      return <DynamicTabs component1={<AddInspectionPage />}  />;
     } else if (page === 'VEHICLE') {
       return <AddVehicle />;
     }

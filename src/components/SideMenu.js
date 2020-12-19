@@ -13,6 +13,7 @@ import DynamicTabs from "../components/DynamicTabs";
 import FieldInfoPage from '../Pages/FieldInfoPage';
 import FarmTimeline from '../Pages/FarmTImeLine';
 import AddCrop from '../Pages/AddCrop';
+import AddInspectionPage from '../Pages/AddInspectionPage';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -82,7 +83,8 @@ export default function SideMenu() {
                 <Tab label="CROP" {...a11yProps(1)} />
                 <Tab label="CROP CYCLE" {...a11yProps(2)} />
                 <Tab label="ACTIVITY" {...a11yProps(3)} />
-                <Tab label="VEHICLE" {...a11yProps(4)} />
+                <Tab label="INSPECTION" {...a11yProps(4)} />
+                <Tab label="VEHICLE" {...a11yProps(5)} />
 
             </Tabs>
             <TabPanel value={value} index={0}>
@@ -98,6 +100,9 @@ export default function SideMenu() {
                 <AddActivityPage />
             </TabPanel>
             <TabPanel value={value} index={4}>
+                <AddInspectionPage />
+            </TabPanel>
+            <TabPanel value={value} index={5}>
                 <AddVehicle />
             </TabPanel>
         </div>
