@@ -37,15 +37,9 @@ const useStyles = makeStyles((theme) => ({
  */
 const columnData = [
   {
-    id: 'id',
-    type: 'text',
-    label: 'Id',
-    width: 5,
-  },
-  {
     id: 'fieldName',
     type: 'text',
-    label: 'Field Name',
+    label: 'Field',
     width: 30,
   },
   {
@@ -70,21 +64,27 @@ const columnData = [
     id: 'actions',
     type: 'menu',
     label: 'Actions',
+    width: 30,
+    align: 'center',
     actions: [
       {
         id: 'processHistory',
+        index: '0',
         label: 'Process History',
       },
       {
         id: 'currentProcesses',
+        index: '1',
         label: 'Current Processes',
       },
       {
         id: 'edit',
+        index: '2',
         label: 'Edit',
       },
       {
         id: 'delete',
+        index: '3',
         label: 'Delete',
       },
     ],
