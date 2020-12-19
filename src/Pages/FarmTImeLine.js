@@ -121,7 +121,7 @@ function FarmTimeline() {
 
   return (
     <div>
-      {!showTimeLine ?
+     
         <Grid container className={classes.root} spacing={2} >
           <Grid item xs={12}>
             <Grid container justify="center">
@@ -236,9 +236,7 @@ function FarmTimeline() {
             </Grid>
 
           </Grid>
-        </Grid > : null
-
-      }
+        </Grid >
 
       {
         timeLine
