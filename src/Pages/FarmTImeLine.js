@@ -33,8 +33,8 @@ const useStyles = makeStyles((theme) => ({
 function FarmTimeline() {
   var months = ["","January","February","March","April","May","June","July","August","September","October","November","December"];
   const classes = useStyles();
-  const [locality, setLocality] = React.useState("");
-  const [fieldId, setFieldId] = React.useState("");
+  const [locality, setLocality] = useState("");
+  const [fieldId, setFieldId] = useState("");
 
   const [fields, setFields] = useState([]);
   const [locationsDataFromServer, setLocationsDataFromServer] = useState([]);
