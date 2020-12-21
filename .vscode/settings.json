@@ -45,5 +45,6 @@
   "editor.fontWeight": null,
   "prettier.trailingComma": "all",
   "javascript.preferences.quoteStyle": "single",
-  "javascript.preferences.importModuleSpecifier": "non-relative"
+  "javascript.preferences.importModuleSpecifier": "non-relative",
+  "editor.formatOnSave": true
 }

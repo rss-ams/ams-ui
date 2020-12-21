@@ -2,7 +2,7 @@ import { API_URL, handleErrors } from 'utils/FetchUtils';
 
 /**
  * API to create crop cycles
- * @param {*} payload 
+ * @param {*} payload
  */
 export const createCropCycles = async (payload) => {
   return fetch(API_URL + 'fieldCropCycles/batch', {
@@ -16,13 +16,13 @@ export const createCropCycles = async (payload) => {
     .then((response) => response.json());
 };
 
-
 /**
- * API to fetch crop cycles based on field ID
- * @param {integer} fieldId 
+ * API to fetch crop-cycles associated with the specified field
+ *
+ * @param {number} fieldId ID for the field
  */
 export const getCropCyclesByField = async (fieldId) => {
-  let url = `${API_URL}fieldCropCycles?fieldId=${fieldId}`;
+  let url = `${API_URL}fieldCropCycles?fieldId=${parseInt(fieldId)}`;
   return fetch(url)
     .then(handleErrors)
     .then((response) => response.json());
