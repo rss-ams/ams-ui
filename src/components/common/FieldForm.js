@@ -1,19 +1,18 @@
 import {
-  Button,
   FormControl,
   FormGroup,
-  InputLabel,
   MenuItem,
-  Select,
   Snackbar,
   TextField,
-  Typography,
+  Typography
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
+import FormButtons from 'components/common/FormButtons';
 import { createField, updateField } from 'dataclients/FieldsClient';
 import { getLocations } from 'dataclients/LocationsClient';
 import React, { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -24,13 +23,6 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 300,
     maxWidth: 300,
   },
-  submitButton: {
-    margin: theme.spacing(3),
-    width: 'fit-content',
-    minWidth: '150px',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-  },
   menuItem: {
     maxWidth: 300,
     whiteSpace: 'normal',
@@ -40,11 +32,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FieldForm = ({ operation, title, selectedRow, closeHandler, submitButtonText }) => {
+const FieldForm = ({
+  operation,
+  title,
+  selectedRow,
+  closeHandler,
+  submitButtonText,
+}) => {
   const classes = useStyles();
-  const [locality, setLocality] = useState(selectedRow.locationCode);
-  const [fieldIdentifier, setFieldIdentifier] = useState(selectedRow.name);
-  const [area, setArea] = useState(selectedRow.area);
+  const defaultValues = {
+    locationCode: selectedRow.locationCode,
+    area: selectedRow.area,
+    fieldName: selectedRow.fieldName,
+  };
+  const { handleSubmit, reset, control, errors: fieldsErrors } = useForm({
+    defaultValues,
+  });
+
   const [locations, setLocations] = useState([]);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertStatus, setAlertStatus] = useState(false);
@@ -72,17 +76,19 @@ const FieldForm = ({ operation, title, selectedRow, closeHandler, submitButtonTe
     setAlertStatus(true);
   };
 
-  const handleSubmit = () => {
+  const submitHandler = (formData) => {
     let payload = {};
-    payload.identifier = fieldIdentifier;
-    payload.location = locality;
-    payload.area = Number(area);
-    payload.id = selectedRow.id;
-    
+    payload.identifier = formData.fieldName;
+    payload.location = formData.locationCode;
+    payload.area = Number(formData.area);
+
     if (operation === 'UPDATE') {
+      payload.id = selectedRow.id;
       updateField(payload)
         .then((response) => {
-          closeHandler();          
+          showAlert('Field successfully updated', 'info');
+          reset(defaultValues);
+          closeHandler();
         })
         .catch((e) => {
           console.log('Internal server error', e);
@@ -92,6 +98,7 @@ const FieldForm = ({ operation, title, selectedRow, closeHandler, submitButtonTe
       createField(payload)
         .then((response) => {
           showAlert('Field successfully created', 'info');
+          reset(defaultValues);
         })
         .catch((e) => {
           console.log('Internal server error', e);
@@ -100,79 +107,108 @@ const FieldForm = ({ operation, title, selectedRow, closeHandler, submitButtonTe
     }
   };
 
-  const handleChange = ({ target }) => {
-    const { name, value } = target;
-    if (name === 'locality') {
-      setLocality(value);
-    } else if (name === 'fieldId') {
-      setFieldIdentifier(value);
-    } else if (name === 'area') {
-      setArea(value);
-    }
-  };
-
   return (
-    <FormGroup className={classes.formGroup}>
-      <Typography align='center' variant='h6' className={classes.title}>
-        {title}
-      </Typography>
-
-      <FormControl className={classes.formControl}>
-        <InputLabel id='locality-label'>Locality</InputLabel>
-        <Select
-          id='locality'
-          name='locality'
-          value={locality}
-          onChange={handleChange}
-        >
-          {locations.map((location) => {
-            return (
-              <MenuItem
-                key={location.code}
-                value={location.code}
-                className={classes.menuItem}
+    <form onSubmit={handleSubmit((formData) => submitHandler(formData))}>
+      <FormGroup className={classes.formGroup}>
+        <Typography align='center' variant='h6' className={classes.title}>
+          {title}
+        </Typography>
+        {/* location selection */}
+        <FormControl className={classes.formControl}>
+          <Controller
+            name='locationCode'
+            control={control}
+            rules={{
+              required: 'Please select a locality',
+            }}
+            as={
+              <TextField
+                select
+                id='locationCode'
+                label='Locality'
+                error={fieldsErrors.locationCode}
+                helperText={
+                  fieldsErrors.locationCode
+                    ? fieldsErrors.locationCode.message
+                    : null
+                }
               >
-                {location.displayStr}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl>
+                {locations.map((location) => {
+                  return (
+                    <MenuItem
+                      key={location.code}
+                      value={location.code}
+                      className={classes.menuItem}
+                    >
+                      {location.displayStr}
+                    </MenuItem>
+                  );
+                })}
+              </TextField>
+            }
+          ></Controller>
+        </FormControl>
+        {/* field input */}
+        <FormControl className={classes.formControl}>
+          <Controller
+            name='fieldName'
+            as={
+              <TextField
+                className={classes.formControl}
+                id='fieldName'
+                name='fieldName'
+                label='Field Name'
+                error={fieldsErrors.fieldName}
+                helperText={
+                  fieldsErrors.fieldName ? fieldsErrors.fieldName.message : null
+                }
+              />
+            }
+            control={control}
+            rules={{
+              required: 'Please enter a field name',
+              pattern: {
+                value: /^([A-Za-z]|[0-9]|_)+$/,
+                message: 'Enter a valid name',
+              },
+            }}
+          />
+        </FormControl>
+        {/* area input */}
+        <FormControl className={classes.formControl}>
+          <Controller
+            name='area'
+            as={
+              <TextField
+                className={classes.formControl}
+                id='area'
+                name='area'
+                label='Area (in acres)'
+                error={fieldsErrors.area}
+                helperText={
+                  fieldsErrors.area ? fieldsErrors.area.message : null
+                }
+              />
+            }
+            control={control}
+            rules={{
+              required: 'Please enter area',
+              validate: (val) =>
+                Number(val) > 0 ? null : 'Enter a valid number',
+            }}
+          />
+        </FormControl>
+        {/* reset/save/create button */}
+        <FormButtons {...{ reset, defaultValues, submitButtonText }} />
 
-      <TextField
-        className={classes.formControl}
-        id='fieldId'
-        name='fieldId'
-        onChange={handleChange}
-        label='Field Name'
-        value={fieldIdentifier}
-      />
-
-      <TextField
-        className={classes.formControl}
-        id='area'
-        name='area'
-        onChange={handleChange}
-        label='Area'
-        value={area}
-      />
-
-      <Button
-        variant='contained'
-        color='primary'
-        size='medium'
-        className={classes.submitButton}
-        onClick={handleSubmit}
-      >
-        {submitButtonText}
-      </Button>
-
-      <Snackbar open={alertStatus} onClose={handleAlertClose}>
-        <Alert onClose={handleAlertClose} severity={alertSeverity}>
-          {alertMessage}
-        </Alert>
-      </Snackbar>
-    </FormGroup>
+        {/* success and error alerts */}
+        <Snackbar open={alertStatus} onClose={handleAlertClose}>
+          <Alert onClose={handleAlertClose} severity={alertSeverity}>
+            {alertMessage}
+          </Alert>
+        </Snackbar>
+      </FormGroup>
+    </form>
   );
 };
 

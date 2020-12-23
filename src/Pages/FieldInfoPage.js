@@ -42,7 +42,7 @@ const columnData = [
     width: 5,
   },
   {
-    id: 'name',
+    id: 'fieldName',
     type: 'text',
     label: 'Field Name',
     width: 30,
@@ -134,7 +134,7 @@ function FieldInfoPage() {
     let data = fieldsData.map((obj) => {
       return {
         id: obj.id,
-        name: obj.identifier,
+        fieldName: obj.identifier,
         location: obj.location.displayStr,
         locationCode: obj.location.code,
         area: obj.area,
