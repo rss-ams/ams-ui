@@ -5,7 +5,7 @@ import {
   MenuItem,
   Select,
   Snackbar,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
@@ -44,34 +44,40 @@ const columnData = [
   {
     id: 'fieldName',
     type: 'text',
-    label: 'Field Name',
+    label: 'Name',
     width: 30,
   },
   {
     id: 'location',
     type: 'text',
     label: 'Locality',
-    width: 30,
+    width: 50,
   },
   {
     id: 'area',
     type: 'text',
     label: 'Area (in acres)',
+    width: 10,
+    align: 'center',
+  },
+  {
+    id: 'actions',
+    type: 'menu',
+    label: 'Actions',
     width: 30,
-  },
-  {
-    id: 'edit',
-    type: 'icon',
-    width: 5,
-    align: 'left',
-    label: '',
-  },
-  {
-    id: 'delete',
-    type: 'icon',
-    width: 5,
-    align: 'left',
-    label: '',
+    align: 'center',
+    actions: [
+      {
+        id: 'edit',
+        index: '0',
+        label: 'Edit',
+      },
+      {
+        id: 'delete',
+        index: '1',
+        label: 'Delete',
+      },
+    ],
   },
 ];
 
@@ -131,8 +137,9 @@ function FieldInfoPage() {
    *
    */
   const updateRowData = () => {
-    let data = fieldsData.map((obj) => {
+    let data = fieldsData.map((obj, index) => {
       return {
+        key: index,
         id: obj.id,
         fieldName: obj.identifier,
         location: obj.location.displayStr,
@@ -190,7 +197,26 @@ function FieldInfoPage() {
   const editField = (selectedRow) => {
     setIsEditModalOpen(true);
     setSelectedRow(selectedRow);
-    console.log(selectedRow);
+  };
+
+  /**
+   * context menu actions handler for fields
+   * @param {*} id
+   * @param {*} selectedRow
+   */
+  const handleFieldOptions = (id, selectedRow) => {
+    switch (id) {
+      case 'edit':
+        editField(selectedRow);
+        console.log(id, selectedRow);
+        break;
+      case 'delete':
+        deleteField(selectedRow);
+        console.log(id, selectedRow);
+        break;
+      default:
+        console.log(selectedRow);
+    }
   };
 
   /**
@@ -198,9 +224,7 @@ function FieldInfoPage() {
    //TODO delete implementation for fields
    * @param {object} selectedRow 
    */
-  const deleteField = (selectedRow) => {
-    console.log(selectedRow);
-  };
+  const deleteField = (selectedRow) => {};
 
   /**
    * Shows alert on UI
@@ -254,8 +278,7 @@ function FieldInfoPage() {
       <TableComponent
         cols={columnData}
         rows={fieldTableRows}
-        deleteHandler={deleteField}
-        editHandler={editField}
+        contextMenuActionHandler={handleFieldOptions}
       />
       {/* modal to show selected field data and edit */}
       <SimpleModal

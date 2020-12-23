@@ -1,11 +1,11 @@
 import { FormGroup, Snackbar, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
+import CropForm from 'components/common/CropForm';
+import SimpleModal from 'components/common/SimpleModal';
 import TableComponent from 'components/common/TableComponent';
 import { getAllCrops } from 'dataclients/CropsClient';
 import React, { useEffect, useState } from 'react';
-import SimpleModal from 'components/common/SimpleModal';
-import CropForm from 'components/common/CropForm';
 
 /**
  * css styles for Crop Info Page
@@ -26,15 +26,9 @@ const useStyles = makeStyles((theme) => ({
  */
 const columnData = [
   {
-    id: 'id',
-    type: 'text',
-    label: 'Id',
-    width: 5,
-  },
-  {
     id: 'name',
     type: 'text',
-    label: 'Crop Name',
+    label: 'Name',
     width: 50,
   },
   {
@@ -50,18 +44,23 @@ const columnData = [
     width: 20,
   },
   {
-    id: 'edit',
-    type: 'icon',
-    width: 5,
-    align: 'left',
-    label: '',
-  },
-  {
-    id: 'delete',
-    type: 'icon',
-    width: 5,
-    align: 'left',
-    label: '',
+    id: 'actions',
+    type: 'menu',
+    label: 'Actions',
+    width: 30,
+    align: 'center',
+    actions: [
+      {
+        id: 'edit',
+        index: '0',
+        label: 'Edit',
+      },
+      {
+        id: 'delete',
+        index: '1',
+        label: 'Delete',
+      },
+    ],
   },
 ];
 
@@ -108,10 +107,10 @@ function CropInfoPage() {
         name: obj.name,
         season: obj.season,
         cgp: `${obj.cropGrowthProtocol.name} - ${obj.cropGrowthProtocol.description}`,
-        cgpid: obj.cropGrowthProtocol.id
+        cgpid: obj.cropGrowthProtocol.id,
       };
     });
-    data.sort((a, b) => (a.id > b.id) ? 1 : -1);
+    data.sort((a, b) => (a.id > b.id ? 1 : -1));
     return data;
   };
 
@@ -148,6 +147,24 @@ function CropInfoPage() {
   };
 
   /**
+   * context menu actions handler for crops
+   * @param {*} id
+   * @param {*} selectedRow
+   */
+  const handleCropOptions = (id, selectedRow) => {
+    switch (id) {
+      case 'edit':
+        editCrop(selectedRow);
+        break;
+      case 'delete':
+        deleteCrop(selectedRow);
+        break;
+      default:
+        console.log(selectedRow);
+    }
+  };
+
+  /**
    * Shows alert on UI
    * sets values of severity - info/error
    * sets alert message
@@ -181,14 +198,13 @@ function CropInfoPage() {
       <TableComponent
         cols={columnData}
         rows={getRowData()}
-        deleteHandler={deleteCrop}
-        editHandler={editCrop}
+        contextMenuActionHandler={handleCropOptions}
       />
       {/* modal to show selected field data and edit */}
       <SimpleModal
         isOpen={isEditModalOpen}
-        closeHandler={handleClose}        
-        modalBody={          
+        closeHandler={handleClose}
+        modalBody={
           <CropForm
             operation='UPDATE'
             title='Edit Crop'

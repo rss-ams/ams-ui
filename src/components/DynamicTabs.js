@@ -14,11 +14,7 @@ function TabPanel(props) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box p={3}>
-          <h1>{children}</h1>
-        </Box>
-      )}
+      {value === index && <Box p={3}>{children}</Box>}
     </div>
   );
 }
@@ -55,7 +51,7 @@ const DynamicTabs = (props) => {
 
   return (
     <div className={classes.root}>
-      <AppBar position='static' color='default' >
+      <AppBar position='static' color='default'>
         <Tabs
           value={value}
           onChange={handleChange}

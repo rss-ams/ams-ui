@@ -1,15 +1,9 @@
-import React from 'react'
-import AddActivityPage from "./AddActivityPage"
-
+import React from 'react';
+import ProcessPage from './ProcessPage';
 
 export default {
-    title: 'Organisms/ActivityPage',
-    component: AddActivityPage
-}
+  title: 'Organisms/ProcessPage',
+  component: ProcessPage,
+};
 
-
-export const Activity = () => <AddActivityPage></AddActivityPage>
-
-
-
-
+export const Activity = () => <ProcessPage></ProcessPage>;
