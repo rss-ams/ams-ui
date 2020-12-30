@@ -16,6 +16,9 @@ import { getCropCyclesByField } from 'dataclients/CropCyclesClient';
 import { getFieldsByLocation } from 'dataclients/FieldsClient';
 import { getLocations } from 'dataclients/LocationsClient';
 import React, { useEffect, useState } from 'react';
+import SimpleModal from 'components/common/SimpleModal';
+import CropCycleForm from 'components/common/CropCycleForm';
+
 
 /**
  * css styles for Crop Cycle Info Page
@@ -108,7 +111,9 @@ function CropCycleInfoPage() {
   const [showLocalityError, setLocalityError] = useState(false);
   const [showFieldError, setFieldError] = useState(false);
   const [fields, setFields] = useState([]);
-  const [cropCycles, setCropCycles] = useState([]);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState('');
+  const [rowData, setRowData] = useState([]);
 
   useEffect(() => {
     getLocations()
@@ -135,7 +140,7 @@ function CropCycleInfoPage() {
 
   /**
    * Function to fetch all crop cycle information using API
-   * updates cropCycles if call is successful
+   * updates rowData if call is successful
    * shows alert in case call fails
    */
   const getCropCycles = () => {
@@ -143,7 +148,7 @@ function CropCycleInfoPage() {
       setFieldError(false);
       getCropCyclesByField(field)
         .then((resp) => {
-          setCropCycles(resp.content);
+          getRowData(resp.content);
         })
         .catch((e) => {
           console.log('Fetching crop cycles failed', e);
@@ -158,7 +163,7 @@ function CropCycleInfoPage() {
    * Function to create and return row data for binding to table
    *
    */
-  const getRowData = () => {
+  const getRowData = (cropCycles) => {
     let data = cropCycles.map((obj) => {
       return {
         id: obj.id,
@@ -174,7 +179,7 @@ function CropCycleInfoPage() {
       };
     });
     data.sort((a, b) => (a.year > b.year ? 1 : -1));
-    return data;
+    setRowData(data);
   };
 
   /**
@@ -222,6 +227,7 @@ function CropCycleInfoPage() {
   const handleCropCycleOptions = (id, selectedRow) => {
     switch (id) {
       case 'edit':
+        editField(selectedRow);
         console.log(id, selectedRow);
         break;
       case 'delete':
@@ -250,6 +256,28 @@ function CropCycleInfoPage() {
     setAlertMessage(message);
     setAlertSeverity(severity);
     setAlertStatus(true);
+  };
+
+  /**
+   * 
+   //Opens the edit modal and passed the relevant row information
+   * @param {object} selectedRow 
+   */
+  const editField = (selectedRow) => {
+    setIsEditModalOpen(true);
+    setSelectedRow(selectedRow);
+  };
+
+  /**
+   * closes the edit modal
+   * refreshes the table with updated data
+   */
+  const handleClose = () => {
+    setIsEditModalOpen(false);
+    getCropCycles();
+    // getRowData();
+    // if (locationCode === '') getFieldData();
+    // else fetchFieldsForLocation();
   };
 
   return (
@@ -311,9 +339,23 @@ function CropCycleInfoPage() {
       {/* custom table to show field info */}
       <TableComponent
         cols={columnData}
-        rows={getRowData()}
+        rows={rowData}
         contextMenuActionHandler={handleCropCycleOptions}
       />
+      {/* modal to show selected field data and edit */}
+      <SimpleModal
+        isOpen={isEditModalOpen}
+        closeHandler={handleClose}
+        modalBody={
+          <CropCycleForm
+            operation='UPDATE'
+            title='Edit Crop Cycle'
+            selectedRow={selectedRow}
+            submitButtonText='Save'
+            closeHandler={handleClose}
+          />
+        }
+      ></SimpleModal>
       {/* alert UI */}
       <Snackbar open={alertStatus} onClose={handleAlertClose}>
         <Alert onClose={handleAlertClose} severity={alertSeverity}>
