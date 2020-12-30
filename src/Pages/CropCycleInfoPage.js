@@ -259,7 +259,7 @@ function CropCycleInfoPage() {
 
   /**
    * 
-   //Opens the edit modal and passed the relevant row information
+   //Opens the edit modal and passes the relevant row information
    * @param {object} selectedRow 
    */
   const editField = (selectedRow) => {
