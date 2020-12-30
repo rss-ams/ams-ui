@@ -7,7 +7,7 @@ import {
   MenuItem,
   Select,
   Snackbar,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
@@ -18,7 +18,6 @@ import { getLocations } from 'dataclients/LocationsClient';
 import React, { useEffect, useState } from 'react';
 import SimpleModal from 'components/common/SimpleModal';
 import CropCycleForm from 'components/common/CropCycleForm';
-
 
 /**
  * css styles for Crop Cycle Info Page
@@ -275,9 +274,6 @@ function CropCycleInfoPage() {
   const handleClose = () => {
     setIsEditModalOpen(false);
     getCropCycles();
-    // getRowData();
-    // if (locationCode === '') getFieldData();
-    // else fetchFieldsForLocation();
   };
 
   return (
