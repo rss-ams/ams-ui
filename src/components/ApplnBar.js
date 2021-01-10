@@ -115,8 +115,8 @@ const ApplnBar = () => {
       return (
         <DynamicTabs
           component1={<AddCropCycle />}
+          component3={<FarmTimeline />}
           component2={<CropCycleInfoPage />}
-          component3={'c3'}
         />
       );
     } else if (page === 'ACTIVITY') {
