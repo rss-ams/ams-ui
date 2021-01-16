@@ -36,7 +36,13 @@ const useStyles = makeStyles((theme) => ({
  */
 const columnData = [
   {
-    id: 'name',
+    id: 'id',
+    type: 'text',
+    label: 'Id',
+    width: 5,
+  },
+  {
+    id: 'fieldName',
     type: 'text',
     label: 'Name',
     width: 30,
@@ -135,7 +141,7 @@ function FieldInfoPage() {
       return {
         key: index,
         id: obj.id,
-        name: obj.identifier,
+        fieldName: obj.identifier,
         location: obj.location.displayStr,
         locationCode: obj.location.code,
         area: obj.area,
