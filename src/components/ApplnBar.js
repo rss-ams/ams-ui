@@ -16,6 +16,7 @@ import {
   Button,
   Box,
   Popover,
+  Snackbar,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -27,6 +28,7 @@ import User from 'Pages/User';
 import { GoogleLogout } from 'react-google-login';
 import GoogleLogin from 'react-google-login';
 import { refreshTokenSetup } from '../utils/refreshToken';
+import { Alert } from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -67,6 +69,9 @@ const ApplnBar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [userName, setUserName] = React.useState('');
   const [email, setEmail] = React.useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertStatus, setAlertStatus] = useState(false);
+  const [alertSeverity, setAlertSeverity] = useState('');
 
   const toggleDrawer = (open) => (event) => {
     if (
@@ -260,14 +265,14 @@ const ApplnBar = () => {
 
   const onLoginFailure = (res) => {
     console.log('Login failed: res:', res);
-    alert(`Failed to login`);
+    showAlert(`Failed to login`, 'error');
   };
 
   const onLogoutSuccess = (res) => {
     localStorage.setItem('authToken', null);
     setAnchorEl(null);
     console.log('Logged out Success');
-    alert('Logged out Successfully');
+    showAlert('Logged out Successfully');
     setAvatarVisible('hidden');
     setLoginVisible(true);
     setLogoutVisible('hidden');
@@ -284,6 +289,19 @@ const ApplnBar = () => {
   };
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const handleAlertClose = (_event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setAlertStatus(false);
+  };
+
+  const showAlert = (message, severity) => {
+    setAlertMessage(message);
+    setAlertSeverity(severity);
+    setAlertStatus(true);
   };
 
   return (
@@ -405,6 +423,11 @@ const ApplnBar = () => {
             </div>
           </Popover>
         </Toolbar>
+        <Snackbar open={alertStatus} onClose={handleAlertClose}>
+          <Alert onClose={handleAlertClose} severity={alertSeverity}>
+            {alertMessage}
+          </Alert>
+        </Snackbar>
       </AppBar>
     </div>
   );
