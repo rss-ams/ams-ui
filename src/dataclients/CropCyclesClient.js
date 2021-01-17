@@ -27,3 +27,19 @@ export const getCropCyclesByField = async (fieldId) => {
     .then(handleErrors)
     .then((response) => response.json());
 };
+
+/**
+ * API to update crop cycles
+ * @param {*} payload 
+ */
+export const updateCropCycles = async (payload) => {
+  return fetch(API_URL + 'fieldCropCycles', {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(handleErrors)
+    .then((response) => response.json());
+};
