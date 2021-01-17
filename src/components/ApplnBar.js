@@ -1,6 +1,7 @@
 import {
   AppBar,
   Button,
+  Divider,
   Drawer,
   IconButton,
   List,
@@ -12,7 +13,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import DynamicTabs from 'components/DynamicTabs';
-import AddActivityPage from 'Pages/AddActivityPage';
+import ProcessPage from 'Pages/ProcessPage';
 import AddCrop from 'Pages/AddCrop';
 import AddCropCycle from 'Pages/AddCropCycle';
 import AddField from 'Pages/AddField';
@@ -72,13 +73,26 @@ const ApplnBar = () => {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-        {['FIELD', 'CROP', 'CROP CYCLE', 'ACTIVITY','INSPECTION', 'VEHICLE'].map(
-          (text, _index) => (
+        {[
+          'FIELD',
+          '',
+          'CROP',
+          '',
+          'CROP CYCLE',
+          '',
+          'ACTIVITY',
+          '',
+          'INSPECTION',
+          '',
+          'VEHICLE',
+        ].map((text, _index) => {
+          if (text === '') return <Divider key={_index} />;
+          return (
             <ListItem button key={text} onClick={handlePageSelection(text)}>
               <ListItemText primary={text} />
             </ListItem>
-          ),
-        )}
+          );
+        })}
       </List>
     </div>
   );
@@ -109,9 +123,9 @@ const ApplnBar = () => {
         />
       );
     } else if (page === 'ACTIVITY') {
-      return <DynamicTabs component1={<AddActivityPage />} />;
+      return <DynamicTabs component1={<ProcessPage />} component2={'c2'} />;
     } else if (page === 'INSPECTION') {
-      return <DynamicTabs component1={<AddInspectionPage />}  />;
+      return <DynamicTabs component1={<AddInspectionPage />} />;
     } else if (page === 'VEHICLE') {
       return <AddVehicle />;
     }
