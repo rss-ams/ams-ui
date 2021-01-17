@@ -271,7 +271,7 @@ const ApplnBar = () => {
     setAvatarVisible('hidden');
     setLoginVisible(true);
     setLogoutVisible('hidden');
-    //route to home page
+    //ToDo: route to home page
   };
 
   const onLogoutFailure = (res) => {
