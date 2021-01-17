@@ -6,6 +6,7 @@ export const createCrop = async (payload) => {
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + localStorage.getItem('authToken'),
     },
   })
     .then(handleErrors)
@@ -22,6 +23,7 @@ export const updateCrop = async (payload) => {
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + localStorage.getItem('authToken'),
     },
   })
     .then(handleErrors)
@@ -29,7 +31,11 @@ export const updateCrop = async (payload) => {
 };
 
 export const getAllCrops = async () => {
-  return fetch(API_URL + 'crops')
+  return fetch(API_URL + 'crops', {
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('authToken'),
+    },
+  })
     .then(handleErrors)
     .then((response) => response.json());
 };

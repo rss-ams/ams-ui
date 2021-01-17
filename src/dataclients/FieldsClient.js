@@ -6,7 +6,11 @@ import { API_URL, handleErrors } from 'utils/FetchUtils';
  */
 export const getAllFields = async () => {
   let url = `${API_URL}fields`;
-  return fetch(url)
+  return fetch(url, {
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('authToken'),
+    },
+  })
     .then(handleErrors)
     .then((response) => response.json());
 };
@@ -18,7 +22,11 @@ export const getAllFields = async () => {
  */
 export const getFieldsByLocation = async (location) => {
   let url = `${API_URL}fields?location=${parseInt(location)}`;
-  return fetch(url)
+  return fetch(url, {
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('authToken'),
+    },
+  })
     .then(handleErrors)
     .then((response) => response.json());
 };
@@ -33,6 +41,7 @@ export const createField = async (payload) => {
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + localStorage.getItem('authToken'),
     },
   })
     .then(handleErrors)
@@ -49,6 +58,7 @@ export const updateField = async (payload) => {
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + localStorage.getItem('authToken'),
     },
   })
     .then(handleErrors)
