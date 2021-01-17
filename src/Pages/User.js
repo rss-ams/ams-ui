@@ -32,13 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const User = ({
-  operation,
-  title,
-  selectedRow,
-  closeHandler,
-  submitButtonText,
-}) => {
+const User = () => {
   const classes = useStyles();
   const [email, setEmail] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
