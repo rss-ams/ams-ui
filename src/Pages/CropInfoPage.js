@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
  */
 const columnData = [
   {
-    id: 'name',
+    id: 'cropName',
     type: 'text',
     label: 'Name',
     width: 50,
@@ -101,10 +101,11 @@ function CropInfoPage() {
    *
    */
   const getRowData = () => {
-    let data = crops.map((obj) => {
+    let data = crops.map((obj, index) => {
       return {
+        key: index,
         id: obj.id,
-        name: obj.name,
+        cropName: obj.name,
         season: obj.season,
         cgp: `${obj.cropGrowthProtocol.name} - ${obj.cropGrowthProtocol.description}`,
         cgpid: obj.cropGrowthProtocol.id,
@@ -127,9 +128,8 @@ function CropInfoPage() {
   };
 
   /**
-   * 
-   //TODO edit implementation for crops
-   * @param {object} selectedRow 
+   *
+   * @param {object} selectedRow
    */
   const editCrop = (selectedRow) => {
     setIsEditModalOpen(true);
@@ -212,11 +212,16 @@ function CropInfoPage() {
             setOpen={setIsEditModalOpen}
             closeHandler={handleClose}
             submitButtonText='Save'
+            showToastMessage={showAlert}
           />
         }
       ></SimpleModal>
       {/* alert UI */}
-      <Snackbar open={alertStatus} onClose={handleAlertClose}>
+      <Snackbar
+        open={alertStatus}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
+      >
         <Alert onClose={handleAlertClose} severity={alertSeverity}>
           {alertMessage}
         </Alert>

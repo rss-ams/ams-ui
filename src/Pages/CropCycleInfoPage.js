@@ -11,13 +11,13 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
+import CropCycleForm from 'components/common/CropCycleForm';
+import SimpleModal from 'components/common/SimpleModal';
 import TableComponent from 'components/common/TableComponent';
 import { getCropCyclesByField } from 'dataclients/CropCyclesClient';
 import { getFieldsByLocation } from 'dataclients/FieldsClient';
 import { getLocations } from 'dataclients/LocationsClient';
 import React, { useEffect, useState } from 'react';
-import SimpleModal from 'components/common/SimpleModal';
-import CropCycleForm from 'components/common/CropCycleForm';
 
 /**
  * css styles for Crop Cycle Info Page
@@ -353,7 +353,11 @@ function CropCycleInfoPage() {
         }
       ></SimpleModal>
       {/* alert UI */}
-      <Snackbar open={alertStatus} onClose={handleAlertClose}>
+      <Snackbar
+        open={alertStatus}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
+      >
         <Alert onClose={handleAlertClose} severity={alertSeverity}>
           {alertMessage}
         </Alert>

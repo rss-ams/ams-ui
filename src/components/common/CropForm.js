@@ -1,22 +1,31 @@
 import {
-  Button,
   FormControl,
   FormGroup,
-  InputLabel,
   MenuItem,
-  Select,
   Snackbar,
   TextField,
   Typography,
 } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Popover from '@material-ui/core/Popover';
 import { makeStyles } from '@material-ui/core/styles';
+import InfoOutlined from '@material-ui/icons/InfoOutlined';
 import { Alert } from '@material-ui/lab';
+import FormButtons from 'components/common/FormButtons';
 import { getAllCropGrowthProtocols } from 'dataclients/CropGrowthProtocolsClient';
 import { createCrop, updateCrop } from 'dataclients/CropsClient';
 import React, { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { CropSeasons } from 'utils/CropConstants';
 
 const useStyles = makeStyles((theme) => ({
+  popover: {
+    pointerEvents: 'none',
+  },
+  paper: {
+    padding: theme.spacing(1),
+  },
   formControl: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
@@ -38,15 +47,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddCrop = ({ operation, title, selectedRow, closeHandler, submitButtonText }) => {
-  const classes = useStyles();
-  const [cropName, setCropName] = useState(selectedRow.name);
-  const [cropSeason, setCropSeason] = useState(selectedRow.season);
-  const [cropGrowthProtocol, setCropGrowthProtocol] = useState(selectedRow.cgpid);
+const AddCrop = ({
+  operation,
+  title,
+  selectedRow,
+  closeHandler,
+  submitButtonText,
+  showToastMessage,
+}) => {
   const [cropGrowthProtocols, setCropGrowthProtocols] = useState([]);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
+  const classes = useStyles();
+  const defaultValues = {
+    cropName: selectedRow.cropName,
+    season: selectedRow.season,
+    cgpid: selectedRow.cgpid,
+  };
+  const { handleSubmit, reset, control, errors: fieldsErrors } = useForm({
+    defaultValues,
+  });
 
   useEffect(() => {
     getAllCropGrowthProtocols()
@@ -68,125 +89,201 @@ const AddCrop = ({ operation, title, selectedRow, closeHandler, submitButtonText
     setAlertMessage(message);
     setAlertSeverity(severity);
     setAlertStatus(true);
-  };  
-
-  const handleChange = ({ target }) => {
-    const { name, value } = target;
-    if (name === 'season') {
-      setCropSeason(value);
-    } else if (name === 'cropGrowthProtocol') {
-      setCropGrowthProtocol(value);
-    } else if (name === 'cropName') {
-      setCropName(value);
-    }
   };
 
-  const handleSubmit = () => {
-    const payload = {
-      id: selectedRow.id,
-      name: cropName,
-      season: cropSeason,
-      cropGrowthProtocol: { id: cropGrowthProtocol },
-    };
-    if(operation === 'UPDATE') {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handlePopoverOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
+  const resetHandler = () => {
+    reset(defaultValues);
+  };
+
+  const submitHandler = (formData) => {
+    let payload = {};
+    payload.name = formData.cropName;
+    payload.season = formData.season;
+    payload.cropGrowthProtocol = { id: formData.cgpid };
+    if (operation === 'UPDATE') {
+      payload.id = selectedRow.id;
       updateCrop(payload)
         .then((_response) => {
+          showToastMessage('Crop successfully updated', 'info');
           closeHandler();
-          showAlert('Crop successfully updated', 'info');
         })
         .catch((e) => {
           console.log('Internal server error', e);
-          showAlert('Crop creation failed: ' + e.message, 'error');
+          showToastMessage('Crop update failed: ' + e.message, 'error');
         });
-    }
-    else {
+    } else {
       createCrop(payload)
         .then((_response) => {
-          showAlert('Crop successfully created', 'info');
+          reset(defaultValues);
+          showToastMessage('Crop successfully created', 'info');
         })
         .catch((e) => {
           console.log('Internal server error', e);
-          showAlert('Crop creation failed: ' + e.message, 'error');
+          showToastMessage('Crop creation failed: ' + e.message, 'error');
         });
     }
   };
 
   return (
-    <FormGroup className={classes.formGroup}>
-      <Typography align='center' variant='h6' className={classes.title}>
-        {title}
-      </Typography>
-
-      <TextField
-        className={classes.formControl}
-        id='cropName'
-        name='cropName'
-        onChange={handleChange}
-        label='Crop Name'
-        value={cropName}
-      />
-
-      <FormControl className={classes.formControl}>
-        <InputLabel id='season-label'>Season</InputLabel>
-        <Select
-          id='season'
-          name='season'
-          value={cropSeason}
-          onChange={handleChange}
-        >
-          {CropSeasons.map((cropSeason) => {
-            return (
-              <MenuItem
-                key={cropSeason}
-                value={cropSeason}
-                className={classes.menuItem}
+    <form onSubmit={handleSubmit((formData) => submitHandler(formData))}>
+      <FormGroup className={classes.formGroup}>
+        <Typography align='center' variant='h6' className={classes.title}>
+          {title}
+        </Typography>
+        {/* crop name input */}
+        <FormControl className={classes.formControl}>
+          <Controller
+            name='cropName'
+            as={
+              <TextField
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton
+                        size='small'
+                        onMouseEnter={handlePopoverOpen}
+                        onMouseLeave={handlePopoverClose}
+                      >
+                        <InfoOutlined />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                className={classes.formControl}
+                id='cropName'
+                name='cropName'
+                label='Crop Name'
+                error={fieldsErrors.cropName}
+                helperText={
+                  fieldsErrors.cropName ? fieldsErrors.cropName.message : null
+                }
+              />
+            }
+            control={control}
+            rules={{
+              required: 'Please enter a crop name',
+              pattern: {
+                value: /^[a-zA-Z]+[a-zA-Z0-9_]*$/,
+                message: 'Enter a valid name',
+              },
+            }}
+          />
+          <Popover
+            id='cropname-help'
+            className={classes.popover}
+            classes={{
+              paper: classes.paper,
+            }}
+            open={open}
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+            onClose={handlePopoverClose}
+            disableRestoreFocus
+          >
+            <Typography variant='body2'>
+              A name must start with a letter followed by letters, digits or _.
+            </Typography>
+          </Popover>
+        </FormControl>
+        {/* season selection */}
+        <FormControl className={classes.formControl}>
+          <Controller
+            name='season'
+            control={control}
+            rules={{
+              required: 'Please select a season',
+            }}
+            as={
+              <TextField
+                select
+                id='season'
+                label='Season'
+                error={fieldsErrors.season}
+                helperText={
+                  fieldsErrors.season ? fieldsErrors.season.message : null
+                }
               >
-                {cropSeason}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl>
-
-      <FormControl className={classes.formControl}>
-        <InputLabel id='cropGrowthProtocol-label'>
-          Crop Growth Protocol
-        </InputLabel>
-        <Select
-          id='cropGrowthProtocol'
-          name='cropGrowthProtocol'
-          value={cropGrowthProtocol}
-          onChange={handleChange}
-        >
-          {cropGrowthProtocols.map((item) => {
-            return (
-              <MenuItem
-                key={item.id}
-                value={item.id}
-                className={classes.menuItem}
+                {CropSeasons.map((cropSeason) => {
+                  return (
+                    <MenuItem
+                      key={cropSeason}
+                      value={cropSeason}
+                      className={classes.menuItem}
+                    >
+                      {cropSeason}
+                    </MenuItem>
+                  );
+                })}
+              </TextField>
+            }
+          ></Controller>
+        </FormControl>
+        <FormControl className={classes.formControl}>
+          <Controller
+            name='cgpid'
+            control={control}
+            rules={{
+              required: 'Please select crop growth protocol',
+            }}
+            as={
+              <TextField
+                select
+                id='cgpid'
+                label='Crop Growth Protocol'
+                error={fieldsErrors.cgpid}
+                helperText={
+                  fieldsErrors.cgpid ? fieldsErrors.cgpid.message : null
+                }
               >
-                {item.name + ' - ' + item.description}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl>
+                {cropGrowthProtocols.map((item) => {
+                  return (
+                    <MenuItem
+                      key={item.id}
+                      value={item.id}
+                      className={classes.menuItem}
+                    >
+                      {item.name + ' - ' + item.description}
+                    </MenuItem>
+                  );
+                })}
+              </TextField>
+            }
+          ></Controller>
+        </FormControl>
 
-      <Button
-        variant='contained'
-        color='primary'
-        className={classes.submitButton}
-        onClick={handleSubmit}
-      >
-        {submitButtonText}
-      </Button>
+        {/* reset/save/create button */}
+        <FormButtons {...{ resetHandler, submitButtonText }} />
 
-      <Snackbar open={alertStatus} onClose={handleAlertClose}>
-        <Alert onClose={handleAlertClose} severity={alertSeverity}>
-          {alertMessage}
-        </Alert>
-      </Snackbar>
-    </FormGroup>
+        <Snackbar
+          open={alertStatus}
+          autoHideDuration={3000}
+          Close={handleAlertClose}
+        >
+          <Alert onClose={handleAlertClose} severity={alertSeverity}>
+            {alertMessage}
+          </Alert>
+        </Snackbar>
+      </FormGroup>
+    </form>
   );
 };
 

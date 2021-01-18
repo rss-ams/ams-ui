@@ -4,7 +4,7 @@ import {
   MenuItem,
   Snackbar,
   TextField,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -48,6 +48,7 @@ const FieldForm = ({
   selectedRow,
   closeHandler,
   submitButtonText,
+  showToastMessage,
 }) => {
   const classes = useStyles();
   const defaultValues = {
@@ -110,23 +111,23 @@ const FieldForm = ({
       payload.id = selectedRow.id;
       updateField(payload)
         .then((response) => {
-          showAlert('Field successfully updated', 'info');
+          showToastMessage('Field successfully updated', 'info');
           reset(defaultValues);
           closeHandler();
         })
         .catch((e) => {
           console.log('Internal server error', e);
-          showAlert('Field updation failed: ' + e.message, 'error');
+          showToastMessage('Field updation failed: ' + e.message, 'error');
         });
     } else {
       createField(payload)
         .then((response) => {
-          showAlert('Field successfully created', 'info');
+          showToastMessage('Field successfully created', 'info');
           reset(defaultValues);
         })
         .catch((e) => {
           console.log('Internal server error', e);
-          showAlert('Field creation failed: ' + e.message, 'error');
+          showToastMessage('Field creation failed: ' + e.message, 'error');
         });
     }
   };
@@ -211,7 +212,7 @@ const FieldForm = ({
             }}
           />
           <Popover
-            id='mouse-over-popover'
+            id='fieldname-help'
             className={classes.popover}
             classes={{
               paper: classes.paper,
@@ -230,7 +231,7 @@ const FieldForm = ({
             disableRestoreFocus
           >
             <Typography variant='body2'>
-              A name must start with a letter followed by letters, digits or _
+              A name must start with a letter followed by letters, digits or _.
             </Typography>
           </Popover>
         </FormControl>
@@ -262,7 +263,11 @@ const FieldForm = ({
         <FormButtons {...{ resetHandler, submitButtonText }} />
 
         {/* success and error alerts */}
-        <Snackbar open={alertStatus} onClose={handleAlertClose}>
+        <Snackbar
+          open={alertStatus}
+          autoHideDuration={3000}
+          onClose={handleAlertClose}
+        >
           <Alert onClose={handleAlertClose} severity={alertSeverity}>
             {alertMessage}
           </Alert>
