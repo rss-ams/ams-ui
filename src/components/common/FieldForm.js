@@ -6,7 +6,11 @@ import {
   TextField,
   Typography
 } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Popover from '@material-ui/core/Popover';
 import { makeStyles } from '@material-ui/core/styles';
+import InfoOutlined from '@material-ui/icons/InfoOutlined';
 import { Alert } from '@material-ui/lab';
 import FormButtons from 'components/common/FormButtons';
 import { createField, updateField } from 'dataclients/FieldsClient';
@@ -15,6 +19,12 @@ import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 const useStyles = makeStyles((theme) => ({
+  popover: {
+    pointerEvents: 'none',
+  },
+  paper: {
+    padding: theme.spacing(1),
+  },
   formControl: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
@@ -76,6 +86,20 @@ const FieldForm = ({
     setAlertStatus(true);
   };
 
+  const resetHandler = () => {
+    reset(defaultValues);
+  };
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handlePopoverOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
   const submitHandler = (formData) => {
     let payload = {};
     payload.identifier = formData.fieldName;
@@ -154,6 +178,19 @@ const FieldForm = ({
             name='fieldName'
             as={
               <TextField
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton
+                        size='small'
+                        onMouseEnter={handlePopoverOpen}
+                        onMouseLeave={handlePopoverClose}
+                      >
+                        <InfoOutlined />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
                 className={classes.formControl}
                 id='fieldName'
                 name='fieldName'
@@ -168,11 +205,34 @@ const FieldForm = ({
             rules={{
               required: 'Please enter a field name',
               pattern: {
-                value: /^([A-Za-z]|[0-9]|_)+$/,
+                value: /^[a-zA-Z]+[a-zA-Z0-9_]*$/,
                 message: 'Enter a valid name',
               },
             }}
           />
+          <Popover
+            id='mouse-over-popover'
+            className={classes.popover}
+            classes={{
+              paper: classes.paper,
+            }}
+            open={open}
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+            onClose={handlePopoverClose}
+            disableRestoreFocus
+          >
+            <Typography variant='body2'>
+              A name must start with a letter followed by letters, digits or _
+            </Typography>
+          </Popover>
         </FormControl>
         {/* area input */}
         <FormControl className={classes.formControl}>
@@ -199,7 +259,7 @@ const FieldForm = ({
           />
         </FormControl>
         {/* reset/save/create button */}
-        <FormButtons {...{ reset, defaultValues, submitButtonText }} />
+        <FormButtons {...{ resetHandler, submitButtonText }} />
 
         {/* success and error alerts */}
         <Snackbar open={alertStatus} onClose={handleAlertClose}>
