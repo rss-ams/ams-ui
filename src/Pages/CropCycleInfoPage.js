@@ -12,12 +12,16 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
 import TableComponent from 'components/common/TableComponent';
-import { getCropCyclesByField } from 'dataclients/CropCyclesClient';
+import {
+  getCropCyclesByField,
+  deleteCropCycleById,
+} from 'dataclients/CropCyclesClient';
 import { getFieldsByLocation } from 'dataclients/FieldsClient';
 import { getLocations } from 'dataclients/LocationsClient';
 import React, { useEffect, useState } from 'react';
 import SimpleModal from 'components/common/SimpleModal';
 import CropCycleForm from 'components/common/CropCycleForm';
+import DeleteForm from 'components/common/DeleteForm';
 
 /**
  * css styles for Crop Cycle Info Page
@@ -111,6 +115,7 @@ function CropCycleInfoPage() {
   const [showFieldError, setFieldError] = useState(false);
   const [fields, setFields] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState('');
   const [rowData, setRowData] = useState([]);
 
@@ -226,11 +231,11 @@ function CropCycleInfoPage() {
   const handleCropCycleOptions = (id, selectedRow) => {
     switch (id) {
       case 'edit':
-        editField(selectedRow);
+        editCropCycle(selectedRow);
         console.log(id, selectedRow);
         break;
       case 'delete':
-        console.log(id, selectedRow);
+        deleteCropCycle(selectedRow);
         break;
       case 'currentProcesses':
         console.log(id, selectedRow);
@@ -262,9 +267,36 @@ function CropCycleInfoPage() {
    //Opens the edit modal and passes the relevant row information
    * @param {object} selectedRow 
    */
-  const editField = (selectedRow) => {
+  const editCropCycle = (selectedRow) => {
     setIsEditModalOpen(true);
     setSelectedRow(selectedRow);
+  };
+
+  /**
+   * delete handler for crop cycle
+   * @param {object} selectedRow
+   */
+  const deleteCropCycle = (selectedRow) => {
+    setSelectedRow(selectedRow);
+    setIsDeleteModalOpen(true);
+  };
+
+  /**
+   * delete crop cycle after user confirmation
+   * @param {object} selectedRow
+   */
+  const deleteCropCycleConfirmed = () => {
+    console.log(selectedRow);
+    deleteCropCycleById(selectedRow.id)
+      .then((_response) => {
+        handleClose();
+        showAlert('Crop successfully deleted', 'info');
+      })
+      .catch((e) => {
+        console.log('Internal server error', e);
+        showAlert('Crop deletion failed: ' + e.message, 'error');
+      });
+    handleClose();
   };
 
   /**
@@ -273,6 +305,7 @@ function CropCycleInfoPage() {
    */
   const handleClose = () => {
     setIsEditModalOpen(false);
+    setIsDeleteModalOpen(false);
     getCropCycles();
   };
 
@@ -348,6 +381,17 @@ function CropCycleInfoPage() {
             title='Edit Crop Cycle'
             selectedRow={selectedRow}
             submitButtonText='Save'
+            closeHandler={handleClose}
+          />
+        }
+      ></SimpleModal>
+      {/* modal to delete selected crop data */}
+      <SimpleModal
+        isOpen={isDeleteModalOpen}
+        closeHandler={handleClose}
+        modalBody={
+          <DeleteForm
+            deleteHandler={deleteCropCycleConfirmed}
             closeHandler={handleClose}
           />
         }

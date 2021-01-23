@@ -11,18 +11,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SimpleModal({
-  isOpen,
-  closeHandler,
-  modalBody,
-}) {
-  const classes = useStyles();  
+export default function SimpleModal({ isOpen, closeHandler, modalBody }) {
+  const classes = useStyles();
 
-  const body = (
-    <div className={classes.paper}>
-      {modalBody}
-    </div>
-  );
+  const body = <div className={classes.paper}>{modalBody}</div>;
 
   return (
     <div>
@@ -31,7 +23,11 @@ export default function SimpleModal({
         onClose={closeHandler}
         aria-labelledby='simple-modal-title'
         aria-describedby='simple-modal-description'
-        style={{display:'flex',alignItems:'center',justifyContent:'center'}}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
       >
         {body}
       </Modal>

@@ -2,10 +2,12 @@ import { FormGroup, Snackbar, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
 import CropForm from 'components/common/CropForm';
+import DeleteForm from 'components/common/DeleteForm';
 import SimpleModal from 'components/common/SimpleModal';
 import TableComponent from 'components/common/TableComponent';
 import { getAllCrops } from 'dataclients/CropsClient';
 import React, { useEffect, useState } from 'react';
+import { deleteCropById } from 'dataclients/CropsClient';
 
 /**
  * css styles for Crop Info Page
@@ -76,6 +78,7 @@ function CropInfoPage() {
   const [alertSeverity, setAlertSeverity] = useState('');
   const [crops, setCrops] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState('');
 
   /**
@@ -128,7 +131,7 @@ function CropInfoPage() {
 
   /**
    * 
-   //TODO edit implementation for crops
+   //edit implementation for crops
    * @param {object} selectedRow 
    */
   const editCrop = (selectedRow) => {
@@ -138,12 +141,30 @@ function CropInfoPage() {
   };
 
   /**
-   *
-   //TODO delete implementation for crops
-   * @param {object} selectedRow 
+   * delete implementation for crops
+   * @param {object} selectedRow
    */
   const deleteCrop = (selectedRow) => {
+    setSelectedRow(selectedRow);
+    setIsDeleteModalOpen(true);
+  };
+
+  /**
+   * delete crops after user confirmation
+   * @param {object} selectedRow
+   */
+  const deleteCropConfirmed = () => {
     console.log(selectedRow);
+    deleteCropById(selectedRow.id)
+      .then((_response) => {
+        handleClose();
+        showAlert('Crop successfully deleted', 'info');
+      })
+      .catch((e) => {
+        console.log('Internal server error', e);
+        showAlert('Crop deletion failed: ' + e.message, 'error');
+      });
+    handleClose();
   };
 
   /**
@@ -184,6 +205,7 @@ function CropInfoPage() {
    */
   const handleClose = () => {
     setIsEditModalOpen(false);
+    setIsDeleteModalOpen(false);
     getCropData();
   };
 
@@ -200,7 +222,7 @@ function CropInfoPage() {
         rows={getRowData()}
         contextMenuActionHandler={handleCropOptions}
       />
-      {/* modal to show selected field data and edit */}
+      {/* modal to show selected crop data and edit */}
       <SimpleModal
         isOpen={isEditModalOpen}
         closeHandler={handleClose}
@@ -212,6 +234,17 @@ function CropInfoPage() {
             setOpen={setIsEditModalOpen}
             closeHandler={handleClose}
             submitButtonText='Save'
+          />
+        }
+      ></SimpleModal>
+      {/* modal to delete selected crop data */}
+      <SimpleModal
+        isOpen={isDeleteModalOpen}
+        closeHandler={handleClose}
+        modalBody={
+          <DeleteForm
+            deleteHandler={deleteCropConfirmed}
+            closeHandler={handleClose}
           />
         }
       ></SimpleModal>

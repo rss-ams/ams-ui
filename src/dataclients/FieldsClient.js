@@ -54,3 +54,13 @@ export const updateField = async (payload) => {
     .then(handleErrors)
     .then((response) => response.json());
 };
+
+/**
+ * API to delete a field
+ * @param {object} payload
+ */
+export const deleteFieldById = async (id) => {
+  return fetch(API_URL + 'fields/' + id, {
+    method: 'DELETE',
+  }).then(handleErrors);
+};

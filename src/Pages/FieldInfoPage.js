@@ -12,9 +12,14 @@ import { Alert } from '@material-ui/lab';
 import FieldForm from 'components/common/FieldForm';
 import SimpleModal from 'components/common/SimpleModal';
 import TableComponent from 'components/common/TableComponent';
-import { getAllFields, getFieldsByLocation } from 'dataclients/FieldsClient';
+import {
+  getAllFields,
+  getFieldsByLocation,
+  deleteFieldById,
+} from 'dataclients/FieldsClient';
 import { getLocations } from 'dataclients/LocationsClient';
 import React, { useEffect, useState } from 'react';
+import DeleteForm from 'components/common/DeleteForm';
 
 /**
  * css styles for Field Info Page
@@ -95,6 +100,7 @@ function FieldInfoPage() {
   const [alertSeverity, setAlertSeverity] = useState('');
   const [fieldsData, setFieldsData] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState('');
   const [fieldTableRows, setFieldTableRows] = useState([]);
 
@@ -220,11 +226,31 @@ function FieldInfoPage() {
   };
 
   /**
-   *
-   //TODO delete implementation for fields
-   * @param {object} selectedRow 
+   *delete implementation for fields
+   * @param {object} selectedRow
    */
-  const deleteField = (selectedRow) => {};
+  const deleteField = (selectedRow) => {
+    setSelectedRow(selectedRow);
+    setIsDeleteModalOpen(true);
+  };
+
+  /**
+   * call to delete API after user confirmation
+   * @param {object} selectedRow
+   */
+  const deleteFieldConfirmed = () => {
+    console.log(selectedRow);
+    deleteFieldById(selectedRow.id)
+      .then((_response) => {
+        handleClose();
+        showAlert('Field successfully deleted', 'info');
+      })
+      .catch((e) => {
+        console.log('Internal server error', e);
+        showAlert('Field deletion failed: ' + e.message, 'error');
+      });
+    handleClose();
+  };
 
   /**
    * Shows alert on UI
@@ -246,6 +272,7 @@ function FieldInfoPage() {
    */
   const handleClose = () => {
     setIsEditModalOpen(false);
+    setIsDeleteModalOpen(false);
     if (locationCode === '') getFieldData();
     else fetchFieldsForLocation();
   };
@@ -292,6 +319,17 @@ function FieldInfoPage() {
             isOpen={isEditModalOpen}
             closeHandler={handleClose}
             submitButtonText='Save'
+          />
+        }
+      ></SimpleModal>
+      {/* modal to delete selected field data */}
+      <SimpleModal
+        isOpen={isDeleteModalOpen}
+        closeHandler={handleClose}
+        modalBody={
+          <DeleteForm
+            deleteHandler={deleteFieldConfirmed}
+            closeHandler={handleClose}
           />
         }
       ></SimpleModal>

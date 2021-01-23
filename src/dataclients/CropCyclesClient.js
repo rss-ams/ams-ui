@@ -30,7 +30,7 @@ export const getCropCyclesByField = async (fieldId) => {
 
 /**
  * API to update crop cycles
- * @param {*} payload 
+ * @param {*} payload
  */
 export const updateCropCycles = async (payload) => {
   return fetch(API_URL + 'fieldCropCycles', {
@@ -42,4 +42,14 @@ export const updateCropCycles = async (payload) => {
   })
     .then(handleErrors)
     .then((response) => response.json());
+};
+
+/**
+ * API to delete a cropcycle
+ * @param {object} payload
+ */
+export const deleteCropCycleById = async (id) => {
+  return fetch(API_URL + 'fieldCropCycles/' + id, {
+    method: 'DELETE',
+  }).then(handleErrors);
 };
