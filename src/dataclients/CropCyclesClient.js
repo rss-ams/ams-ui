@@ -30,7 +30,7 @@ export const getCropCyclesByField = async (fieldId) => {
 
 /**
  * API to update crop cycles
- * @param {*} payload
+ * @param {object} payload
  */
 export const updateCropCycles = async (payload) => {
   return fetch(API_URL + 'fieldCropCycles', {

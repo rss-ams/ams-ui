@@ -290,11 +290,11 @@ function CropCycleInfoPage() {
     deleteCropCycleById(selectedRow.id)
       .then((_response) => {
         handleClose();
-        showAlert('Crop successfully deleted', 'info');
+        showAlert('Crop cycle successfully deleted', 'info');
       })
       .catch((e) => {
         console.log('Internal server error', e);
-        showAlert('Crop deletion failed: ' + e.message, 'error');
+        showAlert('Crop cycle deletion failed: ' + e.message, 'error');
       });
     handleClose();
   };

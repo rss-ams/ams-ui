@@ -1,34 +1,11 @@
-import {
-  Button,
-  FormControl,
-  FormGroup,
-  InputLabel,
-  MenuItem,
-  Select,
-  Snackbar,
-  TextField,
-  Typography,
-} from '@material-ui/core';
+import { Button, FormGroup, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Alert } from '@material-ui/lab';
-import { getAllCropGrowthProtocols } from 'dataclients/CropGrowthProtocolsClient';
-import { createCrop, updateCrop } from 'dataclients/CropsClient';
-import React, { useEffect, useState } from 'react';
-import { CropSeasons } from 'utils/CropConstants';
+import React, { useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
-  formControl: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(1),
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-  },
   submitButton: {
     margin: theme.spacing(2),
     width: 'fit-content',
-  },
-  menuItem: {
-    whiteSpace: 'normal',
   },
   root: {
     textAlign: 'center',
@@ -40,26 +17,10 @@ const useStyles = makeStyles((theme) => ({
 
 const DeleteForm = ({ deleteHandler, closeHandler }) => {
   const classes = useStyles();
-  const [alertMessage, setAlertMessage] = useState('');
-  const [alertStatus, setAlertStatus] = useState(false);
-  const [alertSeverity, setAlertSeverity] = useState('');
   const [title] = useState('Are you sure you want to delete?');
 
-  const handleAlertClose = (_event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setAlertStatus(false);
-  };
-
-  const showAlert = (message, severity) => {
-    setAlertMessage(message);
-    setAlertSeverity(severity);
-    setAlertStatus(true);
-  };
-
   return (
-    <FormGroup className={classes.formGroup}>
+    <FormGroup>
       <Typography align='center' variant='h7' className={classes.title}>
         {title}
       </Typography>
@@ -81,12 +42,6 @@ const DeleteForm = ({ deleteHandler, closeHandler }) => {
           No
         </Button>
       </div>
-
-      <Snackbar open={alertStatus} onClose={handleAlertClose}>
-        <Alert onClose={handleAlertClose} severity={alertSeverity}>
-          {alertMessage}
-        </Alert>
-      </Snackbar>
     </FormGroup>
   );
 };
