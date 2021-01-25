@@ -1,7 +1,9 @@
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   AppBar,
   Button,
-  Divider,
   Drawer,
   IconButton,
   List,
@@ -12,17 +14,9 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
-import DynamicTabs from 'components/DynamicTabs';
-import ProcessPage from 'Pages/ProcessPage';
-import AddCrop from 'Pages/AddCrop';
-import AddCropCycle from 'Pages/AddCropCycle';
-import AddField from 'Pages/AddField';
-import AddVehicle from 'Pages/AddVehicle';
-import FieldInfoPage from 'Pages/FieldInfoPage';
-import CropInfoPage from 'Pages/CropInfoPage';
-import CropCycleInfoPage from 'Pages/CropCycleInfoPage';
-import FarmTimeline from 'Pages/FarmTImeLine';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,7 +29,20 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   list: {
-    width: 250,
+    width: 200,
+    paddingTop: theme.spacing(0),
+    paddingBottom: theme.spacing(0),
+  },
+  accordianSummary: {
+    paddingTop: theme.spacing(0),
+    paddingBottom: theme.spacing(0),
+  },
+  accordianDetails: {
+    padding: theme.spacing(0),
+  },
+  accordianItem: {
+    paddingTop: theme.spacing(0),
+    paddingBottom: theme.spacing(0),
   },
 }));
 
@@ -43,7 +50,6 @@ const ApplnBar = () => {
   const classes = useStyles();
 
   const [drawerState, setDrawerState] = useState(false);
-  const [page, setPage] = useState('FIELD');
 
   const toggleDrawer = (open) => (event) => {
     if (
@@ -55,76 +61,146 @@ const ApplnBar = () => {
     setDrawerState(open);
   };
 
-  const handlePageSelection = (selection) => (event) => {
-    if (
-      event.type === 'keydown' &&
-      (event.key === 'Tab' || event.key === 'Shift')
-    ) {
-      return;
-    }
-    setPage(selection);
-  };
-  const getMenuItems = () => (
-    <div
-      className={classes.list}
-      role='presentation'
-      onClick={toggleDrawer(false)}
-      onKeyDown={toggleDrawer(false)}
-    >
-      <List>
-        {[
-          'FIELD',
-          '',
-          'CROP',
-          '',
-          'CROP CYCLE',
-          '',
-          'ACTIVITY',
-          '',
-          'VEHICLE',
-        ].map((text, _index) => {
-          if (text === '') return <Divider key={_index} />;
-          return (
-            <ListItem button key={text} onClick={handlePageSelection(text)}>
-              <ListItemText primary={text} />
+  const getMenu = () => (
+    <div role='presentation'>
+      {/* Fields */}
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='fields-content'
+          id='fields-header'
+          classes={{
+            content: classes.accordianSummary,
+            expanded: classes.accordianSummaryExpanded,
+          }}
+        >
+          <Typography>FIELDS</Typography>
+        </AccordionSummary>
+        <AccordionDetails className={classes.accordianDetails}>
+          <List className={classes.list}>
+            <ListItem
+              button
+              key='fields-add-'
+              className={classes.accordianItem}
+              onClick={toggleDrawer(false)}
+            >
+              <Link to='/fields/add'>
+                <ListItemText primary='ADD' />
+              </Link>
             </ListItem>
-          );
-        })}
-      </List>
+            <ListItem
+              button
+              key='fields-info'
+              className={classes.accordianItem}
+              onClick={toggleDrawer(false)}
+            >
+              <Link to='/fields/info'>
+                <ListItemText primary='VIEW' />
+              </Link>
+            </ListItem>
+          </List>
+        </AccordionDetails>
+      </Accordion>
+
+      {/* Crops */}
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='crops-content'
+          id='crops-header'
+          className={classes.accordianSummary}
+        >
+          <Typography>CROPS</Typography>
+        </AccordionSummary>
+        <AccordionDetails className={classes.accordianDetails}>
+          <List className={classes.list}>
+            <ListItem
+              button
+              key='crops-add-'
+              className={classes.accordianItem}
+              onClick={toggleDrawer(false)}
+            >
+              <Link to='/crops/add'>
+                <ListItemText primary='ADD' />
+              </Link>
+            </ListItem>
+            <ListItem
+              button
+              key='crops-info'
+              className={classes.accordianItem}
+              onClick={toggleDrawer(false)}
+            >
+              <Link to='/crops/info'>
+                <ListItemText primary='VIEW' />
+              </Link>
+            </ListItem>
+          </List>
+        </AccordionDetails>
+      </Accordion>
+
+      {/* Crop-cycles */}
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='crop-cycles-content'
+          id='crop-cycles-header'
+          className={classes.accordianSummary}
+        >
+          <Typography>CROP CYCLES</Typography>
+        </AccordionSummary>
+        <AccordionDetails className={classes.accordianDetails}>
+          <List className={classes.list}>
+            <ListItem
+              button
+              key='crop-cycles-add-'
+              className={classes.accordianItem}
+              onClick={toggleDrawer(false)}
+            >
+              <Link to='/crop-cycles/add'>
+                <ListItemText primary='ADD' />
+              </Link>
+            </ListItem>
+            <ListItem
+              button
+              key='crop-cycles-info'
+              className={classes.accordianItem}
+              onClick={toggleDrawer(false)}
+            >
+              <Link to='/crop-cycles/info'>
+                <ListItemText primary='VIEW' />
+              </Link>
+            </ListItem>
+          </List>
+        </AccordionDetails>
+      </Accordion>
+
+      {/* Processes */}
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='processes-content'
+          id='processes-header'
+          className={classes.accordianSummary}
+        >
+          <Typography>PROCESSES</Typography>
+        </AccordionSummary>
+        <AccordionDetails className={classes.accordianDetails}>
+          <List className={classes.list}>
+            <ListItem
+              button
+              key='processes'
+              className={classes.accordianItem}
+              onClick={toggleDrawer(false)}
+            >
+              <Link to='/processes/update'>
+                <ListItemText primary='UPDATE' />
+              </Link>
+            </ListItem>
+          </List>
+        </AccordionDetails>
+      </Accordion>
     </div>
   );
-
-  const comp = (page) => {
-    if (page === 'FIELD') {
-      return (
-        <DynamicTabs
-          component1={<AddField />}
-          component2={<FieldInfoPage />}
-          component3={<FarmTimeline />}
-        />
-      );
-    } else if (page === 'CROP') {
-      return (
-        <DynamicTabs
-          component1={<AddCrop />}
-          component2={<CropInfoPage />}
-          component3={'c3'}
-        />
-      );
-    } else if (page === 'CROP CYCLE') {
-      return (
-        <DynamicTabs
-          component1={<AddCropCycle />}
-          component3={<FarmTimeline />}
-          component2={<CropCycleInfoPage />}
-        />
-      );
-    } else if (page === 'ACTIVITY') {
-      return <DynamicTabs component1={<ProcessPage />} component2={'c2'} />;
-    } else if (page === 'VEHICLE') {
-      return <AddVehicle />;
-    }
-  };
 
   return (
     <div className={classes.root}>
@@ -140,12 +216,13 @@ const ApplnBar = () => {
             >
               <MenuIcon />
             </IconButton>
+
             <Drawer
               anchor={'left'}
               open={drawerState}
               onClose={toggleDrawer(false)}
             >
-              {getMenuItems()}
+              {getMenu()}
             </Drawer>
           </React.Fragment>
           <Typography variant='h6' className={classes.title}>
@@ -154,7 +231,6 @@ const ApplnBar = () => {
           <Button color='inherit'>Login</Button>
         </Toolbar>
       </AppBar>
-      {comp(page)}
     </div>
   );
 };
