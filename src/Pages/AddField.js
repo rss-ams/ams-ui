@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
 import FieldForm from 'components/common/FieldForm';
+import React, { useState } from 'react';
 
 const AddField = () => {
   const [selectedRow] = useState({
     locationCode: '',
-    name: '',
+    fieldName: '',
     area: '',
   });
 
