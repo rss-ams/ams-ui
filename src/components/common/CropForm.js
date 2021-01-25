@@ -175,7 +175,7 @@ const AddCrop = ({
             rules={{
               required: 'Please enter a crop name',
               pattern: {
-                value: /^[a-zA-Z]+[a-zA-Z0-9_]*$/,
+                value: /^[a-zA-Z]+[a-zA-Z0-9_\s]*$/,
                 message: 'Enter a valid name',
               },
             }}

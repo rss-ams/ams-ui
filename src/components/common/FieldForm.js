@@ -206,7 +206,7 @@ const FieldForm = ({
             rules={{
               required: 'Please enter a field name',
               pattern: {
-                value: /^[a-zA-Z]+[a-zA-Z0-9_]*$/,
+                value: /^[a-zA-Z]+[a-zA-Z0-9_\s]*$/,
                 message: 'Enter a valid name',
               },
             }}
@@ -231,7 +231,8 @@ const FieldForm = ({
             disableRestoreFocus
           >
             <Typography variant='body2'>
-              A name must start with a letter followed by letters, digits or _.
+              A name must start with a letter followed by letters, digits,
+              whitespaces or _.
             </Typography>
           </Popover>
         </FormControl>
