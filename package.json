@@ -8,27 +8,15 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@material-ui/pickers": "^3.2.10",
-    "ag-grid-community": "^24.0.0",
-    "ag-grid-enterprise": "^24.0.0",
-    "ag-grid-react": "^24.0.0",
-    "axios": "^0.20.0",
     "clsx": "^1.1.1",
-    "cra-template": "1.0.3",
     "date-fns": "^2.16.1",
     "history": "^5.0.0",
     "jshint": "^2.12.0",
-    "moment": "^2.29.1",
-    "mui-autocomplete": "^2.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-dom-factories": "^1.0.2",
     "react-hook-form": "^6.13.1",
-    "react-lottie": "^1.2.3",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.0",
-    "react-select-material-ui": "^6.7.0",
-    "react-table": "^7.6.2",
-    "styled-components": "^5.2.0"
+    "react-scripts": "4.0.0"
   },
   "scripts": {
     "start": "react-scripts start --no-cache",
@@ -55,12 +43,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
-    "@storybook/addon-actions": "^6.1.11",
-    "@storybook/addon-essentials": "^6.1.11",
-    "@storybook/addon-links": "^6.1.11",
-    "@storybook/node-logger": "^6.1.11",
-    "@storybook/preset-create-react-app": "^3.1.4",
-    "@storybook/react": "^6.1.11",
     "react-is": "^16.13.1"
   }
 }
