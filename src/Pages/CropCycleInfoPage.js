@@ -14,7 +14,7 @@ import { Alert } from '@material-ui/lab';
 import TableComponent from 'components/common/TableComponent';
 import {
   getCropCyclesByField,
-  deleteCropCycleById,
+  deleteCropCycle,
 } from 'dataclients/CropCyclesClient';
 import { getFieldsByLocation } from 'dataclients/FieldsClient';
 import { getLocations } from 'dataclients/LocationsClient';
@@ -231,11 +231,10 @@ function CropCycleInfoPage() {
   const handleCropCycleOptions = (id, selectedRow) => {
     switch (id) {
       case 'edit':
-        editCropCycle(selectedRow);
-        console.log(id, selectedRow);
+        editClickHandler(selectedRow);
         break;
       case 'delete':
-        deleteCropCycle(selectedRow);
+        deleteClickHandler(selectedRow);
         break;
       case 'currentProcesses':
         console.log(id, selectedRow);
@@ -267,7 +266,7 @@ function CropCycleInfoPage() {
    //Opens the edit modal and passes the relevant row information
    * @param {object} selectedRow 
    */
-  const editCropCycle = (selectedRow) => {
+  const editClickHandler = (selectedRow) => {
     setIsEditModalOpen(true);
     setSelectedRow(selectedRow);
   };
@@ -276,7 +275,7 @@ function CropCycleInfoPage() {
    * delete handler for crop cycle
    * @param {object} selectedRow
    */
-  const deleteCropCycle = (selectedRow) => {
+  const deleteClickHandler = (selectedRow) => {
     setSelectedRow(selectedRow);
     setIsDeleteModalOpen(true);
   };
@@ -285,9 +284,9 @@ function CropCycleInfoPage() {
    * delete crop cycle after user confirmation
    * @param {object} selectedRow
    */
-  const deleteCropCycleConfirmed = () => {
+  const deleteConfirmationHandler = () => {
     console.log(selectedRow);
-    deleteCropCycleById(selectedRow.id)
+    deleteCropCycle(selectedRow.id)
       .then((_response) => {
         handleClose();
         showAlert('Crop cycle successfully deleted', 'info');
@@ -391,7 +390,7 @@ function CropCycleInfoPage() {
         closeHandler={handleClose}
         modalBody={
           <DeleteForm
-            deleteHandler={deleteCropCycleConfirmed}
+            deleteHandler={deleteConfirmationHandler}
             closeHandler={handleClose}
           />
         }

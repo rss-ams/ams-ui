@@ -134,7 +134,7 @@ function CropInfoPage() {
    //edit implementation for crops
    * @param {object} selectedRow 
    */
-  const editCrop = (selectedRow) => {
+  const editClickHandler = (selectedRow) => {
     setIsEditModalOpen(true);
     setSelectedRow(selectedRow);
     console.log(selectedRow);
@@ -144,7 +144,7 @@ function CropInfoPage() {
    * delete implementation for crops
    * @param {object} selectedRow
    */
-  const deleteCrop = (selectedRow) => {
+  const deleteClickHandler = (selectedRow) => {
     setSelectedRow(selectedRow);
     setIsDeleteModalOpen(true);
   };
@@ -153,7 +153,7 @@ function CropInfoPage() {
    * delete crops after user confirmation
    * @param {object} selectedRow
    */
-  const deleteCropConfirmed = () => {
+  const deleteConfirmationHandler = () => {
     console.log(selectedRow);
     deleteCropById(selectedRow.id)
       .then((_response) => {
@@ -175,10 +175,10 @@ function CropInfoPage() {
   const handleCropOptions = (id, selectedRow) => {
     switch (id) {
       case 'edit':
-        editCrop(selectedRow);
+        editClickHandler(selectedRow);
         break;
       case 'delete':
-        deleteCrop(selectedRow);
+        deleteClickHandler(selectedRow);
         break;
       default:
         console.log(selectedRow);
@@ -243,7 +243,7 @@ function CropInfoPage() {
         closeHandler={handleClose}
         modalBody={
           <DeleteForm
-            deleteHandler={deleteCropConfirmed}
+            deleteHandler={deleteConfirmationHandler}
             closeHandler={handleClose}
           />
         }

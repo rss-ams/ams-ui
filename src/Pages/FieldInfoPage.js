@@ -15,7 +15,7 @@ import TableComponent from 'components/common/TableComponent';
 import {
   getAllFields,
   getFieldsByLocation,
-  deleteFieldById,
+  deleteField,
 } from 'dataclients/FieldsClient';
 import { getLocations } from 'dataclients/LocationsClient';
 import React, { useEffect, useState } from 'react';
@@ -200,7 +200,7 @@ function FieldInfoPage() {
    //Opens the edit modal and passed the relevant row information
    * @param {object} selectedRow 
    */
-  const editField = (selectedRow) => {
+  const editClickHandler = (selectedRow) => {
     setIsEditModalOpen(true);
     setSelectedRow(selectedRow);
   };
@@ -213,12 +213,10 @@ function FieldInfoPage() {
   const handleFieldOptions = (id, selectedRow) => {
     switch (id) {
       case 'edit':
-        editField(selectedRow);
-        console.log(id, selectedRow);
+        editClickHandler(selectedRow);
         break;
       case 'delete':
-        deleteField(selectedRow);
-        console.log(id, selectedRow);
+        deleteClickHandler(selectedRow);
         break;
       default:
         console.log(selectedRow);
@@ -226,10 +224,10 @@ function FieldInfoPage() {
   };
 
   /**
-   *delete implementation for fields
+   *delete handler for fields
    * @param {object} selectedRow
    */
-  const deleteField = (selectedRow) => {
+  const deleteClickHandler = (selectedRow) => {
     setSelectedRow(selectedRow);
     setIsDeleteModalOpen(true);
   };
@@ -238,9 +236,9 @@ function FieldInfoPage() {
    * call to delete API after user confirmation
    * @param {object} selectedRow
    */
-  const deleteFieldConfirmed = () => {
+  const deleteConfirmationHandler = () => {
     console.log(selectedRow);
-    deleteFieldById(selectedRow.id)
+    deleteField(selectedRow.id)
       .then((_response) => {
         handleClose();
         showAlert('Field successfully deleted', 'info');
@@ -328,7 +326,7 @@ function FieldInfoPage() {
         closeHandler={handleClose}
         modalBody={
           <DeleteForm
-            deleteHandler={deleteFieldConfirmed}
+            deleteHandler={deleteConfirmationHandler}
             closeHandler={handleClose}
           />
         }

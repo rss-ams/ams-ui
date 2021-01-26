@@ -48,7 +48,7 @@ export const updateCropCycles = async (payload) => {
  * API to delete a cropcycle
  * @param {object} payload
  */
-export const deleteCropCycleById = async (id) => {
+export const deleteCropCycle = async (id) => {
   return fetch(API_URL + 'fieldCropCycles/' + id, {
     method: 'DELETE',
   }).then(handleErrors);

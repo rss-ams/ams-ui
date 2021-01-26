@@ -27,7 +27,7 @@ const DeleteForm = ({ deleteHandler, closeHandler }) => {
       <div className={classes.root}>
         <Button
           variant='contained'
-          color='primary'
+          color='muted'
           className={classes.submitButton}
           onClick={deleteHandler}
         >
