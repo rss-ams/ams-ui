@@ -5,7 +5,6 @@ import {
   AppBar,
   Button,
   Avatar,
-  Divider,
   Drawer,
   IconButton,
   List,
@@ -22,8 +21,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Home from 'Pages/Home';
-import User from 'Pages/User';
 import { GoogleLogout } from 'react-google-login';
 import GoogleLogin from 'react-google-login';
 import { refreshTokenSetup } from 'utils/refreshToken';
@@ -49,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
   accordianItem: {
     paddingTop: theme.spacing(0),
     paddingBottom: theme.spacing(0),
+  },
   header: {
     padding: theme.spacing(2, 2, 2),
   },
@@ -61,7 +59,6 @@ const ApplnBar = () => {
   const classes = useStyles();
 
   const [drawerState, setDrawerState] = useState(false);
-  const [page, setPage] = useState('HOME');
   const [imageUrl, setImgUrl] = useState('');
   const [loginVisible, setLoginVisible] = useState(true);
   const [avatarVisible, setAvatarVisible] = useState('hidden');
@@ -85,7 +82,6 @@ const ApplnBar = () => {
 
   const getMenu = () => (
     <div role='presentation'>
-
       {/* Fields */}
       <Accordion>
         <AccordionSummary
@@ -241,7 +237,7 @@ const ApplnBar = () => {
               className={classes.accordianItem}
               onClick={toggleDrawer(false)}
             >
-              <Link to='/user/add'>
+              <Link to='/users/add'>
                 <ListItemText primary='ADD' />
               </Link>
             </ListItem>
