@@ -56,5 +56,8 @@ export const updateCropCycles = async (payload) => {
 export const deleteCropCycle = async (id) => {
   return fetch(API_URL + 'fieldCropCycles/' + id, {
     method: 'DELETE',
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('authToken'),
+    },
   }).then(handleErrors);
 };

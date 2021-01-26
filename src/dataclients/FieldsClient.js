@@ -72,5 +72,8 @@ export const updateField = async (payload) => {
 export const deleteField = async (id) => {
   return fetch(API_URL + 'fields/' + id, {
     method: 'DELETE',
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('authToken'),
+    },
   }).then(handleErrors);
 };

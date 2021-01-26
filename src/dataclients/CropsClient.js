@@ -47,5 +47,8 @@ export const getAllCrops = async () => {
 export const deleteCrop = async (id) => {
   return fetch(API_URL + 'crops/' + id, {
     method: 'DELETE',
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('authToken'),
+    },
   }).then(handleErrors);
 };
