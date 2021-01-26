@@ -10,6 +10,7 @@ export const createCropCycles = async (payload) => {
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + localStorage.getItem('authToken'),
     },
   })
     .then(handleErrors)
@@ -23,7 +24,11 @@ export const createCropCycles = async (payload) => {
  */
 export const getCropCyclesByField = async (fieldId) => {
   let url = `${API_URL}fieldCropCycles?fieldId=${parseInt(fieldId)}`;
-  return fetch(url)
+  return fetch(url, {
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('authToken'),
+    },
+  })
     .then(handleErrors)
     .then((response) => response.json());
 };
