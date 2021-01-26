@@ -66,7 +66,7 @@ const User = () => {
 
     createUser(payload)
       .then((_response) => {
-        showAlert('User successfully saved to application', 'info');
+        showAlert('User successfully added', 'info');
       })
       .catch((e) => {
         console.log('Internal server error', e);

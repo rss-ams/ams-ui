@@ -13,7 +13,6 @@ import {
   ListItemText,
   Toolbar,
   Typography,
-  Button,
   Box,
   Popover,
   Snackbar,
@@ -27,8 +26,9 @@ import Home from 'Pages/Home';
 import User from 'Pages/User';
 import { GoogleLogout } from 'react-google-login';
 import GoogleLogin from 'react-google-login';
-import { refreshTokenSetup } from '../utils/refreshToken';
+import { refreshTokenSetup } from 'utils/refreshToken';
 import { Alert } from '@material-ui/lab';
+import { GOOGLE_CLIENT_ID } from 'utils/LoginConstants';
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -66,7 +66,7 @@ const ApplnBar = () => {
   const [loginVisible, setLoginVisible] = useState(true);
   const [avatarVisible, setAvatarVisible] = useState('hidden');
   const [logoutVisible, setLogoutVisible] = useState('hidden');
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [userOptionsAnchor, setUserOptionsAnchor] = React.useState(null);
   const [userName, setUserName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [alertMessage, setAlertMessage] = useState('');
@@ -85,6 +85,7 @@ const ApplnBar = () => {
 
   const getMenu = () => (
     <div role='presentation'>
+
       {/* Fields */}
       <Accordion>
         <AccordionSummary
@@ -251,12 +252,10 @@ const ApplnBar = () => {
   );
 
   const onLoginSuccess = (res) => {
-    console.log('Login Success: currentUser:', res.profileObj);
     setImgUrl(res.profileObj.imageUrl);
     setAvatarVisible('visible');
     setLoginVisible(false);
     setLogoutVisible('visible');
-    refreshTokenSetup(res);
     setUserName(res.profileObj.name);
     setEmail(res.profileObj.email);
     localStorage.setItem('authToken', res.tokenId);
@@ -270,7 +269,7 @@ const ApplnBar = () => {
 
   const onLogoutSuccess = (res) => {
     localStorage.setItem('authToken', null);
-    setAnchorEl(null);
+    setUserOptionsAnchor(null);
     console.log('Logged out Success');
     showAlert('Logged out Successfully');
     setAvatarVisible('hidden');
@@ -284,11 +283,11 @@ const ApplnBar = () => {
     alert('Log out Failed');
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleUserOptionsClose = () => {
+    setUserOptionsAnchor(null);
   };
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleAvatarClick = (event) => {
+    setUserOptionsAnchor(event.currentTarget);
   };
 
   const handleAlertClose = (_event, reason) => {
@@ -333,7 +332,7 @@ const ApplnBar = () => {
           {loginVisible ? (
             <Box>
               <GoogleLogin
-                clientId='765498256947-104ng32fscf55ntmdc0p2hn0v6g6k0nu.apps.googleusercontent.com'
+                clientId={GOOGLE_CLIENT_ID}
                 onSuccess={onLoginSuccess}
                 onFailure={onLoginFailure}
                 isSignedIn={true}
@@ -354,15 +353,15 @@ const ApplnBar = () => {
             </Box>
           ) : (
             <Box visibility={avatarVisible}>
-              <Avatar alt='Remy Sharp' onClick={handleClick} src={imageUrl} />
+              <Avatar onClick={handleAvatarClick} src={imageUrl} />
             </Box>
           )}
           <Popover
             id='simple-menu'
-            anchorEl={anchorEl}
+            anchorEl={userOptionsAnchor}
             keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
+            open={Boolean(userOptionsAnchor)}
+            onClose={handleUserOptionsClose}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             transformOrigin={{ vertical: 'top', horizontal: 'center' }}
           >
@@ -403,7 +402,7 @@ const ApplnBar = () => {
                 }}
               >
                 <GoogleLogout
-                  clientId='765498256947-104ng32fscf55ntmdc0p2hn0v6g6k0nu.apps.googleusercontent.com'
+                  clientId={GOOGLE_CLIENT_ID}
                   onLogoutSuccess={onLogoutSuccess}
                   onLogoutFailure={onLogoutFailure}
                   render={(renderProps) => (
