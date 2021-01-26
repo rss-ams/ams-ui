@@ -66,9 +66,9 @@ const ApplnBar = () => {
   const [loginVisible, setLoginVisible] = useState(true);
   const [avatarVisible, setAvatarVisible] = useState('hidden');
   const [logoutVisible, setLogoutVisible] = useState('hidden');
-  const [userOptionsAnchor, setUserOptionsAnchor] = React.useState(null);
-  const [userName, setUserName] = React.useState('');
-  const [email, setEmail] = React.useState('');
+  const [userOptionsAnchor, setUserOptionsAnchor] = useState(null);
+  const [userName, setUserName] = useState('');
+  const [email, setEmail] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
