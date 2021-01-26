@@ -38,11 +38,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddCrop = ({ operation, title, selectedRow, closeHandler, submitButtonText }) => {
+const CropForm = ({
+  operation,
+  title,
+  selectedRow,
+  closeHandler,
+  submitButtonText,
+}) => {
   const classes = useStyles();
   const [cropName, setCropName] = useState(selectedRow.name);
   const [cropSeason, setCropSeason] = useState(selectedRow.season);
-  const [cropGrowthProtocol, setCropGrowthProtocol] = useState(selectedRow.cgpid);
+  const [cropGrowthProtocol, setCropGrowthProtocol] = useState(
+    selectedRow.cgpid,
+  );
   const [cropGrowthProtocols, setCropGrowthProtocols] = useState([]);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertStatus, setAlertStatus] = useState(false);
@@ -68,7 +76,7 @@ const AddCrop = ({ operation, title, selectedRow, closeHandler, submitButtonText
     setAlertMessage(message);
     setAlertSeverity(severity);
     setAlertStatus(true);
-  };  
+  };
 
   const handleChange = ({ target }) => {
     const { name, value } = target;
@@ -88,7 +96,7 @@ const AddCrop = ({ operation, title, selectedRow, closeHandler, submitButtonText
       season: cropSeason,
       cropGrowthProtocol: { id: cropGrowthProtocol },
     };
-    if(operation === 'UPDATE') {
+    if (operation === 'UPDATE') {
       updateCrop(payload)
         .then((_response) => {
           closeHandler();
@@ -98,8 +106,7 @@ const AddCrop = ({ operation, title, selectedRow, closeHandler, submitButtonText
           console.log('Internal server error', e);
           showAlert('Crop creation failed: ' + e.message, 'error');
         });
-    }
-    else {
+    } else {
       createCrop(payload)
         .then((_response) => {
           showAlert('Crop successfully created', 'info');
@@ -190,4 +197,4 @@ const AddCrop = ({ operation, title, selectedRow, closeHandler, submitButtonText
   );
 };
 
-export default AddCrop;
+export default CropForm;

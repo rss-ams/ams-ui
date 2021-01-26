@@ -39,3 +39,13 @@ export const getAllCrops = async () => {
     .then(handleErrors)
     .then((response) => response.json());
 };
+
+/**
+ * API to delete a crop
+ * @param {object} payload
+ */
+export const deleteCrop = async (id) => {
+  return fetch(API_URL + 'crops/' + id, {
+    method: 'DELETE',
+  }).then(handleErrors);
+};
