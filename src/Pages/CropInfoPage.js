@@ -7,7 +7,7 @@ import SimpleModal from 'components/common/SimpleModal';
 import TableComponent from 'components/common/TableComponent';
 import { getAllCrops } from 'dataclients/CropsClient';
 import React, { useEffect, useState } from 'react';
-import { deleteCropById } from 'dataclients/CropsClient';
+import { deleteCrop } from 'dataclients/CropsClient';
 
 /**
  * css styles for Crop Info Page
@@ -155,7 +155,7 @@ function CropInfoPage() {
    */
   const deleteConfirmationHandler = () => {
     console.log(selectedRow);
-    deleteCropById(selectedRow.id)
+    deleteCrop(selectedRow.id)
       .then((_response) => {
         handleClose();
         showAlert('Crop successfully deleted', 'info');

@@ -38,7 +38,7 @@ export const getAllCrops = async () => {
  * API to delete a crop
  * @param {object} payload
  */
-export const deleteCropById = async (id) => {
+export const deleteCrop = async (id) => {
   return fetch(API_URL + 'crops/' + id, {
     method: 'DELETE',
   }).then(handleErrors);
