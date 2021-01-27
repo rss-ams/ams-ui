@@ -31,6 +31,7 @@ export const postActivity = async (payload, fieldCropCycleId) => {
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + localStorage.getItem('authToken')
     },
   })
     .then(handleErrors)

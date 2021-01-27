@@ -43,6 +43,7 @@ export const updateCropCycles = async (payload) => {
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + localStorage.getItem('authToken')
     },
   })
     .then(handleErrors)

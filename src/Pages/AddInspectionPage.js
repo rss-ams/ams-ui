@@ -243,12 +243,10 @@ import {
               showAlert(" Same activity cannot be added be twice", 'error');
             }else {
               processAllInspectionPosting(cntInspParam);
-              //console.log("ShowfollowupActivity:" + showFollowUpActivity);
-              if (showFollowUpActivity === true) {
-                //console.log("Inside postAdhoc");
-                postAdHocActivity();
-              }
+              postAdHocActivity();              
             }
+          }else{
+            processAllInspectionPosting(cntInspParam);
           }
           
         } 

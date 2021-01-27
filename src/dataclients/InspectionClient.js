@@ -6,7 +6,12 @@ import { handleErrors, API_URL } from 'utils/FetchUtils';
  * 
  */
 export const getInspectionParams = async () => {
-  return fetch(API_URL + 'fieldCropCycles/inspectionTypes')
+  return fetch(API_URL + 'fieldCropCycles/inspectionTypes',
+    {
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('authToken'),
+      }
+    })
     .then(handleErrors)
     .then((response) => response.json());
 };
@@ -27,7 +32,12 @@ export const getAdhocActivities = async (fieldCropCycleId, inspectionValues) => 
   })
   if (fieldCropCycleId === '' || qParam === "")
     return [];
-  return fetch(API_URL + 'fieldCropCycles/' + fieldCropCycleId + '/processes?' + qParam)
+  return fetch(API_URL + 'fieldCropCycles/' + fieldCropCycleId + '/processes?' + qParam,
+    {
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('authToken'),
+      }
+    })
     .then(handleErrors)
     .then((response) => response.json());
 };
@@ -43,6 +53,7 @@ export const postInspection = async (payload, fieldCropCycleId) => {
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + localStorage.getItem('authToken')
     },
   })
     .then(handleErrors)

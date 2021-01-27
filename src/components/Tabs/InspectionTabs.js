@@ -4,7 +4,7 @@ import { useParams } from 'react-router';
 
 const getTabToIndexMap = () => {
   let opToIndex = new Map();
-  opToIndex.set('post', 0);
+  opToIndex.set('update', 0);
   return opToIndex;
 };
 
@@ -12,8 +12,8 @@ const InspectionTabs = () => {
   const { tab } = useParams();
   const tab0 = {
     component: AddInspectionPage,
-    name: 'post',
-    location: '/inspections/post',
+    name: 'update',
+    location: '/inspections/update',
     index: 0,
   };
 
