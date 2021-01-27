@@ -91,6 +91,11 @@ const CropCycleForm = ({
     }
   };
 
+  /**
+   * handler for alert close
+   * @param {*} _event
+   * @param {*} reason
+   */
   const handleAlertClose = (_event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -98,12 +103,21 @@ const CropCycleForm = ({
     setAlertStatus(false);
   };
 
+  /**
+   * displays the alert message on UI
+   * @param {String} message
+   * @param {String} severity can be info, error etc
+   */
   const showAlert = (message, severity) => {
     setAlertMessage(message);
     setAlertSeverity(severity);
     setAlertStatus(true);
   };
 
+  /**
+   * handler for form submit/create
+   * @param {Object} formData
+   */
   const handleSubmit = () => {
     const payload = {
       id: id,
@@ -130,7 +144,7 @@ const CropCycleForm = ({
       <Typography align='center' variant='h6' className={classes.title}>
         {title}
       </Typography>
-
+      {/* crop selection */}
       <FormControl className={classes.formControl}>
         <InputLabel shrink id='crop-label'>
           Crop
@@ -145,7 +159,7 @@ const CropCycleForm = ({
           })}
         </Select>
       </FormControl>
-
+      {/* field selection */}
       <FormControl className={classes.formControl}>
         <InputLabel shrink id='field-label'>
           Field
@@ -160,7 +174,7 @@ const CropCycleForm = ({
           })}
         </Select>
       </FormControl>
-
+      {/* season selection */}
       <FormControl className={classes.formControl}>
         <InputLabel id='season-label'>Season</InputLabel>
         <Select
@@ -178,7 +192,7 @@ const CropCycleForm = ({
           })}
         </Select>
       </FormControl>
-
+      {/* year selection */}
       <FormControl className={classes.formControl}>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <DatePicker
@@ -204,8 +218,12 @@ const CropCycleForm = ({
       >
         Submit
       </Button>
-
-      <Snackbar open={alertStatus} onClose={handleAlertClose}>
+      {/* success and error alerts */}
+      <Snackbar
+        open={alertStatus}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
+      >
         <Alert onClose={handleAlertClose} severity={alertSeverity}>
           {alertMessage}
         </Alert>

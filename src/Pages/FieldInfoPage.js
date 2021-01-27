@@ -317,6 +317,7 @@ function FieldInfoPage() {
             isOpen={isEditModalOpen}
             closeHandler={handleClose}
             submitButtonText='Save'
+            showToastMessage={showAlert}
           />
         }
       ></SimpleModal>
@@ -332,7 +333,11 @@ function FieldInfoPage() {
         }
       ></SimpleModal>
       {/* alert UI */}
-      <Snackbar open={alertStatus} onClose={handleAlertClose}>
+      <Snackbar
+        open={alertStatus}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
+      >
         <Alert onClose={handleAlertClose} severity={alertSeverity}>
           {alertMessage}
         </Alert>

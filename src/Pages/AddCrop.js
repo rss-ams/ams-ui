@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
 import CropForm from 'components/common/CropForm';
+import React, { useState } from 'react';
 
 const AddCrop = () => {
   const [selectedRow] = useState({
-    name: '',
+    cropName: '',
     season: '',
     cgpid: '',
   });
