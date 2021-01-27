@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 300,
     maxWidth: 300,
   },
+  title: {
+    margin: '10px 0 0 0',
+  },
   submitButton: {
     margin: theme.spacing(3),
     width: 'fit-content',

@@ -19,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 'auto',
     width: 250,
   },
+  title: {
+    margin: '10px 0 0 0',
+  },
 }));
 
 /**

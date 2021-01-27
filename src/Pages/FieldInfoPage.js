@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 250,
     maxWidth: 300,
   },
+  title: {
+    margin: '10px 0 0 0',
+  },
 }));
 
 /**
