@@ -23,7 +23,7 @@ export default function DeleteDialog({
         <DialogTitle id='delete-dialog-title'>Delete</DialogTitle>
         <DialogContent dividers>
           <DialogContentText id='delete-dialog-description'>
-            {`Are you sure you want to delete '${context}' ?`}
+            {`Are you sure you want to delete ${context} ?`}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
