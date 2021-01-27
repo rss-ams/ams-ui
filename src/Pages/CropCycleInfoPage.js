@@ -158,6 +158,7 @@ function CropCycleInfoPage() {
           getRowData(resp.content);
         })
         .catch((e) => {
+          setLoading(false);
           console.log('Fetching crop cycles failed', e);
           showAlert(`Fetching crop cycles failed`, 'error');
         });
