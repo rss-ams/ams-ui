@@ -73,6 +73,7 @@ const columnData = [
 function CropInfoPage() {
   const classes = useStyles();
   const [alertMessage, setAlertMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
   const [crops, setCrops] = useState([]);
@@ -86,9 +87,14 @@ function CropInfoPage() {
    * shows alert in case call fails
    */
   const getCropData = () => {
+    setLoading(true);
     getAllCrops()
-      .then(setCrops)
+      .then((crops) => {
+        setCrops(crops);
+        setLoading(false);
+      })
       .catch((e) => {
+        setLoading(false);
         console.log('Fetching all crops failed', e);
         showAlert(`Fetching crops failed`, 'error');
       });
@@ -220,6 +226,7 @@ function CropInfoPage() {
       <TableComponent
         cols={columnData}
         rows={getRowData()}
+        loading={loading}
         contextMenuActionHandler={handleCropOptions}
       />
       {/* modal to show selected crop data and edit */}

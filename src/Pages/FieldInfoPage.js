@@ -103,6 +103,7 @@ function FieldInfoPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState('');
   const [fieldTableRows, setFieldTableRows] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getLocations()
@@ -119,11 +120,14 @@ function FieldInfoPage() {
    * shows alert in case call fails
    */
   const getFieldData = () => {
+    setLoading(true);
     getAllFields()
       .then((fields) => {
+        setLoading(false);
         setFieldsData(fields.content);
       })
       .catch((e) => {
+        setLoading(false);
         console.log('Fetching all fields failed', e);
         showAlert(`Fetching fields failed`, 'error');
       });
@@ -187,9 +191,14 @@ function FieldInfoPage() {
    * shows alert in case call fails
    */
   const fetchFieldsForLocation = () => {
+    setLoading(true);
     getFieldsByLocation(locationCode)
-      .then(setFieldsData)
+      .then((fields) => {
+        setFieldsData(fields);
+        setLoading(false);
+      })
       .catch((e) => {
+        setLoading(false);
         console.log(`Fetching fields for ${locationCode} failed`, e);
         showAlert(`Fetching fields for ${locationCode} failed`, 'error');
       });
@@ -303,6 +312,7 @@ function FieldInfoPage() {
       <TableComponent
         cols={columnData}
         rows={fieldTableRows}
+        loading={loading}
         contextMenuActionHandler={handleFieldOptions}
       />
       {/* modal to show selected field data and edit */}

@@ -105,6 +105,7 @@ const columnData = [
  */
 function CropCycleInfoPage() {
   const classes = useStyles();
+  const [loading, setLoading] = useState(false);
   const [locations, setLocations] = useState([]);
   const [locationCode, setLocationCode] = useState('');
   const [field, setField] = useState('');
@@ -150,8 +151,10 @@ function CropCycleInfoPage() {
   const getCropCycles = () => {
     if (Number.isInteger(field)) {
       setFieldError(false);
+      setLoading(true);
       getCropCyclesByField(field)
         .then((resp) => {
+          setLoading(false);
           getRowData(resp.content);
         })
         .catch((e) => {
@@ -368,6 +371,7 @@ function CropCycleInfoPage() {
       <TableComponent
         cols={columnData}
         rows={rowData}
+        loading={loading}
         contextMenuActionHandler={handleCropCycleOptions}
       />
       {/* modal to show selected field data and edit */}
