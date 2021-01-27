@@ -12,17 +12,16 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
 import CropCycleForm from 'components/common/CropCycleForm';
+import DeleteDialog from 'components/common/DeleteDialog';
 import SimpleModal from 'components/common/SimpleModal';
-import DeleteForm from 'components/common/DeleteForm';
 import TableComponent from 'components/common/TableComponent';
 import {
-  getCropCyclesByField,
   deleteCropCycle,
+  getCropCyclesByField,
 } from 'dataclients/CropCyclesClient';
 import { getFieldsByLocation } from 'dataclients/FieldsClient';
 import { getLocations } from 'dataclients/LocationsClient';
 import React, { useEffect, useState } from 'react';
-
 
 /**
  * css styles for Crop Cycle Info Page
@@ -385,17 +384,13 @@ function CropCycleInfoPage() {
           />
         }
       ></SimpleModal>
-      {/* modal to delete selected crop data */}
-      <SimpleModal
-        isOpen={isDeleteModalOpen}
+      {/* modal to delete selected crop cycle data */}
+      <DeleteDialog
+        context={'the crop cycle'}
+        deleteHandler={deleteConfirmationHandler}
         closeHandler={handleClose}
-        modalBody={
-          <DeleteForm
-            deleteHandler={deleteConfirmationHandler}
-            closeHandler={handleClose}
-          />
-        }
-      ></SimpleModal>
+        openState={isDeleteModalOpen}
+      ></DeleteDialog>
       {/* alert UI */}
       <Snackbar
         open={alertStatus}

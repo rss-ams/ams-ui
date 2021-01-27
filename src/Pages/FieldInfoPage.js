@@ -9,17 +9,17 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
+import DeleteDialog from 'components/common/DeleteDialog';
 import FieldForm from 'components/common/FieldForm';
 import SimpleModal from 'components/common/SimpleModal';
 import TableComponent from 'components/common/TableComponent';
 import {
+  deleteField,
   getAllFields,
   getFieldsByLocation,
-  deleteField,
 } from 'dataclients/FieldsClient';
 import { getLocations } from 'dataclients/LocationsClient';
 import React, { useEffect, useState } from 'react';
-import DeleteForm from 'components/common/DeleteForm';
 
 /**
  * css styles for Field Info Page
@@ -322,16 +322,12 @@ function FieldInfoPage() {
         }
       ></SimpleModal>
       {/* modal to delete selected field data */}
-      <SimpleModal
-        isOpen={isDeleteModalOpen}
+      <DeleteDialog
+        context={selectedRow.fieldName}
+        deleteHandler={deleteConfirmationHandler}
         closeHandler={handleClose}
-        modalBody={
-          <DeleteForm
-            deleteHandler={deleteConfirmationHandler}
-            closeHandler={handleClose}
-          />
-        }
-      ></SimpleModal>
+        openState={isDeleteModalOpen}
+      ></DeleteDialog>
       {/* alert UI */}
       <Snackbar
         open={alertStatus}

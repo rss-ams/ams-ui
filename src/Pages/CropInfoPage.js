@@ -2,12 +2,11 @@ import { FormGroup, Snackbar, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
 import CropForm from 'components/common/CropForm';
-import DeleteForm from 'components/common/DeleteForm';
+import DeleteDialog from 'components/common/DeleteDialog';
 import SimpleModal from 'components/common/SimpleModal';
 import TableComponent from 'components/common/TableComponent';
-import { getAllCrops } from 'dataclients/CropsClient';
+import { deleteCrop, getAllCrops } from 'dataclients/CropsClient';
 import React, { useEffect, useState } from 'react';
-import { deleteCrop } from 'dataclients/CropsClient';
 
 /**
  * css styles for Crop Info Page
@@ -131,9 +130,9 @@ function CropInfoPage() {
   };
 
   /**
-   * 
+   *
    * edit implementation for crops
-   * @param {object} selectedRow 
+   * @param {object} selectedRow
    */
   const editClickHandler = (selectedRow) => {
     setIsEditModalOpen(true);
@@ -240,16 +239,12 @@ function CropInfoPage() {
         }
       ></SimpleModal>
       {/* modal to delete selected crop data */}
-      <SimpleModal
-        isOpen={isDeleteModalOpen}
+      <DeleteDialog
+        context={selectedRow.cropName}
+        deleteHandler={deleteConfirmationHandler}
         closeHandler={handleClose}
-        modalBody={
-          <DeleteForm
-            deleteHandler={deleteConfirmationHandler}
-            closeHandler={handleClose}
-          />
-        }
-      ></SimpleModal>
+        openState={isDeleteModalOpen}
+      ></DeleteDialog>
       {/* alert UI */}
       <Snackbar
         open={alertStatus}
