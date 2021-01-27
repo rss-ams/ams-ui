@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddCrop = ({
+const CropForm = ({
   operation,
   title,
   selectedRow,
@@ -320,4 +320,4 @@ const AddCrop = ({
   );
 };
 
-export default AddCrop;
+export default CropForm;

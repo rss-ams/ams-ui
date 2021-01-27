@@ -10,6 +10,7 @@ export const createCropCycles = async (payload) => {
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + localStorage.getItem('authToken'),
     },
   })
     .then(handleErrors)
@@ -23,14 +24,18 @@ export const createCropCycles = async (payload) => {
  */
 export const getCropCyclesByField = async (fieldId) => {
   let url = `${API_URL}fieldCropCycles?fieldId=${parseInt(fieldId)}`;
-  return fetch(url)
+  return fetch(url, {
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('authToken'),
+    },
+  })
     .then(handleErrors)
     .then((response) => response.json());
 };
 
 /**
  * API to update crop cycles
- * @param {*} payload 
+ * @param {object} payload
  */
 export const updateCropCycles = async (payload) => {
   return fetch(API_URL + 'fieldCropCycles', {
@@ -42,4 +47,17 @@ export const updateCropCycles = async (payload) => {
   })
     .then(handleErrors)
     .then((response) => response.json());
+};
+
+/**
+ * API to delete a cropcycle
+ * @param {object} payload
+ */
+export const deleteCropCycle = async (id) => {
+  return fetch(API_URL + 'fieldCropCycles/' + id, {
+    method: 'DELETE',
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('authToken'),
+    },
+  }).then(handleErrors);
 };
