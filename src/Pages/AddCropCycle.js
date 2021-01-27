@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 300,
     maxWidth: 300,
   },
+  title: {
+    margin: '10px 0 0 0',
+  },
   submitButton: {
     margin: theme.spacing(3),
     width: 'fit-content',
@@ -206,7 +209,11 @@ const AddCropCycle = () => {
         Submit
       </Button>
 
-      <Snackbar open={alertStatus} onClose={handleAlertClose}>
+      <Snackbar
+        open={alertStatus}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
+      >
         <Alert onClose={handleAlertClose} severity={alertSeverity}>
           {alertMessage}
         </Alert>

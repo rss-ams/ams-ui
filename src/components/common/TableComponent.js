@@ -1,3 +1,5 @@
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
@@ -12,20 +14,29 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ContextMenu from 'components/common/ContextMenu';
 import React from 'react';
-
 /**
  * css styles for table
  */
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     margin: '20px 0 20px 0',
     width: '100%',
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
+  loader: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   container: {
     maxHeight: 400,
   },
   noDataContainer: {
     textAlign: 'center',
+    padding: '50px',
   },
   noDataSpan: {
     fontWeight: 'normal',
@@ -36,7 +47,7 @@ const useStyles = makeStyles({
     padding: 0,
     borderRadius: 0,
   },
-});
+}));
 
 /**
  * Common Table component for displaying details
@@ -53,6 +64,7 @@ export default function TableComponent({
   deleteHandler,
   editHandler,
   contextMenuActionHandler,
+  loading,
 }) {
   const classes = useStyles();
   return (
@@ -135,11 +147,14 @@ export default function TableComponent({
           </TableBody>
         </Table>
       </TableContainer>
-      {!rows.length ? (
+      {!rows.length && !loading ? (
         <div className={classes.noDataContainer}>
           <span className={classes.noDataSpan}>No Data</span>
         </div>
       ) : null}
+      <Backdrop className={classes.backdrop} open={loading} close={!loading}>
+        <CircularProgress color='Primary' />
+      </Backdrop>
     </Paper>
   );
 }

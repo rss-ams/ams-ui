@@ -1,7 +1,8 @@
 import { AppBar, Box, Tab, Tabs } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { createBrowserHistory } from 'history';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -10,8 +11,8 @@ function TabPanel(props) {
     <div
       role='tabpanel'
       hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
+      id={`nav-tabpanel-${index}`}
+      aria-labelledby={`nav-tab-${index}`}
       {...other}
     >
       {value === index && <Box p={3}>{children}</Box>}
@@ -27,9 +28,21 @@ TabPanel.propTypes = {
 
 function a11yProps(index) {
   return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    id: `nav-tab-${index}`,
+    'aria-controls': `nav-tabpanel-${index}`,
   };
+}
+
+function LinkTab(props) {
+  return (
+    <Tab
+      component='a'
+      onClick={(event) => {
+        event.preventDefault();
+      }}
+      {...props}
+    />
+  );
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -43,10 +56,17 @@ const useStyles = makeStyles((theme) => ({
 
 const DynamicTabs = (props) => {
   const classes = useStyles();
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(props.selectedIndex);
+
+  let history = createBrowserHistory();
+
+  useEffect(() => {
+    setValue(props.selectedIndex);
+  }, [props]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    createBrowserHistory.push(newValue);
   };
 
   return (
@@ -59,20 +79,25 @@ const DynamicTabs = (props) => {
           variant='fullWidth'
           centered
         >
-          {props.component1 && <Tab label='Add' {...a11yProps(0)} />}
-          {props.component2 && <Tab label='Info' {...a11yProps(1)} />}
-          {props.component3 && <Tab label='Timeline' {...a11yProps(2)} />}
+          {props.tabs.map((tab) => {
+            return (
+              <LinkTab
+                label={tab.name}
+                key={tab.name}
+                href={tab.location}
+                {...a11yProps(tab.index)}
+              />
+            );
+          })}
         </Tabs>
       </AppBar>
-      <TabPanel value={value} index={0}>
-        {props.component1}
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        {props.component2}
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        {props.component3}
-      </TabPanel>
+      {props.tabs.map((tab) => {
+        return (
+          <TabPanel value={value} index={tab.index} key={tab.index}>
+            {tab.component}
+          </TabPanel>
+        );
+      })}
     </div>
   );
 };

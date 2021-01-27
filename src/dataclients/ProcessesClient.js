@@ -1,13 +1,21 @@
 import { API_URL, handleErrors } from 'utils/FetchUtils';
 
 export const getProcessCategories = async () => {
-  return fetch(API_URL + 'fieldCropCycles/processCategories')
+  return fetch(API_URL + 'fieldCropCycles/processCategories', {
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('authToken'),
+    },
+  })
     .then(handleErrors)
     .then((response) => response.json());
 };
 
 export const getProcessStatuses = async () => {
-  return fetch(`${API_URL}fieldCropCycles/processStatuses`)
+  return fetch(`${API_URL}fieldCropCycles/processStatuses`, {
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('authToken'),
+    },
+  })
     .then(handleErrors)
     .then((response) => response.json());
 };
@@ -40,6 +48,7 @@ export const updateProcess = async (cropCycleId, payload) => {
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + localStorage.getItem('authToken'),
     },
   })
     .then(handleErrors)

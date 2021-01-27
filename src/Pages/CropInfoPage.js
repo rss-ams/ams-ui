@@ -2,9 +2,10 @@ import { FormGroup, Snackbar, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
 import CropForm from 'components/common/CropForm';
+import DeleteDialog from 'components/common/DeleteDialog';
 import SimpleModal from 'components/common/SimpleModal';
 import TableComponent from 'components/common/TableComponent';
-import { getAllCrops } from 'dataclients/CropsClient';
+import { deleteCrop, getAllCrops } from 'dataclients/CropsClient';
 import React, { useEffect, useState } from 'react';
 
 /**
@@ -18,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 'auto',
     width: 250,
   },
+  title: {
+    margin: '10px 0 0 0',
+  },
 }));
 
 /**
@@ -26,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
  */
 const columnData = [
   {
-    id: 'name',
+    id: 'cropName',
     type: 'text',
     label: 'Name',
     width: 50,
@@ -72,10 +76,12 @@ const columnData = [
 function CropInfoPage() {
   const classes = useStyles();
   const [alertMessage, setAlertMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
   const [crops, setCrops] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState('');
 
   /**
@@ -84,9 +90,14 @@ function CropInfoPage() {
    * shows alert in case call fails
    */
   const getCropData = () => {
+    setLoading(true);
     getAllCrops()
-      .then(setCrops)
+      .then((crops) => {
+        setCrops(crops);
+        setLoading(false);
+      })
       .catch((e) => {
+        setLoading(false);
         console.log('Fetching all crops failed', e);
         showAlert(`Fetching crops failed`, 'error');
       });
@@ -101,10 +112,11 @@ function CropInfoPage() {
    *
    */
   const getRowData = () => {
-    let data = crops.map((obj) => {
+    let data = crops.map((obj, index) => {
       return {
+        key: index,
         id: obj.id,
-        name: obj.name,
+        cropName: obj.name,
         season: obj.season,
         cgp: `${obj.cropGrowthProtocol.name} - ${obj.cropGrowthProtocol.description}`,
         cgpid: obj.cropGrowthProtocol.id,
@@ -127,23 +139,41 @@ function CropInfoPage() {
   };
 
   /**
-   * 
-   //TODO edit implementation for crops
-   * @param {object} selectedRow 
+   *
+   * edit implementation for crops
+   * @param {object} selectedRow
    */
-  const editCrop = (selectedRow) => {
+  const editClickHandler = (selectedRow) => {
     setIsEditModalOpen(true);
     setSelectedRow(selectedRow);
     console.log(selectedRow);
   };
 
   /**
-   *
-   //TODO delete implementation for crops
-   * @param {object} selectedRow 
+   * delete implementation for crops
+   * @param {object} selectedRow
    */
-  const deleteCrop = (selectedRow) => {
+  const deleteClickHandler = (selectedRow) => {
+    setSelectedRow(selectedRow);
+    setIsDeleteModalOpen(true);
+  };
+
+  /**
+   * delete crops after user confirmation
+   * @param {object} selectedRow
+   */
+  const deleteConfirmationHandler = () => {
     console.log(selectedRow);
+    deleteCrop(selectedRow.id)
+      .then((_response) => {
+        handleClose();
+        showAlert('Crop successfully deleted', 'info');
+      })
+      .catch((e) => {
+        console.log('Internal server error', e);
+        showAlert('Crop deletion failed: ' + e.message, 'error');
+      });
+    handleClose();
   };
 
   /**
@@ -154,10 +184,10 @@ function CropInfoPage() {
   const handleCropOptions = (id, selectedRow) => {
     switch (id) {
       case 'edit':
-        editCrop(selectedRow);
+        editClickHandler(selectedRow);
         break;
       case 'delete':
-        deleteCrop(selectedRow);
+        deleteClickHandler(selectedRow);
         break;
       default:
         console.log(selectedRow);
@@ -184,6 +214,7 @@ function CropInfoPage() {
    */
   const handleClose = () => {
     setIsEditModalOpen(false);
+    setIsDeleteModalOpen(false);
     getCropData();
   };
 
@@ -198,9 +229,10 @@ function CropInfoPage() {
       <TableComponent
         cols={columnData}
         rows={getRowData()}
+        loading={loading}
         contextMenuActionHandler={handleCropOptions}
       />
-      {/* modal to show selected field data and edit */}
+      {/* modal to show selected crop data and edit */}
       <SimpleModal
         isOpen={isEditModalOpen}
         closeHandler={handleClose}
@@ -212,11 +244,23 @@ function CropInfoPage() {
             setOpen={setIsEditModalOpen}
             closeHandler={handleClose}
             submitButtonText='Save'
+            showToastMessage={showAlert}
           />
         }
       ></SimpleModal>
+      {/* modal to delete selected crop data */}
+      <DeleteDialog
+        context={selectedRow.cropName}
+        deleteHandler={deleteConfirmationHandler}
+        closeHandler={handleClose}
+        openState={isDeleteModalOpen}
+      ></DeleteDialog>
       {/* alert UI */}
-      <Snackbar open={alertStatus} onClose={handleAlertClose}>
+      <Snackbar
+        open={alertStatus}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
+      >
         <Alert onClose={handleAlertClose} severity={alertSeverity}>
           {alertMessage}
         </Alert>

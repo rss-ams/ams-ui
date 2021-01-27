@@ -3,33 +3,31 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => ({
   submitButton: {
     width: 'fit-content',
-    minWidth: '150px',
+    minWidth: '120px',
     marginLeft: 'auto',
     marginRight: 'auto',
   },
   resetButton: {
     width: 'fit-content',
-    minWidth: '150px',
+    minWidth: '120px',
     marginLeft: 'auto',
-    marginRight: 'auto',
+    marginRight: '8px',
   },
   root: {
     textAlign: 'center',
-    '& > *': {
-      marginLeft: theme.spacing(1),
-    },
+    marginTop: '16px',
   },
 }));
-const FormButtons = ({ reset, defaultValues, submitButtonText }) => {
+const FormButtons = ({ resetHandler, submitButtonText }) => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
       <Button
         variant='contained'
         size='medium'
-        className={classes.submitButton}
+        className={classes.resetButton}
         onClick={() => {
-          reset(defaultValues);
+          resetHandler();
         }}
       >
         Reset

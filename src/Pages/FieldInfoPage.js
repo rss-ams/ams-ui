@@ -9,10 +9,15 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
+import DeleteDialog from 'components/common/DeleteDialog';
 import FieldForm from 'components/common/FieldForm';
 import SimpleModal from 'components/common/SimpleModal';
 import TableComponent from 'components/common/TableComponent';
-import { getAllFields, getFieldsByLocation } from 'dataclients/FieldsClient';
+import {
+  deleteField,
+  getAllFields,
+  getFieldsByLocation,
+} from 'dataclients/FieldsClient';
 import { getLocations } from 'dataclients/LocationsClient';
 import React, { useEffect, useState } from 'react';
 
@@ -27,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 'auto',
     minWidth: 250,
     maxWidth: 300,
+  },
+  title: {
+    margin: '10px 0 0 0',
   },
 }));
 
@@ -95,8 +103,10 @@ function FieldInfoPage() {
   const [alertSeverity, setAlertSeverity] = useState('');
   const [fieldsData, setFieldsData] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState('');
   const [fieldTableRows, setFieldTableRows] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getLocations()
@@ -113,11 +123,14 @@ function FieldInfoPage() {
    * shows alert in case call fails
    */
   const getFieldData = () => {
+    setLoading(true);
     getAllFields()
       .then((fields) => {
+        setLoading(false);
         setFieldsData(fields.content);
       })
       .catch((e) => {
+        setLoading(false);
         console.log('Fetching all fields failed', e);
         showAlert(`Fetching fields failed`, 'error');
       });
@@ -181,9 +194,14 @@ function FieldInfoPage() {
    * shows alert in case call fails
    */
   const fetchFieldsForLocation = () => {
+    setLoading(true);
     getFieldsByLocation(locationCode)
-      .then(setFieldsData)
+      .then((fields) => {
+        setFieldsData(fields);
+        setLoading(false);
+      })
       .catch((e) => {
+        setLoading(false);
         console.log(`Fetching fields for ${locationCode} failed`, e);
         showAlert(`Fetching fields for ${locationCode} failed`, 'error');
       });
@@ -194,7 +212,7 @@ function FieldInfoPage() {
    //Opens the edit modal and passed the relevant row information
    * @param {object} selectedRow 
    */
-  const editField = (selectedRow) => {
+  const editClickHandler = (selectedRow) => {
     setIsEditModalOpen(true);
     setSelectedRow(selectedRow);
   };
@@ -207,12 +225,10 @@ function FieldInfoPage() {
   const handleFieldOptions = (id, selectedRow) => {
     switch (id) {
       case 'edit':
-        editField(selectedRow);
-        console.log(id, selectedRow);
+        editClickHandler(selectedRow);
         break;
       case 'delete':
-        deleteField(selectedRow);
-        console.log(id, selectedRow);
+        deleteClickHandler(selectedRow);
         break;
       default:
         console.log(selectedRow);
@@ -220,11 +236,31 @@ function FieldInfoPage() {
   };
 
   /**
-   *
-   //TODO delete implementation for fields
-   * @param {object} selectedRow 
+   *delete handler for fields
+   * @param {object} selectedRow
    */
-  const deleteField = (selectedRow) => {};
+  const deleteClickHandler = (selectedRow) => {
+    setSelectedRow(selectedRow);
+    setIsDeleteModalOpen(true);
+  };
+
+  /**
+   * call to delete API after user confirmation
+   * @param {object} selectedRow
+   */
+  const deleteConfirmationHandler = () => {
+    console.log(selectedRow);
+    deleteField(selectedRow.id)
+      .then((_response) => {
+        handleClose();
+        showAlert('Field successfully deleted', 'info');
+      })
+      .catch((e) => {
+        console.log('Internal server error', e);
+        showAlert('Field deletion failed: ' + e.message, 'error');
+      });
+    handleClose();
+  };
 
   /**
    * Shows alert on UI
@@ -246,6 +282,7 @@ function FieldInfoPage() {
    */
   const handleClose = () => {
     setIsEditModalOpen(false);
+    setIsDeleteModalOpen(false);
     if (locationCode === '') getFieldData();
     else fetchFieldsForLocation();
   };
@@ -278,6 +315,7 @@ function FieldInfoPage() {
       <TableComponent
         cols={columnData}
         rows={fieldTableRows}
+        loading={loading}
         contextMenuActionHandler={handleFieldOptions}
       />
       {/* modal to show selected field data and edit */}
@@ -292,11 +330,23 @@ function FieldInfoPage() {
             isOpen={isEditModalOpen}
             closeHandler={handleClose}
             submitButtonText='Save'
+            showToastMessage={showAlert}
           />
         }
       ></SimpleModal>
+      {/* modal to delete selected field data */}
+      <DeleteDialog
+        context={selectedRow.fieldName}
+        deleteHandler={deleteConfirmationHandler}
+        closeHandler={handleClose}
+        openState={isDeleteModalOpen}
+      ></DeleteDialog>
       {/* alert UI */}
-      <Snackbar open={alertStatus} onClose={handleAlertClose}>
+      <Snackbar
+        open={alertStatus}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
+      >
         <Alert onClose={handleAlertClose} severity={alertSeverity}>
           {alertMessage}
         </Alert>

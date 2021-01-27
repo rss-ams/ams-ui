@@ -4,9 +4,13 @@ import {
   MenuItem,
   Snackbar,
   TextField,
-  Typography
+  Typography,
 } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Popover from '@material-ui/core/Popover';
 import { makeStyles } from '@material-ui/core/styles';
+import InfoOutlined from '@material-ui/icons/InfoOutlined';
 import { Alert } from '@material-ui/lab';
 import FormButtons from 'components/common/FormButtons';
 import { createField, updateField } from 'dataclients/FieldsClient';
@@ -15,6 +19,15 @@ import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 const useStyles = makeStyles((theme) => ({
+  popover: {
+    pointerEvents: 'none',
+  },
+  title: {
+    margin: '10px 0 0 0',
+  },
+  paper: {
+    padding: theme.spacing(1),
+  },
   formControl: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
@@ -38,6 +51,7 @@ const FieldForm = ({
   selectedRow,
   closeHandler,
   submitButtonText,
+  showToastMessage,
 }) => {
   const classes = useStyles();
   const defaultValues = {
@@ -48,11 +62,24 @@ const FieldForm = ({
   const { handleSubmit, reset, control, errors: fieldsErrors } = useForm({
     defaultValues,
   });
-
   const [locations, setLocations] = useState([]);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
+
+  /**
+   * displays the alert message on UI
+   * @param {String} message
+   * @param {String} severity can be info, error etc
+   */
+  const showAlert = (message, severity) => {
+    setAlertMessage(message);
+    setAlertSeverity(severity);
+    setAlertStatus(true);
+  };
+  if (!showToastMessage) {
+    showToastMessage = showAlert;
+  }
 
   useEffect(() => {
     getLocations()
@@ -63,6 +90,11 @@ const FieldForm = ({
       });
   }, []);
 
+  /**
+   * handler for alert close
+   * @param {*} _event
+   * @param {*} reason
+   */
   const handleAlertClose = (_event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -70,12 +102,42 @@ const FieldForm = ({
     setAlertStatus(false);
   };
 
-  const showAlert = (message, severity) => {
-    setAlertMessage(message);
-    setAlertSeverity(severity);
-    setAlertStatus(true);
+  /**
+   * handler for form reset
+   */
+  const resetHandler = () => {
+    reset(defaultValues);
   };
 
+  /**
+   * sets the anchor for display of hint popover
+   */
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  /**
+   * Handler for open of hint popover
+   * @param {*} event
+   */
+  const handlePopoverOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  /**
+   * handler for close of hint popover
+   */
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  /**
+   * sets the hint popover state to open/closed
+   */
+  const open = Boolean(anchorEl);
+
+  /**
+   * handler for form submit/create
+   * @param {Object} formData
+   */
   const submitHandler = (formData) => {
     let payload = {};
     payload.identifier = formData.fieldName;
@@ -86,23 +148,23 @@ const FieldForm = ({
       payload.id = selectedRow.id;
       updateField(payload)
         .then((response) => {
-          showAlert('Field successfully updated', 'info');
+          showToastMessage('Field successfully updated', 'info');
           reset(defaultValues);
           closeHandler();
         })
         .catch((e) => {
           console.log('Internal server error', e);
-          showAlert('Field updation failed: ' + e.message, 'error');
+          showToastMessage('Field updation failed: ' + e.message, 'error');
         });
     } else {
       createField(payload)
         .then((response) => {
-          showAlert('Field successfully created', 'info');
+          showToastMessage('Field successfully created', 'info');
           reset(defaultValues);
         })
         .catch((e) => {
           console.log('Internal server error', e);
-          showAlert('Field creation failed: ' + e.message, 'error');
+          showToastMessage('Field creation failed: ' + e.message, 'error');
         });
     }
   };
@@ -154,6 +216,19 @@ const FieldForm = ({
             name='fieldName'
             as={
               <TextField
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton
+                        size='small'
+                        onMouseEnter={handlePopoverOpen}
+                        onMouseLeave={handlePopoverClose}
+                      >
+                        <InfoOutlined />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
                 className={classes.formControl}
                 id='fieldName'
                 name='fieldName'
@@ -168,11 +243,36 @@ const FieldForm = ({
             rules={{
               required: 'Please enter a field name',
               pattern: {
-                value: /^([A-Za-z]|[0-9]|_)+$/,
+                value: /^[a-zA-Z]+[a-zA-Z0-9_\s]*$/,
                 message: 'Enter a valid name',
               },
             }}
           />
+          {/* popover to show hint for field input */}
+          <Popover
+            id='fieldname-help'
+            className={classes.popover}
+            classes={{
+              paper: classes.paper,
+            }}
+            open={open}
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+            onClose={handlePopoverClose}
+            disableRestoreFocus
+          >
+            <Typography variant='body2'>
+              A name must start with a letter followed by letters, digits,
+              whitespaces or _.
+            </Typography>
+          </Popover>
         </FormControl>
         {/* area input */}
         <FormControl className={classes.formControl}>
@@ -199,10 +299,14 @@ const FieldForm = ({
           />
         </FormControl>
         {/* reset/save/create button */}
-        <FormButtons {...{ reset, defaultValues, submitButtonText }} />
+        <FormButtons {...{ resetHandler, submitButtonText }} />
 
         {/* success and error alerts */}
-        <Snackbar open={alertStatus} onClose={handleAlertClose}>
+        <Snackbar
+          open={alertStatus}
+          autoHideDuration={3000}
+          onClose={handleAlertClose}
+        >
           <Alert onClose={handleAlertClose} severity={alertSeverity}>
             {alertMessage}
           </Alert>
