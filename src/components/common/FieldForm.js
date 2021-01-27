@@ -74,6 +74,11 @@ const FieldForm = ({
       });
   }, []);
 
+  /**
+   * handler for alert close
+   * @param {*} _event
+   * @param {*} reason
+   */
   const handleAlertClose = (_event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -81,26 +86,53 @@ const FieldForm = ({
     setAlertStatus(false);
   };
 
+  /**
+   * displays the alert message on UI
+   * @param {String} message
+   * @param {String} severity can be info, error etc
+   */
   const showAlert = (message, severity) => {
     setAlertMessage(message);
     setAlertSeverity(severity);
     setAlertStatus(true);
   };
 
+  /**
+   * handler for form reset
+   */
   const resetHandler = () => {
     reset(defaultValues);
   };
+
+  /**
+   * sets the anchor for display of hint popover
+   */
   const [anchorEl, setAnchorEl] = React.useState(null);
 
+  /**
+   * Handler for open of hint popover
+   * @param {*} event
+   */
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
+  /**
+   * handler for close of hint popover
+   */
   const handlePopoverClose = () => {
     setAnchorEl(null);
   };
 
+  /**
+   * sets the hint popover state to open/closed
+   */
   const open = Boolean(anchorEl);
+
+  /**
+   * handler for form submit/create
+   * @param {Object} formData
+   */
   const submitHandler = (formData) => {
     let payload = {};
     payload.identifier = formData.fieldName;
@@ -211,6 +243,7 @@ const FieldForm = ({
               },
             }}
           />
+          {/* popover to show hint for field input */}
           <Popover
             id='fieldname-help'
             className={classes.popover}

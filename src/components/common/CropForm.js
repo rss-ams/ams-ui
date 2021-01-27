@@ -78,6 +78,11 @@ const AddCrop = ({
       });
   }, []);
 
+  /**
+   * handler for alert close
+   * @param {*} _event
+   * @param {*} reason
+   */
   const handleAlertClose = (_event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -85,28 +90,53 @@ const AddCrop = ({
     setAlertStatus(false);
   };
 
+  /**
+   * displays the alert message on UI
+   * @param {String} message
+   * @param {String} severity can be info, error etc
+   */
   const showAlert = (message, severity) => {
     setAlertMessage(message);
     setAlertSeverity(severity);
     setAlertStatus(true);
   };
 
+  /**
+   * sets the anchor for display of hint popover
+   */
   const [anchorEl, setAnchorEl] = React.useState(null);
 
+  /**
+   * Handler for open of hint popover
+   * @param {*} event
+   */
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
+  /**
+   * handler for close of hint popover
+   */
   const handlePopoverClose = () => {
     setAnchorEl(null);
   };
 
+  /**
+   * sets the hint popover state to open/closed
+   */
   const open = Boolean(anchorEl);
 
+  /**
+   * handler for form reset
+   */
   const resetHandler = () => {
     reset(defaultValues);
   };
 
+  /**
+   * handler for form submit/create
+   * @param {Object} formData
+   */
   const submitHandler = (formData) => {
     let payload = {};
     payload.name = formData.cropName;
@@ -180,6 +210,7 @@ const AddCrop = ({
               },
             }}
           />
+          {/* popover to show hint for field input */}
           <Popover
             id='cropname-help'
             className={classes.popover}
@@ -200,7 +231,8 @@ const AddCrop = ({
             disableRestoreFocus
           >
             <Typography variant='body2'>
-              A name must start with a letter followed by letters, digits or _.
+              A name must start with a letter followed by letters, digits,
+              whitespaces or _.
             </Typography>
           </Popover>
         </FormControl>
@@ -237,6 +269,7 @@ const AddCrop = ({
             }
           ></Controller>
         </FormControl>
+        {/* crop growth protocol selection */}
         <FormControl className={classes.formControl}>
           <Controller
             name='cgpid'
@@ -272,7 +305,7 @@ const AddCrop = ({
 
         {/* reset/save/create button */}
         <FormButtons {...{ resetHandler, submitButtonText }} />
-
+        {/* success and error alerts */}
         <Snackbar
           open={alertStatus}
           autoHideDuration={3000}
