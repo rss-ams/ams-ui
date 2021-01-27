@@ -59,11 +59,24 @@ const FieldForm = ({
   const { handleSubmit, reset, control, errors: fieldsErrors } = useForm({
     defaultValues,
   });
-
   const [locations, setLocations] = useState([]);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
+
+  /**
+   * displays the alert message on UI
+   * @param {String} message
+   * @param {String} severity can be info, error etc
+   */
+  const showAlert = (message, severity) => {
+    setAlertMessage(message);
+    setAlertSeverity(severity);
+    setAlertStatus(true);
+  };
+  if (!showToastMessage) {
+    showToastMessage = showAlert;
+  }
 
   useEffect(() => {
     getLocations()
@@ -84,17 +97,6 @@ const FieldForm = ({
       return;
     }
     setAlertStatus(false);
-  };
-
-  /**
-   * displays the alert message on UI
-   * @param {String} message
-   * @param {String} severity can be info, error etc
-   */
-  const showAlert = (message, severity) => {
-    setAlertMessage(message);
-    setAlertSeverity(severity);
-    setAlertStatus(true);
   };
 
   /**

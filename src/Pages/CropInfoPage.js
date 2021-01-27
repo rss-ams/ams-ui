@@ -2,12 +2,11 @@ import { FormGroup, Snackbar, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
 import CropForm from 'components/common/CropForm';
-import DeleteForm from 'components/common/DeleteForm';
+import DeleteDialog from 'components/common/DeleteDialog';
 import SimpleModal from 'components/common/SimpleModal';
 import TableComponent from 'components/common/TableComponent';
-import { getAllCrops } from 'dataclients/CropsClient';
+import { deleteCrop, getAllCrops } from 'dataclients/CropsClient';
 import React, { useEffect, useState } from 'react';
-import { deleteCrop } from 'dataclients/CropsClient';
 
 /**
  * css styles for Crop Info Page
@@ -74,6 +73,7 @@ const columnData = [
 function CropInfoPage() {
   const classes = useStyles();
   const [alertMessage, setAlertMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
   const [crops, setCrops] = useState([]);
@@ -87,9 +87,14 @@ function CropInfoPage() {
    * shows alert in case call fails
    */
   const getCropData = () => {
+    setLoading(true);
     getAllCrops()
-      .then(setCrops)
+      .then((crops) => {
+        setCrops(crops);
+        setLoading(false);
+      })
       .catch((e) => {
+        setLoading(false);
         console.log('Fetching all crops failed', e);
         showAlert(`Fetching crops failed`, 'error');
       });
@@ -131,9 +136,9 @@ function CropInfoPage() {
   };
 
   /**
-   * 
+   *
    * edit implementation for crops
-   * @param {object} selectedRow 
+   * @param {object} selectedRow
    */
   const editClickHandler = (selectedRow) => {
     setIsEditModalOpen(true);
@@ -221,6 +226,7 @@ function CropInfoPage() {
       <TableComponent
         cols={columnData}
         rows={getRowData()}
+        loading={loading}
         contextMenuActionHandler={handleCropOptions}
       />
       {/* modal to show selected crop data and edit */}
@@ -240,16 +246,12 @@ function CropInfoPage() {
         }
       ></SimpleModal>
       {/* modal to delete selected crop data */}
-      <SimpleModal
-        isOpen={isDeleteModalOpen}
+      <DeleteDialog
+        context={selectedRow.cropName}
+        deleteHandler={deleteConfirmationHandler}
         closeHandler={handleClose}
-        modalBody={
-          <DeleteForm
-            deleteHandler={deleteConfirmationHandler}
-            closeHandler={handleClose}
-          />
-        }
-      ></SimpleModal>
+        openState={isDeleteModalOpen}
+      ></DeleteDialog>
       {/* alert UI */}
       <Snackbar
         open={alertStatus}

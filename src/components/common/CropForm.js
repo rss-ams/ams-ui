@@ -65,6 +65,19 @@ const CropForm = ({
     season: selectedRow.season,
     cgpid: selectedRow.cgpid,
   };
+  /**
+   * displays the alert message on UI
+   * @param {String} message
+   * @param {String} severity can be info, error etc
+   */
+  const showAlert = (message, severity) => {
+    setAlertMessage(message);
+    setAlertSeverity(severity);
+    setAlertStatus(true);
+  };
+  if (!showToastMessage) {
+    showToastMessage = showAlert;
+  }
   const { handleSubmit, reset, control, errors: fieldsErrors } = useForm({
     defaultValues,
   });
@@ -88,17 +101,6 @@ const CropForm = ({
       return;
     }
     setAlertStatus(false);
-  };
-
-  /**
-   * displays the alert message on UI
-   * @param {String} message
-   * @param {String} severity can be info, error etc
-   */
-  const showAlert = (message, severity) => {
-    setAlertMessage(message);
-    setAlertSeverity(severity);
-    setAlertStatus(true);
   };
 
   /**
