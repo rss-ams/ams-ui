@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
   noDataContainer: {
     textAlign: 'center',
+    padding: '50px',
   },
   noDataSpan: {
     fontWeight: 'normal',
