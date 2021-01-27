@@ -237,7 +237,7 @@ const ApplnBar = () => {
               className={classes.accordianItem}
               onClick={toggleDrawer(false)}
             >
-              <Link to='/inspection/post'>
+              <Link to='/inspections/post'>
                 <ListItemText primary='POST' />
               </Link>
             </ListItem>

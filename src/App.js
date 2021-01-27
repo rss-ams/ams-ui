@@ -3,11 +3,13 @@ import CropCycleTabs from 'components/Tabs/CropCycleTabs';
 import CropTabs from 'components/Tabs/CropTabs';
 import FieldTabs from 'components/Tabs/FieldTabs';
 import UserTabs from 'components/Tabs/UserTabs';
+import InspectionTabs from 'components/Tabs/InspectionTabs';
 import React from 'react';
 import Home from 'Pages/Home';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
 import ApplnBar from './components/ApplnBar';
+
 
 function App() {
   return (
@@ -21,6 +23,7 @@ function App() {
           <Route path='/crops/:tab' component={CropTabs} />
           <Route path='/crop-cycles/:tab' component={CropCycleTabs} />
           <Route path='/processes/:tab' component={ProcessTabs} />
+          <Route path='/inspections/:tab' component={InspectionTabs} />
           <Route path='/users/:tab' component={UserTabs} />
         </Switch>
       </div>

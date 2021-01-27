@@ -4,7 +4,7 @@ import { useParams } from 'react-router';
 
 const getTabToIndexMap = () => {
   let opToIndex = new Map();
-  opToIndex.set('update', 0);
+  opToIndex.set('post', 0);
   return opToIndex;
 };
 
