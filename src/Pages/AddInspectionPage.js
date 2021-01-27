@@ -91,18 +91,18 @@ import {
 
     
       function enableAddAdHocActivities() {
-        console.log("inside enable adhoc add");
+        //console.log("inside enable adhoc add");
         if (adHocActivityList.length > 0)
           setShowFollowUpActivity(true)
         else
           setShowFollowUpActivity(false);
-        console.log(showFollowUpActivity);
-        console.log(adHocActivityList);
+        //console.log(showFollowUpActivity);
+        //console.log(adHocActivityList);
       }
     
     const handleInspectionDateChange = (d) => {
         setSelectedInspectionDate(d);
-        console.log(d);
+        //console.log(d);
       };
     
       //return no of submitted inspection parameters
@@ -120,7 +120,7 @@ import {
     
       //checks if duplicate Ad hoc actvities are not submitted
       const isDuplicateAdHocEntry = () => {
-        console.log("Inside isduplicateAdHocEntry");
+        //console.log("Inside isduplicateAdHocEntry");
         let i = 0;
         let len = followUpActivities.length;
         let dup = 0;
@@ -129,10 +129,10 @@ import {
           while ((j < len) && (dup === 0)) {
             if (followUpActivities[i].code === followUpActivities[j].code) {
               dup = 1;
-              console.log("Found duplicate");
+              //console.log("Found duplicate");
             }
-            console.log(i + "th adHocActivity:" + followUpActivities[i].code);
-            console.log(j + "th adHocActivity:" + followUpActivities[j].code);
+            //console.log(i + "th adHocActivity:" + followUpActivities[i].code);
+            //console.log(j + "th adHocActivity:" + followUpActivities[j].code);
             j++;
           }
           i++;
@@ -160,16 +160,16 @@ import {
             "completionDate": selectedInspectionDate,
             "fieldCropCycle": { "id": cropCycleId }
           };
-          console.log(payload);
+          //console.log(payload);
           postInspection(payload, cropCycleId)
             .then((response) => {
-              console.log("Inspection posted for " + iParam.name + " : " + response);
+              //console.log("Inspection posted for " + iParam.name + " : " + response);
               inspPostedCnt = inspPostedCnt + 1;
     
               if (inspPostedCnt === cntInspParam) {
                 if (showFollowUpActivity === false) {
                   showAlert(info, 'info');
-                  console.log("Inspection count" + inspPostedCnt);
+                  //console.log("Inspection count" + inspPostedCnt);
                 }
     
               }
@@ -190,7 +190,7 @@ import {
       }
     
       function postAdHocActivity() {
-        console.log("Posting AdHoc Activiies:")
+        //console.log("Posting AdHoc Activiies:")
         let postAdhocCnt = 0;
         let info = "Inspection Info successfullly posted";
         let error = "";
@@ -203,14 +203,14 @@ import {
             "startDueDate": selectedInspectionDate,
             "endDueDate": selectedInspectionDate
           };
-          console.log(payload);
+          //console.log(payload);
           postActivity(payload, cropCycleId)
             .then((response) => {
-              console.log("AdHoc activty posted for " + adHoctivity.displayStr + " : " + response);
+              //console.log("AdHoc activty posted for " + adHoctivity.displayStr + " : " + response);
               postAdhocCnt = postAdhocCnt + 1;
               if (postAdhocCnt === followUpActivities.length) {
                 showAlert(info, 'info');
-                console.log("Inspection count" + postAdhocCnt);
+                //console.log("Inspection count" + postAdhocCnt);
               }
     
     
@@ -230,17 +230,28 @@ import {
         let cntInspParam = countInspData();
         if (cntInspParam === 0) {
           showAlert("At least one inspection parameter need to be submitted", 'error');
-        } else if (isDuplicateAdHocEntry() === 1) {
-          showAlert(" Same activity cannot be added be twice", 'error');
         } else {
-          processAllInspectionPosting(cntInspParam);
-          console.log("ShowfollowupActivity:" + showFollowUpActivity);
-          if (showFollowUpActivity === true) {
-            console.log("Inside postAdhoc");
-            postAdHocActivity();
+          if(showFollowUpActivity === true)
+          {
+           
+            if((followUpActivities.length === 1) && (followUpActivities[0].code === ""))
+            {
+              showAlert("Please select at least one follow up activity",'error');
+              console.log("error");
+            }else if(isDuplicateAdHocEntry() === 1) 
+            {
+              showAlert(" Same activity cannot be added be twice", 'error');
+            }else {
+              processAllInspectionPosting(cntInspParam);
+              //console.log("ShowfollowupActivity:" + showFollowUpActivity);
+              if (showFollowUpActivity === true) {
+                //console.log("Inside postAdhoc");
+                postAdHocActivity();
+              }
+            }
           }
-    
-        }
+          
+        } 
       };
 
 
