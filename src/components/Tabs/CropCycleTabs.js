@@ -1,12 +1,14 @@
 import DynamicTabs from 'components/DynamicTabs';
 import AddCropCycle from 'Pages/AddCropCycle';
 import CropCycleInfoPage from 'Pages/CropCycleInfoPage';
+import CropCycleTimeline from 'Pages/CropCycleTimeline';
 import { useParams } from 'react-router';
 
 const getTabToIndexMap = () => {
   let opToIndex = new Map();
   opToIndex.set('add', 0);
   opToIndex.set('info', 1);
+  opToIndex.set('timeline', 2);
   return opToIndex;
 };
 
@@ -25,9 +27,15 @@ const CropCycleTabs = () => {
     location: '/crop-cycles/info',
     index: 1,
   };
+  const tab2 = {
+    component: CropCycleTimeline,
+    name: 'timeline',
+    location: '/crop-cycles/timeline',
+    index: 2,
+  };
   return (
     <DynamicTabs
-      tabs={[tab0, tab1]}
+      tabs={[tab0, tab1, tab2]}
       selectedIndex={getTabToIndexMap().get(tab)}
     />
   );

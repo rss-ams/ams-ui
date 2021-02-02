@@ -189,6 +189,16 @@ const ApplnBar = () => {
                 <ListItemText primary='VIEW' />
               </Link>
             </ListItem>
+            <ListItem
+              button
+              key='crop-cycles-timeline'
+              className={classes.accordianItem}
+              onClick={toggleDrawer(false)}
+            >
+              <Link to='/crop-cycles/timeline'>
+                <ListItemText primary='TIMELINE' />
+              </Link>
+            </ListItem>
           </List>
         </AccordionDetails>
       </Accordion>
