@@ -365,7 +365,6 @@ const ApplnBar = () => {
           <Popover
             id='simple-menu'
             anchorEl={userOptionsAnchor}
-            keepMounted
             open={Boolean(userOptionsAnchor)}
             onClose={handleUserOptionsClose}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
@@ -374,7 +373,7 @@ const ApplnBar = () => {
             <div>
               <Box>
                 <Typography
-                  variant='h7'
+                  variant='h6'
                   className={classes.header}
                   style={{
                     display: 'flex',
