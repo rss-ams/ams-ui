@@ -158,7 +158,7 @@ const ProcessCard = ({
             </Grid>
             <Grid item>
               {/* additional label shown if the process is of ad hoc type */}
-              {!process.isAdhoc && (
+              {process.isAdhoc && (
                 <Chip variant='outlined' size='small' label='Ad hoc' />
               )}
             </Grid>
