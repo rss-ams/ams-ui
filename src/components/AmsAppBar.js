@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
   offset: theme.mixins.toolbar,
 }));
 
-const ApplnBar = () => {
+const AmsAppBar = () => {
   const classes = useStyles();
 
   const [drawerState, setDrawerState] = useState(false);
@@ -94,7 +94,7 @@ const ApplnBar = () => {
             expanded: classes.accordianSummaryExpanded,
           }}
         >
-          <Typography>FIELDS</Typography>
+          <Typography>FIELD MASTER</Typography>
         </AccordionSummary>
         <AccordionDetails className={classes.accordianDetails}>
           <List className={classes.list}>
@@ -130,7 +130,7 @@ const ApplnBar = () => {
           id='crops-header'
           className={classes.accordianSummary}
         >
-          <Typography>CROPS</Typography>
+          <Typography>CROP MASTER</Typography>
         </AccordionSummary>
         <AccordionDetails className={classes.accordianDetails}>
           <List className={classes.list}>
@@ -166,7 +166,7 @@ const ApplnBar = () => {
           id='crop-cycles-header'
           className={classes.accordianSummary}
         >
-          <Typography>CROP CYCLES</Typography>
+          <Typography>CROP CYCLE MASTER</Typography>
         </AccordionSummary>
         <AccordionDetails className={classes.accordianDetails}>
           <List className={classes.list}>
@@ -212,7 +212,7 @@ const ApplnBar = () => {
           id='processes-header'
           className={classes.accordianSummary}
         >
-          <Typography>PROCESSES</Typography>
+          <Typography>ACTIVITY MASTER</Typography>
         </AccordionSummary>
         <AccordionDetails className={classes.accordianDetails}>
           <List className={classes.list}>
@@ -465,4 +465,4 @@ const ApplnBar = () => {
   );
 };
 
-export default ApplnBar;
+export default AmsAppBar;

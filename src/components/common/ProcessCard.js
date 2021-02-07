@@ -95,6 +95,9 @@ const ProcessCard = ({
   const getStatusName = () =>
     processStatuses.filter((obj) => obj.code === statusCode)[0].displayStr;
 
+  const getProcessName = () =>
+    `${process.processName.category}: ${process.processName.displayStr}`;
+
   const handleAccordionExpand = (e, expanded) => {
     setShowProcessNameLabel(!expanded);
   };
@@ -146,7 +149,7 @@ const ProcessCard = ({
             <Grid item>
               {/* process name */}
               <Typography className={classes.heading}>
-                {process.processName.displayStr}
+                {getProcessName()}
               </Typography>
 
               {/* process status label */}
@@ -184,7 +187,7 @@ const ProcessCard = ({
                     id='status-label'
                     className={classes.accordianItems}
                   >
-                    Status
+                    Activity status
                   </InputLabel>
                   <Select
                     id='status'
