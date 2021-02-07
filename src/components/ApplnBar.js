@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
   middle: {
     padding: theme.spacing(0, 2, 0),
   },
+  offset: theme.mixins.toolbar,
 }));
 
 const ApplnBar = () => {
@@ -337,7 +338,7 @@ const ApplnBar = () => {
 
   return (
     <div className={classes.root}>
-      <AppBar position='static' color='default'>
+      <AppBar color='default'>
         <Toolbar>
           <React.Fragment key='left'>
             <IconButton
@@ -459,6 +460,7 @@ const ApplnBar = () => {
           </Alert>
         </Snackbar>
       </AppBar>
+      <div className={classes.offset} />
     </div>
   );
 };
