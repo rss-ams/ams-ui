@@ -1,12 +1,25 @@
 import {
   FormControl,
   Grid,
-  InputLabel, Select, MenuItem
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@material-ui/core';
 import { getCropCyclesByField } from 'dataclients/CropCyclesClient';
 import { getFieldsByLocation } from 'dataclients/FieldsClient';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
+/**
+ * Component to render Location, field and Crop Cycle form.
+ * @param {object} classStyleObj CSS style object created using makestyles
+ * @param {Array} locations List of available locations
+ * @param {*} setInspectionVal Handler to update the Inspection objects
+ * @param {String} cropCycleId code of the selected crop cycle whose inspection data need to be added
+ * @param {*} setCropCycleIdHandler Handler for setting cropCycleId
+ * @param {Array} cropCycles List of available crop cycles for selected field
+ * @param {*} setCropCyclesHandler Handler for setting crop cyle list based on seleted field
+ * @param {*} failureHandler Callback method to be called on any operation failure
+ */
 const CropCycleComponent = ({
   classStyleObj,
   locations,
@@ -14,10 +27,8 @@ const CropCycleComponent = ({
   setCropCycleIdHandler,
   cropCycles,
   setCropCyclesHandler,
-  failureHandler
-
+  failureHandler,
 }) => {
-
   const classes = classStyleObj;
   const [locationCode, setLocationCode] = useState('');
   const [fieldId, setFieldId] = useState('');
@@ -159,9 +170,7 @@ const CropCycleComponent = ({
           </Select>
         </FormControl>
       </Grid>
-
     </React.Fragment>
-
-  )
-}
+  );
+};
 export default CropCycleComponent;

@@ -21,19 +21,40 @@ export const getProcessStatuses = async () => {
 };
 
 /**
- * API to post activity 
- * @param {*} payload 
+ * API to post activity
+ * @param {*} payload
  */
 
-export const postActivity = async (payload, fieldCropCycleId) => {
+export const postProcess = async (payload, fieldCropCycleId) => {
   return fetch(API_URL + 'fieldCropCycles/' + fieldCropCycleId + '/processes', {
     method: 'POST',
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + localStorage.getItem('authToken')
+      Authorization: 'Bearer ' + localStorage.getItem('authToken'),
     },
   })
+    .then(handleErrors)
+    .then((response) => response.json());
+};
+
+/**
+ * API to post batch activity
+ * @param {*} payload
+ */
+
+export const postBatchProcess = async (payload, fieldCropCycleId) => {
+  return fetch(
+    API_URL + 'fieldCropCycles/' + fieldCropCycleId + '/processes/batch',
+    {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + localStorage.getItem('authToken'),
+      },
+    },
+  )
     .then(handleErrors)
     .then((response) => response.json());
 };
