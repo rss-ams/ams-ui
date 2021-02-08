@@ -189,6 +189,16 @@ const ApplnBar = () => {
                 <ListItemText primary='VIEW' />
               </Link>
             </ListItem>
+            <ListItem
+              button
+              key='crop-cycles-timeline'
+              className={classes.accordianItem}
+              onClick={toggleDrawer(false)}
+            >
+              <Link to='/crop-cycles/timeline'>
+                <ListItemText primary='TIMELINE' />
+              </Link>
+            </ListItem>
           </List>
         </AccordionDetails>
       </Accordion>
@@ -381,7 +391,6 @@ const ApplnBar = () => {
           <Popover
             id='simple-menu'
             anchorEl={userOptionsAnchor}
-            keepMounted
             open={Boolean(userOptionsAnchor)}
             onClose={handleUserOptionsClose}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
@@ -390,7 +399,7 @@ const ApplnBar = () => {
             <div>
               <Box>
                 <Typography
-                  variant='h7'
+                  variant='h6'
                   className={classes.header}
                   style={{
                     display: 'flex',

@@ -19,7 +19,6 @@ function App() {
         <Switch>
           <Route path='/home' component={Home} />
           <Route path='/fields/:tab' component={FieldTabs} />
-          <Route path='/fields' component={FieldTabs} />
           <Route path='/crops/:tab' component={CropTabs} />
           <Route path='/crop-cycles/:tab' component={CropCycleTabs} />
           <Route path='/processes/:tab' component={ProcessTabs} />
