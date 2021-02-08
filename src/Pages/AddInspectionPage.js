@@ -55,7 +55,7 @@ const AddInspectionPage = () => {
   const [locations, setLocations] = useState([]);
   const [cropCycleId, setCropCycleId] = useState('');
   const [cropCycles, setCropCycles] = useState([]);
-  const [inspectionValues, setInspectionValues] = useState([]);
+  const [inspectionList, setInspectionList] = useState([]);
   const [selectedInspectionDate, setSelectedInspectionDate] = useState(
     new Date(),
   );
@@ -98,12 +98,12 @@ const AddInspectionPage = () => {
 
   const fetchAdHocActivityList = () => {
     let qParam = '';
-    inspectionValues.forEach((iValue) => {
-      if (iValue.val === 0) {
-        qParam = qParam + iValue.code + '=false&';
+    inspectionList.forEach((inspectionValue) => {
+      if (inspectionValue.val === 0) {
+        qParam = qParam + inspectionValue.code + '=false&';
       }
-      if (iValue.val === 1) {
-        qParam = qParam + iValue.code + '=true&';
+      if (inspectionValue.val === 1) {
+        qParam = qParam + inspectionValue.code + '=true&';
       }
     });
     if (cropCycleId === '' || qParam === '') setAdHocProcessList([]);
@@ -122,8 +122,8 @@ const AddInspectionPage = () => {
 
   //return no of submitted inspection parameters
   const countInspectionParamSubmitted = () => {
-    let cnt = inspectionValues.filter(
-      (inspectionVal) => inspectionVal.val !== -1,
+    let cnt = inspectionList.filter(
+      (inspectionValue) => inspectionValue.val !== -1,
     ).length;
     return cnt;
   };
@@ -144,11 +144,11 @@ const AddInspectionPage = () => {
   // post all submitted inspection observations through the batch post api
   const postInspections = () => {
     let payload = [];
-    inspectionValues.forEach((inspectionVal) => {
-      if (inspectionVal.val !== -1) {
+    inspectionList.forEach((inspectionValue) => {
+      if (inspectionValue.val !== -1) {
         payload.push({
-          inspectionType: inspectionVal.code,
-          resultPositive: Boolean(inspectionVal.val),
+          inspectionType: inspectionValue.code,
+          resultPositive: Boolean(inspectionValue.val),
           dueDate: selectedInspectionDate,
           completionDate: selectedInspectionDate,
           fieldCropCycle: { id: cropCycleId },
@@ -218,11 +218,10 @@ const AddInspectionPage = () => {
     return { error: error, message: message };
   };
   const handleSubmit = (e) => {
-    let cntInspParam = countInspectionParamSubmitted();
     let formValidationResult = validateInspectionData();
 
     if (!formValidationResult.error) {
-      postInspections(cntInspParam);
+      postInspections();
       if (showFollowUpProcesses === true) {
         postAdHocProcesses();
       }
@@ -271,8 +270,8 @@ const AddInspectionPage = () => {
     return (
       <div>
         <InspectionOptions
-          inspectionVal={inspectionValues}
-          setInspectionVal={setInspectionValues}
+          inspectionList={inspectionList}
+          setInspectionList={setInspectionList}
           classStyleObj={classes}
           failureHandler={processUpdateFailureHandler}
         />
@@ -330,7 +329,7 @@ const AddInspectionPage = () => {
       });
   }, []);
 
-  useEffect(fetchAdHocActivityList, [inspectionValues, cropCycleId]);
+  useEffect(fetchAdHocActivityList, [inspectionList, cropCycleId]);
   useEffect(enableAddAdHocActivities, [adHocProcessList]);
 
   return (

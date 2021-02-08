@@ -7,76 +7,75 @@ import {
   FormLabel,
 } from '@material-ui/core';
 import { getInspectionParams } from 'dataclients/InspectionClient';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 /**
  * Component to render Radio boxes of available inspection parameters fetched from server.
- * @param {Array} inspectionVal List of Inspection objects to be submitted
- * @param {*} setInspectionVal Handler to update the Inspection objects
+ * @param {Array} inspectionList List of Inspection objects to be submitted
+ * @param {*} setInspectionList Handler to update the Inspection objects
  * @param {object} classStyleObj CSS style object created using makestyles
  * @param {*} failureHandler Callback method to be called on any operation failure
  */
 
 const InspectionOptions = ({
-  inspectionVal,
-  setInspectionVal,
+  inspectionList,
+  setInspectionList,
   classStyleObj,
   failureHandler,
 }) => {
-  //object and callaback for fetching list of avaialble Inspection parameters
-  const [inspectionParams, setInspectionParams] = useState([]);
-
   /*
     function to initialize Inspection values with -1 
     */
-  const initializeInspectionVal = () => {
+  const initializeInspectionList = (serverInspectionParams) => {
     var inspVals = [];
-    inspectionParams.forEach((param) => {
-      inspVals.push({ code: param.code, name: param.displayStr, val: -1 });
+    serverInspectionParams.forEach((param) => {
+      inspVals.push({
+        code: param.code,
+        displayStr: param.displayStr,
+        val: -1,
+      });
     });
-    setInspectionVal(inspVals);
+    setInspectionList(inspVals);
   };
 
   const handleInspectionChange = ({ target }) => {
     const { name, value } = target;
-    let inspVals = inspectionVal;
-    inspVals.find((inspV) => inspV.name === name).val = parseInt(value);
-    setInspectionVal([...inspVals]);
+    let inspVals = inspectionList;
+    inspVals.find((inspV) => inspV.displayStr === name).val = parseInt(value);
+    setInspectionList([...inspVals]);
   };
 
   //fecthing inspection parameters available from the server
   useEffect(() => {
     getInspectionParams()
-      .then(setInspectionParams)
+      .then(initializeInspectionList)
       .catch((e) => {
         console.log('Fetching Inspection Param list failed', e);
         failureHandler('Fetching Inspection Param list failed', 'error');
       });
   }, []);
 
-  useEffect(initializeInspectionVal, [inspectionParams]);
-
   return (
     <div>
-      {inspectionParams.map((insParam, index) => {
+      {inspectionList.map((inspectionValue) => {
         return (
           <Grid
             container
             direction='row'
             justify='center'
             alignItems='center'
-            key={insParam.displayStr}
+            key={inspectionValue.displayStr}
           >
             <FormControl className={classStyleObj.formControl} row='true'>
               <FormLabel
-                id={insParam.displayStr}
+                id={inspectionValue.displayStr}
                 className={classStyleObj.radioLabel}
               >
-                {insParam.displayStr}
+                {inspectionValue.displayStr}
               </FormLabel>
               <RadioGroup
-                id={insParam.displayStr}
-                name={insParam.displayStr}
+                id={inspectionValue.displayStr}
+                name={inspectionValue.displayStr}
                 onChange={handleInspectionChange}
                 row
               >
