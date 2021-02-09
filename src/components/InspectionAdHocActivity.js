@@ -23,7 +23,7 @@ const InspectionAdHocActivity = ({
   // handle Selection of Adhoc activities
   const classes = classStyleObj;
   const handleInputChange = (e, index) => {
-    const { name, value } = e.target;
+    const value = e.target.value;
     const list = [...followUpProcesses];
     list[index].code = value;
     list[index].displayStr = adHocProcessList.filter(
