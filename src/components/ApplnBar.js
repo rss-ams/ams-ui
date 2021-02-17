@@ -229,6 +229,32 @@ const ApplnBar = () => {
         </AccordionDetails>
       </Accordion>
 
+      {/* Inspection */}
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='processes-content'
+          id='processes-header'
+          className={classes.accordianSummary}
+        >
+          <Typography>INSPECTION</Typography>
+        </AccordionSummary>
+        <AccordionDetails className={classes.accordianDetails}>
+          <List className={classes.list}>
+            <ListItem
+              button
+              key='processes'
+              className={classes.accordianItem}
+              onClick={toggleDrawer(false)}
+            >
+              <Link to='/inspections/update'>
+                <ListItemText primary='UPDATE' />
+              </Link>
+            </ListItem>
+          </List>
+        </AccordionDetails>
+      </Accordion>
+
       {/* USER */}
       <Accordion>
         <AccordionSummary
@@ -358,10 +384,10 @@ const ApplnBar = () => {
               />
             </Box>
           ) : (
-            <Box visibility={avatarVisible}>
-              <Avatar onClick={handleAvatarClick} src={imageUrl} />
-            </Box>
-          )}
+              <Box visibility={avatarVisible}>
+                <Avatar onClick={handleAvatarClick} src={imageUrl} />
+              </Box>
+            )}
           <Popover
             id='simple-menu'
             anchorEl={userOptionsAnchor}
