@@ -8,14 +8,14 @@ import React from 'react';
 import Home from 'Pages/Home';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
-import ApplnBar from './components/ApplnBar';
+import AmsAppBar from './components/AmsAppBar';
 
 
 function App() {
   return (
     <BrowserRouter>
       <div className='App'>
-        <ApplnBar />
+        <AmsAppBar />
         <Switch>
           <Route path='/home' component={Home} />
           <Route path='/fields/:tab' component={FieldTabs} />

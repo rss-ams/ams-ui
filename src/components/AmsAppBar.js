@@ -53,9 +53,10 @@ const useStyles = makeStyles((theme) => ({
   middle: {
     padding: theme.spacing(0, 2, 0),
   },
+  offset: theme.mixins.toolbar,
 }));
 
-const ApplnBar = () => {
+const AmsAppBar = () => {
   const classes = useStyles();
 
   const [drawerState, setDrawerState] = useState(false);
@@ -93,7 +94,7 @@ const ApplnBar = () => {
             expanded: classes.accordianSummaryExpanded,
           }}
         >
-          <Typography>FIELDS</Typography>
+          <Typography>FIELD MASTER</Typography>
         </AccordionSummary>
         <AccordionDetails className={classes.accordianDetails}>
           <List className={classes.list}>
@@ -129,7 +130,7 @@ const ApplnBar = () => {
           id='crops-header'
           className={classes.accordianSummary}
         >
-          <Typography>CROPS</Typography>
+          <Typography>CROP MASTER</Typography>
         </AccordionSummary>
         <AccordionDetails className={classes.accordianDetails}>
           <List className={classes.list}>
@@ -165,7 +166,7 @@ const ApplnBar = () => {
           id='crop-cycles-header'
           className={classes.accordianSummary}
         >
-          <Typography>CROP CYCLES</Typography>
+          <Typography>CROP CYCLE MASTER</Typography>
         </AccordionSummary>
         <AccordionDetails className={classes.accordianDetails}>
           <List className={classes.list}>
@@ -211,7 +212,7 @@ const ApplnBar = () => {
           id='processes-header'
           className={classes.accordianSummary}
         >
-          <Typography>PROCESSES</Typography>
+          <Typography>ACTIVITY MASTER</Typography>
         </AccordionSummary>
         <AccordionDetails className={classes.accordianDetails}>
           <List className={classes.list}>
@@ -337,7 +338,7 @@ const ApplnBar = () => {
 
   return (
     <div className={classes.root}>
-      <AppBar position='static' color='default'>
+      <AppBar color='default'>
         <Toolbar>
           <React.Fragment key='left'>
             <IconButton
@@ -459,8 +460,9 @@ const ApplnBar = () => {
           </Alert>
         </Snackbar>
       </AppBar>
+      <div className={classes.offset} />
     </div>
   );
 };
 
-export default ApplnBar;
+export default AmsAppBar;

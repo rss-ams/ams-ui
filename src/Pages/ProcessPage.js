@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
-import ProcessCard from 'components/common/ProcessCard';
+import ProcessCards from 'components/common/ProcessCards';
 import { getCropCyclesByField } from 'dataclients/CropCyclesClient';
 import { getFieldsByLocation } from 'dataclients/FieldsClient';
 import { getLocations } from 'dataclients/LocationsClient';
@@ -168,6 +168,7 @@ const ProcessPage = () => {
    */
   const processUpdateSuccessHandler = (message) => {
     showAlert(message, 'info');
+    fetchCropCyclesForField(fieldId);
   };
 
   /**
@@ -182,48 +183,8 @@ const ProcessPage = () => {
    * Returns process cards corresponding to each non-completed processes
    * for the selected crop-cycle
    */
-  const getProcessCards = () => {
-    let selectedCropCycle = cropCycles.filter(
-      (cropCycle) => cropCycle.id === cropCycleId,
-    )[0];
-
-    // if a crop cycle is not selected
-    if (!selectedCropCycle)
-      return (
-        <Typography className={classes.helpText}>
-          Please select a crop cycle
-        </Typography>
-      );
-
-    // if the crop cycle doesn't have ant non-completed processes
-    if (
-      !selectedCropCycle.currentProcesses ||
-      selectedCropCycle.currentProcesses.length === 0
-    )
-      return (
-        <Typography className={classes.helpText}>
-          'No ongoing processes for the crop cycle. All processes completed for
-          this crop cycle?'{' '}
-        </Typography>
-      );
-
-    // Happy case - return process cards corresponding to each non-completed process
-    return (
-      selectedCropCycle.currentProcesses &&
-      selectedCropCycle.currentProcesses.map((currentProcess) => {
-        return (
-          <ProcessCard
-            key={currentProcess.id}
-            process={currentProcess}
-            processStatuses={processStatuses}
-            cropCycleId={cropCycleId}
-            updateSuccessHandler={processUpdateSuccessHandler}
-            updateFailureHandler={processUpdateFailureHandler}
-          />
-        );
-      })
-    );
-  };
+  const getSelectedCropCycle = () =>
+    cropCycles.filter((cropCycle) => cropCycle.id === cropCycleId)[0];
 
   return (
     <FormGroup className={classes.formGroup}>
@@ -304,7 +265,12 @@ const ProcessPage = () => {
 
         {/* Process cards for each non-completed processes */}
         <Grid item xs={12}>
-          {getProcessCards()}
+          <ProcessCards
+            selectedCropCycle={getSelectedCropCycle()}
+            processStatuses={processStatuses}
+            updateSuccessHandler={processUpdateSuccessHandler}
+            updateFailureHandler={processUpdateFailureHandler}
+          ></ProcessCards>
         </Grid>
       </Grid>
 
