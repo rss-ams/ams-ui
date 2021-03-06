@@ -1,7 +1,7 @@
 import DynamicTabs from 'components/DynamicTabs';
-import AddCropCycle from 'Pages/AddCropCycle';
-import CropCycleInfoPage from 'Pages/CropCycleInfoPage';
-import CropCycleTimeline from 'Pages/CropCycleTimeline';
+import AddCropCycle from 'Pages/CropCycle/AddCropCycle';
+import CropCycleInfoPage from 'Pages/CropCycle/CropCycleInfoPage';
+import CropCycleTimeline from 'Pages/CropCycle/CropCycleTimeline';
 import { useParams } from 'react-router';
 
 const getTabToIndexMap = () => {

@@ -1,5 +1,5 @@
 import DynamicTabs from 'components/DynamicTabs';
-import AddInspectionPage from 'Pages/AddInspectionPage';
+import AddInspectionPage from 'Pages/Inspection/AddInspectionPage';
 import { useParams } from 'react-router';
 
 const getTabToIndexMap = () => {

@@ -17,8 +17,8 @@ import {
   postBatchInspection,
 } from 'dataclients/InspectionClient';
 import React, { useEffect, useState } from 'react';
-import InspectionOptions from 'components/InspectionOptions';
-import InspectionAdHocActivity from 'components/InspectionAdHocActivity';
+import InspectionOptions from 'Pages/Inspection/InspectionOptions';
+import InspectionAdHocActivity from 'Pages/Inspection/InspectionAdHocActivity';
 import CropCycleComponent from 'components/CropCycleComponent';
 const useStyles = makeStyles((theme) => ({
   gridItem: {
