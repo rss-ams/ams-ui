@@ -1,6 +1,6 @@
 import DynamicTabs from 'components/DynamicTabs';
-import AddField from 'Pages/AddField';
-import FieldInfoPage from 'Pages/FieldInfoPage';
+import AddField from 'Pages/Field/AddField';
+import FieldInfoPage from 'Pages/Field/FieldInfoPage';
 import { useParams } from 'react-router';
 
 const getTabToIndexMap = () => {

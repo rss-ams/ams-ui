@@ -1,6 +1,6 @@
 import DynamicTabs from 'components/DynamicTabs';
-import AddCrop from 'Pages/AddCrop';
-import CropInfoPage from 'Pages/CropInfoPage';
+import AddCrop from 'Pages/Crop/AddCrop';
+import CropInfoPage from 'Pages/Crop/CropInfoPage';
 
 import { useParams } from 'react-router';
 
