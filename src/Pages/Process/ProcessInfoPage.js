@@ -41,12 +41,6 @@ const columnData = [
     label: 'Field - Crop',
     width: 30,
   },
-  // {
-  //   id: 'cropName',
-  //   type: 'text',
-  //   label: 'Crop',
-  //   width: 30,
-  // },
   {
     id: 'season',
     type: 'text',
@@ -105,7 +99,6 @@ const ProcessInfoPage = () => {
       return {
         year: obj.year,
         season: obj.season + ' - ' + obj.year,
-        // fieldName: obj.field.identifier,
         fieldName: obj.field.identifier + ' - ' + obj.crop.name,
         cropName: obj.crop.name,
         currentProcessesWithStatus: obj.currentProcesses
@@ -123,10 +116,10 @@ const ProcessInfoPage = () => {
   }, [cropCycles]);
 
   /**
-   * Function to fetch CropCycles for a selected pocess code
+   * Function to fetch CropCycles for a selected process code
    * updates CropCycles table if call is successful
    * shows alert in case call fails
-   * @param {number} selectedFieldId The ID of the selected field
+   * @param {number} selectedProcessCode The ID of the selected process code
    */
   const fetchCropCyclesForProcess = (selectedProcessCode) => {
     getCropCycleForProcess(selectedProcessCode)
@@ -145,7 +138,6 @@ const ProcessInfoPage = () => {
     } else if (name === 'process-name') {
       setProcessNameCode(value);
       fetchCropCyclesForProcess(value);
-      // need to clear the following dropdowns and hence the process cards
     }
   };
 
