@@ -10,7 +10,6 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
 import AmsAppBar from './components/AmsAppBar';
 
-
 function App() {
   return (
     <BrowserRouter>

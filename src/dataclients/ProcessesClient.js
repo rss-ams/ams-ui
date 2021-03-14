@@ -10,6 +10,16 @@ export const getProcessCategories = async () => {
     .then((response) => response.json());
 };
 
+export const getCropCycleForProcess = async (processCode) => {
+  return fetch(`${API_URL}fieldCropCycles?processCode=` + processCode, {
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('authToken'),
+    },
+  })
+    .then(handleErrors)
+    .then((response) => response.json());
+};
+
 export const getProcessStatuses = async () => {
   return fetch(`${API_URL}fieldCropCycles/processStatuses`, {
     headers: {
