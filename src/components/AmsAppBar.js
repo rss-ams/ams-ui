@@ -226,6 +226,16 @@ const AmsAppBar = () => {
                 <ListItemText primary='UPDATE' />
               </Link>
             </ListItem>
+            <ListItem
+              button
+              key='processes'
+              className={classes.accordianItem}
+              onClick={toggleDrawer(false)}
+            >
+              <Link to='/processes/info'>
+                <ListItemText primary='INFO' />
+              </Link>
+            </ListItem>
           </List>
         </AccordionDetails>
       </Accordion>
@@ -385,10 +395,10 @@ const AmsAppBar = () => {
               />
             </Box>
           ) : (
-              <Box visibility={avatarVisible}>
-                <Avatar onClick={handleAvatarClick} src={imageUrl} />
-              </Box>
-            )}
+            <Box visibility={avatarVisible}>
+              <Avatar onClick={handleAvatarClick} src={imageUrl} />
+            </Box>
+          )}
           <Popover
             id='simple-menu'
             anchorEl={userOptionsAnchor}

@@ -45,6 +45,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(14),
     color: theme.palette.text.secondary,
   },
+  title: {
+    margin: '10px 0 0 0',
+  },
 }));
 
 const ProcessPage = () => {

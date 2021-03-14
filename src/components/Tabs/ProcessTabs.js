@@ -1,5 +1,6 @@
 import DynamicTabs from 'components/DynamicTabs';
 import ProcessPage from 'Pages/Process/ProcessPage';
+import ProcessInfoPage from 'Pages/Process/ProcessInfoPage';
 import { useParams } from 'react-router';
 
 const getTabToIndexMap = () => {
@@ -18,7 +19,7 @@ const ProcessTabs = () => {
     index: 0,
   };
   const infoTab = {
-    component: ProcessPage,
+    component: ProcessInfoPage,
     name: 'info',
     location: '/processes/info',
     index: 1,
