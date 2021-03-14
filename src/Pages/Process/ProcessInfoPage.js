@@ -17,10 +17,6 @@ import React, { useEffect, useState } from 'react';
 import TableComponent from 'components/common/TableComponent';
 
 const useStyles = makeStyles((theme) => ({
-  gridItem: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-  },
   formControl: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
@@ -28,21 +24,6 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 'auto',
     minWidth: 300,
     maxWidth: 300,
-  },
-  submitButton: {
-    margin: theme.spacing(3),
-    width: 'fit-content',
-    minWidth: '150px',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-  },
-  menuItem: {
-    maxWidth: 300,
-    whiteSpace: 'normal',
-  },
-  helpText: {
-    fontSize: theme.typography.pxToRem(14),
-    color: theme.palette.text.secondary,
   },
   title: {
     margin: '10px 0 0 0',
@@ -128,16 +109,10 @@ const ProcessInfoPage = () => {
   useEffect(() => {
     let data = cropCycles.map((obj) => {
       return {
-        id: obj.id,
         year: obj.year,
         season: obj.season,
-        fieldId: obj.field.id,
         fieldName: obj.field.identifier,
-        cropId: obj.crop.id,
         cropName: obj.crop.name,
-        ...obj.crop.cropGrowthProtocol.fertilization,
-        processHistory: obj.processHistory,
-        currentProcesses: obj.currentProcesses,
         currentProcessesWithStatus: obj.currentProcesses
           .map(
             (process) =>
