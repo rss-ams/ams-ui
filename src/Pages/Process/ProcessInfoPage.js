@@ -38,25 +38,19 @@ const columnData = [
   {
     id: 'fieldName',
     type: 'text',
-    label: 'Field',
+    label: 'Field - Crop',
     width: 30,
   },
-  {
-    id: 'cropName',
-    type: 'text',
-    label: 'Crop',
-    width: 30,
-  },
+  // {
+  //   id: 'cropName',
+  //   type: 'text',
+  //   label: 'Crop',
+  //   width: 30,
+  // },
   {
     id: 'season',
     type: 'text',
     label: 'Season',
-    width: 10,
-  },
-  {
-    id: 'year',
-    type: 'text',
-    label: 'Year',
     width: 10,
   },
   {
@@ -110,19 +104,18 @@ const ProcessInfoPage = () => {
     let data = cropCycles.map((obj) => {
       return {
         year: obj.year,
-        season: obj.season,
-        fieldName: obj.field.identifier,
+        season: obj.season + ' - ' + obj.year,
+        // fieldName: obj.field.identifier,
+        fieldName: obj.field.identifier + ' - ' + obj.crop.name,
         cropName: obj.crop.name,
         currentProcessesWithStatus: obj.currentProcesses
           .map(
             (process) =>
               process.processName.displayStr +
               ' : ' +
-              process.processStatus.displayStr +
-              ', ',
+              process.processStatus.displayStr,
           )
-          .toString()
-          .replace(/(^\s*,)|(,\s*$)/g, ''),
+          .join(', '),
       };
     });
     data.sort((a, b) => (a.year > b.year ? 1 : -1));
@@ -159,7 +152,7 @@ const ProcessInfoPage = () => {
   return (
     <FormGroup className={classes.formGroup}>
       <Typography align='center' variant='h6' className={classes.title}>
-        Field Cycles for Process
+        Crop Cycles for Process
       </Typography>
 
       {/* Process Category selection */}
